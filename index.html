@@ -3,501 +3,304 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Daily WOD — One-Page Scheduler (20–60 min)</title>
+<title>Daily WOD — Simple, 20–60 min</title>
 <style>
-  :root{
-    --bg:#0f1115; --card:#151922; --ink:#e8eaf0; --muted:#aab0c0; --accent:#61dafb;
-    --code:#1c2230; --ok:#9de1af; --warn:#ead18d; --hot:#f1a1b1;
-  }
+  :root{ --bg:#0f1115; --card:#151922; --ink:#e8eaf0; --muted:#aab0c0; --accent:#61dafb; --code:#1c2230; }
   *{box-sizing:border-box}
-  body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
-       font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+  body{margin:0;padding:24px;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
   h1,h2,h3{margin:0 0 8px;line-height:1.15}
-  h1{font-size:28px} h2{font-size:20px;color:var(--muted);font-weight:600}
-  h3{font-size:16px;color:var(--muted);font-weight:600}
-  .wrap{max-width:980px;margin:0 auto;display:grid;gap:16px}
+  h1{font-size:28px} h2{font-size:20px;color:var(--muted);font-weight:600} h3{font-size:16px;color:var(--muted);font-weight:600}
+  .wrap{max-width:900px;margin:0 auto;display:grid;gap:16px}
   .card{background:var(--card);border:1px solid #222937;border-radius:12px;padding:16px;box-shadow:0 4px 18px rgba(0,0,0,.25)}
   .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center}
-  .controls .row>*{flex:0 0 auto}
-  button,select,input[type="number"],input[type="checkbox"],label.toggle{
-    background:#111723;color:var(--ink);border:1px solid #2a3345;border-radius:8px;padding:10px 12px;cursor:pointer;font:inherit
-  }
+  button,input[type="number"]{background:#111723;color:var(--ink);border:1px solid #2a3345;border-radius:8px;padding:10px 12px;cursor:pointer;font:inherit}
   button:hover{border-color:var(--accent)}
-  input[type="number"]{width:88px;text-align:center}
+  input[type="number"]{width:90px;text-align:center}
   .pill{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid #2a3345;background:#0d1320;color:var(--muted);font-size:12px;margin-right:6px}
-  .typeA{border-color:#355a3a;color:var(--ok)} .typeB{border-color:#5a4d35;color:var(--warn)} .typeC{border-color:#5a3544;color:var(--hot)}
   .meta{color:var(--muted);font-size:14px}
   ul{margin:8px 0 0 20px} li{margin:4px 0}
-  details summary{cursor:pointer;user-select:none}
   .notice{background:#1a2030;border-left:4px solid var(--accent);padding:10px 12px;border-radius:8px}
-  .bench{color:var(--accent);font-weight:600}
-  .grid2{display:grid;grid-template-columns:1fr;gap:12px}
-  @media(min-width:900px){.grid2{grid-template-columns:1fr 1fr}}
-  .floatToday{position:fixed;right:16px;bottom:16px;z-index:10;display:none}
   .center{text-align:center}
-  .subtle{opacity:.85}
-  .week{display:none}
-  @media print{ .controls, .floatToday, details, .footer {display:none} body{background:white;color:#111} .card{box-shadow:none;border-color:#ddd}}
+  @media print{ .controls, .footer {display:none} body{background:white;color:#111} .card{box-shadow:none;border-color:#ddd}}
 </style>
 </head>
 <body>
 <div class="wrap">
-
-  <!-- HEADER + CONTROLS -->
   <div class="card">
     <h1 class="center">Daily WOD</h1>
     <div id="todayStr" class="meta center"></div>
-    <div class="controls" style="margin-top:8px;">
-      <div class="row">
-        <button id="prevBtn" aria-label="Previous day">◀ Prev</button>
-        <button id="todayBtn" aria-label="Jump to today">Today</button>
-        <button id="nextBtn" aria-label="Next day">Next ▶</button>
-      </div>
-      <div class="row">
-        <label class="muted" for="dayPicker">Day of Year:</label>
-        <input id="dayPicker" type="number" min="1" max="365" value="1" />
-        <button id="goBtn">Go</button>
-        <button id="weekBtn" title="Show week view">Week View / Print</button>
-        <button id="copyLinkBtn" title="Copy link to this day">Copy Link</button>
-      </div>
-      <div class="row">
-        <label class="toggle"><input type="checkbox" id="rxToggle"> RX</label>
-        <label class="toggle"><input type="checkbox" id="noRunToggle"> No Run (auto-sub)</label>
-        <label class="toggle"><input type="checkbox" id="equipRower" checked> Rower</label>
-        <label class="toggle"><input type="checkbox" id="equipRope" checked> Jump Rope</label>
-        <label class="toggle"><input type="checkbox" id="equipPU" checked> Pull-up Bar</label>
-      </div>
-      <div class="row subtle">
-        <span>Seed:</span>
-        <input id="seedBox" type="number" value="1337" />
-        <button id="seedApply">Reseed</button>
-      </div>
+    <div class="row controls" style="margin-top:8px;">
+      <button id="prevBtn">◀ Prev</button>
+      <button id="todayBtn">Today</button>
+      <button id="nextBtn">Next ▶</button>
+    </div>
+    <div class="row">
+      <label class="meta" for="dayPicker">Day of Year:</label>
+      <input id="dayPicker" type="number" min="1" max="365" value="1" />
+      <button id="goBtn">Go</button>
+      <button id="copyLinkBtn">Copy Link</button>
     </div>
   </div>
 
-  <!-- WOD CARD -->
   <div class="card">
-    <div class="row" style="justify-content:space-between;align-items:center">
+    <div class="row" style="justify-content:space-between">
       <h2 id="wodTitle">Workout</h2>
       <div>
         <span class="pill" id="typePill"></span>
-        <span class="pill" id="timeDomain"></span>
-        <span class="pill" id="targetPill" title="Target time domain"></span>
+        <span class="pill" id="timePill"></span>
+        <span class="pill" id="targetPill"></span>
       </div>
     </div>
     <div id="wodBody"></div>
     <div class="meta" id="wodNotes" style="margin-top:8px;"></div>
   </div>
 
-  <!-- WARMUP + SCALING/Cooldown -->
-  <div class="card grid2">
-    <div>
-      <h3>Warm-Up (auto-suggested first)</h3>
-      <div id="warmups"></div>
-    </div>
-    <div>
-      <h3>Scaling, Loads & Cooldown</h3>
-      <div id="scaling"></div>
-      <div id="cooldown" style="margin-top:8px"></div>
-    </div>
-  </div>
-
-  <!-- BENCHMARK LIST -->
   <div class="card">
-    <details>
-      <summary><strong>Browse Benchmarks / Named WODs</strong></summary>
-      <div id="benchList" style="margin-top:8px;"></div>
-    </details>
+    <h3>Warm-Up</h3>
+    <div id="warmup"></div>
   </div>
 
-  <!-- WEEK VIEW -->
-  <div class="card week" id="weekView">
-    <h3>7-Day Preview</h3>
-    <div id="weekBody"></div>
+  <div class="card">
+    <h3>Cooldown</h3>
+    <div id="cooldown"></div>
   </div>
 
-  <button class="floatToday" id="backToday">Back to Today</button>
-
-  <div class="footer center meta">One-file app. 20–60 min workouts. Uses KB 53/35, DB 50s, rower, running, box (20/24/32), pull-up bar, jump rope.</div>
+  <div class="footer center meta">Gear: DB (2×50 lb), KB (53 & 35 single bells), rower, running, box 20/24/32, pull-up bar, rope.</div>
 </div>
 
 <script>
-/* ==================== UTILITIES ==================== */
+/* ---------- Helpers ---------- */
 function mulberry32(a){return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}}
 function choice(rng,arr){return arr[Math.floor(rng()*arr.length)]}
 function shuffle(rng,arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function dayOfYear(d){const start=new Date(Date.UTC(d.getFullYear(),0,1));const diff=(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-start);return Math.floor(diff/(24*60*60*1000))+1}
+function dayOfYear(d){const start=new Date(Date.UTC(d.getFullYear(),0,1));const diff=Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-start;return Math.floor(diff/(24*60*60*1000))+1}
 function fmtDate(d){return d.toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
-function clamp(n,min,max){return Math.max(min,Math.min(max,n))}
-const url=new URL(window.location);  // params live update later too
 
-/* ==================== STATE & PREFS ==================== */
-const PREF = {
-  rx: localStorage.getItem("wod_rx")==="1",
-  noRun: localStorage.getItem("wod_noRun")==="1",
-  equipRower: localStorage.getItem("equip_rower")!=="0",
-  equipRope: localStorage.getItem("equip_rope")!=="0",
-  equipPU: localStorage.getItem("equip_pu")!=="0",
-  seed: +(url.searchParams.get("seed") || localStorage.getItem("wod_seed") || 1337)
-};
+/* ---------- Loads tied to YOUR kit ---------- */
+const DB2H = "2×50 lb";        // double DB heavy (you own this)
+const DB1H = "1×50 lb";        // single DB (use for 'lighter' variants)
+const KB53 = "53 lb";          // single bell
+const KB35 = "35 lb";          // single bell
+const BOX  = '24"';
 
-/* ==================== EQUIPMENT & LOADS ==================== */
-const LOADS = {
-  db: { rx:"2×50 lb", sc:"2×35 lb", ez:"2×20 lb" },
-  kb: { rx:"53 lb", sc:"35 lb", ez:"26 lb" },
-  box: { std:'24"', low:'20"', high:'32"' }
-};
+/* ---------- One warm-up / one cooldown ---------- */
+const ONE_WARMUP = [
+  "8–10 min easy build: row or jog (progress each 2 min).",
+  `Then 2 rounds (quality): 8 KB swings (${KB35}), 6 lunges/leg, 15s active hang or kip swings, 8 push-ups.`
+].join("<br>");
+const ONE_COOLDOWN = [
+  "3–5 min easy walk/row to drop HR.",
+  "2× :45 couch stretch / side.",
+  "2× :30–:45 banded lat or passive hang.",
+  "Ankle rocks x10/side."
+].join("<br>");
 
-/* ==================== WARM-UPS ==================== */
-const WARMUPS = [
-  {name:"General 8-min Flow", tags:["run","row","rope","pull","push","squat"], body:[
-    "2 rounds (easy):",
-    "• 30s jump rope (single-unders)","• 10 air squats","• 10 scap pull-ups or ring rows",
-    "• 10 push-ups (hands elevated if needed)","• 5 inchworms + 5 hollow rocks"
-  ]},
-  {name:"Row / Run Prime (10 min)", tags:["run","row","hip","pull"], body:[
-    "Row or Run: easy → moderate → brisk → easy (2 min each)",
-    "Then 2 rounds: 8 KB swings (light), 6 lunges/leg, 5 kip swings"
-  ]},
-  {name:"Shoulders & Hips (9 min)", tags:["press","hinge","pull"], body:[
-    "3 rounds:","• 10 pass-throughs","• 10 glute bridges","• 10 KB deadlifts (light)",
-    "• 8 DB push press (light)","• 20s active hang (or row hold)"
-  ]},
-  {name:"Engine On (EMOM 8)", tags:["rope","burpee","squat","core"], body:[
-    "EMOM 8:","1) 30s jump rope + 5 burpees","2) 10 goblet squats (light) + 10 sit-ups"
-  ]},
-  {name:"Core & Kip (8 min)", tags:["pull","core"], body:[
-    "2 rounds: 8 hollow rocks, 8 arch rocks, 20s hang, 8 knee raises, 6 strict pull-ups (band ok)"
-  ]}
-];
-
-/* ==================== NAMED / BENCHMARK WODS ==================== */
-/* Long/time-domain friendly (20–60). Adapted to available gear. */
+/* ---------- Named WODs (adapted to your exact kit) ---------- */
 const BENCH = [
-  // Girls / Heroes (adapted)
-  {title:"Cindy", type:"AMRAP 20", time:"20", body:["• 5 Pull-ups","• 10 Push-ups","• 15 Air Squats"],
-   notes:"Classic bodyweight engine."},
-  {title:"Chelsea", type:"EMOM 30", time:"30", body:["Every minute for 30 min:","• 5 Pull-ups, 10 Push-ups, 15 Air Squats"],
-   notes:"If you die early, switch to EMOM 20 or reduce reps."},
-  {title:"Barbara (Half)", type:"For Time (5 rds)", time:"25–40", body:[
-    "5 rounds:","• 20 Pull-ups","• 30 Push-ups","• 40 Sit-ups","• 50 Air Squats","Rest 1 min between rounds"
-  ], notes:"Still spicy. Full Barbara is 5× (3 min rest)."},
-  {title:"Kelly", type:"For Time (5 rds)", time:"25–40", body:[
-    "5 rounds:","• 400m Run","• 30 Box Jumps — 24\"","• 30 DB Thrusters — 2×20 lb"
-  ], notes:"Wall balls swapped for light DB thrusters."},
-  {title:"Eva (Scaled)", type:"For Time (5 rds)", time:"35–55", body:[
-    "5 rounds:","• 800m Run","• 30 KB Swings — 53 lb","• 30 Pull-ups"
-  ], notes:"Drop to 3 rds if needed."},
-  {title:"Filthy Fifty (Home)", type:"For Time", time:"20–35", body:[
-    "50 each:","• Box Jumps — 24\"","• Jumping Pull-ups or Ring Rows","• KB Swings — 35 lb",
-    "• Walking Lunges (50 steps)","• K2E → V-ups","• Push Press — 2×20 lb","• Back Extensions → Supermans",
-    "• Wall Ball → DB Thrusters (2×20 lb)","• Burpees","• Double-unders (or 150 singles)"
-  ], notes:"Classic volume chipper."},
-  {title:"Chad (Scaled)", type:"For Time", time:"40–60", body:[
-    "• 1,000 Box Step-ups — 20\" (partition as needed)"
-  ], notes:"Ruck optional. Pace and protect Achilles."},
-  {title:"The Seven (DB)", type:"For Time (7 rds)", time:"30–50", body:[
-    "7 rounds:","• 7 HSPU → pike push-ups","• 7 Thrusters — 2×50 lb","• 7 Knees-to-Elbows → V-ups",
-    "• 7 Deadlifts — 2×50 lb","• 7 Burpees","• 7 KB Swings — 53 lb","• 7 Pull-ups"
-  ], notes:"Hero grinder."},
-  {title:"Badger (DB)", type:"For Time (3 rds)", time:"30–45", body:[
-    "3 rounds:","• 30 DB Squat Cleans — 2×35 lb","• 30 Pull-ups","• 800m Run"
-  ], notes:"Barbell replaced with DBs."},
-  {title:"Glen (Home)", type:"For Time", time:"45–60", body:[
-    "• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Sit-ups","• 1 mile Run"
-  ], notes:"Partition bodyweight. Cap ~60."},
-  {title:"Helen+ (5 rds)", type:"For Time (5 rds)", time:"20–30", body:[
-    "5 rounds:","• 400m Run","• 21 KB Swings — 53 lb","• 12 Pull-ups"
-  ], notes:"Classic Helen bumped to 5."},
-  {title:"Nicole (20-min)", type:"AMRAP 20", time:"20", body:[
-    "AMRAP 20:","• 400m Run","• Max Pull-ups (each round)"
-  ], notes:"Record pull-ups each round; total is score."},
-  // Open-style longer pieces
-  {title:"Open 20.2 (Home)", type:"AMRAP 20", time:"20", body:[
-    "AMRAP 20:","• 4 DB Thrusters — 2×50 lb","• 6 Toes-to-Bar → 10 V-ups","• 24 Double-unders (or 48 singles)"
-  ], notes:"T2B subbed. Keep breathing."},
-  {title:"Open 20.1 (DB/Burpee)", type:"For Time (10 rds)", time:"20–30", body:[
-    "10 rounds:","• 8 DB Ground-to-Overhead — 2×50 lb","• 10 Burpees (line-facing optional)"
-  ], notes:"Pace. Fast transitions."},
-  {title:"Open 22.2 (Home)", type:"For Time", time:"20–30", body:[
-    "1-2-3-…-10-…-3-2-1 reps:","• Deadlifts — 2×50 lb","• Bar-Facing Burpees → Regular Burpees"
-  ], notes:"Steady cadence; protect back."},
-  // Seasonal pins
-  {title:"12 Days of Christmas (Home)", type:"For Time", time:"30–50", body:[
-    "Perform like the song (1→12, then 12→1):",
-    "1 Burpee","2 KB Swings — 53 lb","3 DB Thrusters — 2×35 lb","4 Pull-ups","5 Box Jumps — 24\"",
-    "6 Sit-ups","7 Push-ups","8 Alt DB Snatches — 50 lb","9 Lunges / leg","10 Double-unders (or 30 singles)",
-    "11 KB Goblet Squats — 53 lb","12 Cal Row (or 200m run)"
-  ], notes:"Grippy, pace early."}
+  {title:"Cindy", type:"AMRAP", time:"20",
+   body:["As many rounds as possible in 20 min:","• 5 Pull-ups","• 10 Push-ups","• 15 Air Squats"],
+   notes:"Classic engine."},
+  {title:"Chelsea", type:"EMOM", time:"30",
+   body:["Every minute for 30 min:","• 5 Pull-ups, 10 Push-ups, 15 Air Squats"],
+   notes:"If you blow up, drop to 4/8/12 and keep the minute."},
+  {title:"Barbara (Half)", type:"For Time", time:"25–40",
+   body:["5 rounds:","• 20 Pull-ups","• 30 Push-ups","• 40 Sit-ups","• 50 Air Squats","Rest 1 min between rounds"],
+   notes:"Still grim."},
+  {title:"Kelly (Home)", type:"For Time", time:"25–40",
+   body:["5 rounds:","• 400m Run",`• 30 Box Jumps — ${BOX}`,`• 30 Goblet Thrusters — ${DB1H}`],
+   notes:"Wall balls → **single-DB goblet thrusters** (use the 50)."},
+  {title:"Eva (Scaled)", type:"For Time", time:"35–55",
+   body:["5 rounds:","• 800m Run",`• 30 KB Swings — ${KB53}`,"• 30 Pull-ups"],
+   notes:"Drop to 3 rds if needed."},
+  {title:"Filthy Fifty (Home)", type:"For Time", time:"25–40",
+   body:["50 each:",
+     `• Box Jumps — ${BOX}`,
+     "• Jumping Pull-ups or Ring Rows",
+     `• KB Swings — ${KB35}`,
+     "• Walking Lunges (50 steps)",
+     "• V-ups",
+     `• DB Push Press — ${DB1H} (switch arms as needed)`,
+     "• Supermans",
+     `• Goblet Thrusters — ${DB1H}`,
+     "• Burpees",
+     "• 150 Single-unders"],
+   notes:"Volume party; single-bell/single-DB only."},
+  {title:"Chad (Scaled)", type:"For Time", time:"40–60",
+   body:["• 1,000 Box Step-ups — 20\" (partition as needed)"],
+   notes:"Ruck optional; Achilles-friendly pace."},
+  {title:"The Seven (DB)", type:"For Time", time:"30–50",
+   body:["7 rounds:",
+     "• 7 Pike Push-ups",
+     `• 7 Thrusters — ${DB2H}`,
+     "• 7 V-ups",
+     `• 7 Deadlifts — ${DB2H}`,
+     "• 7 Burpees",
+     `• 7 KB Swings — ${KB53}`,
+     "• 7 Pull-ups"],
+   notes:"Hero grinder."},
+  {title:"Glen (Home)", type:"For Time", time:"45–60",
+   body:["• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Sit-ups","• 1 mile Run"],
+   notes:"Partition calisthenics. Cap 60."},
+  {title:"Helen+", type:"For Time", time:"20–30",
+   body:["5 rounds:","• 400m Run",`• 21 KB Swings — ${KB53}`,"• 12 Pull-ups"],
+   notes:"Helen, but 5 rounds."},
+  {title:"Nicole", type:"AMRAP", time:"20",
+   body:["AMRAP 20:","• 400m Run","• Max Pull-ups"],
+   notes:"Count total pull-ups."},
+  {title:"Open 17.1 / 21.2 (DB)", type:"For Time", time:"20–30",
+   body:["10-20-30-40-50 reps:",`• Alt DB Snatches — ${DB1H}`,`• Burpee Box Jump-Overs — ${BOX}`],
+   notes:"Step up is fine; keep moving."},
+  {title:"Open 20.2 (Home)", type:"AMRAP", time:"20",
+   body:["AMRAP 20:",`• 4 DB Thrusters — ${DB2H}`,"• 6 Toes-to-Bar → 10 V-ups","• 24 Double-unders (or 48 singles)"],
+   notes:"Heavy DBs; small sets, quick cycle."},
+  {title:"Open 22.2 (Home)", type:"For Time", time:"20–30",
+   body:["1-2-3-…-10-…-3-2-1:",`• Deadlifts — ${DB2H}`,"• Burpees"],
+   notes:"Back neutral, cadence burpees."},
+  {title:"12 Days of Christmas (Home)", type:"For Time", time:"30–50",
+   body:["Perform like the song (1→12, then 12→1):",
+     "1 Burpee",`2 KB Swings — ${KB53}`,`3 Goblet Thrusters — ${DB1H}`,"4 Pull-ups",`5 Box Jumps — ${BOX}`,
+     "6 Sit-ups","7 Push-ups",`8 Alt DB Snatches — ${DB1H}`,"9 Lunges / leg","10 Double-unders (or 30 singles)",
+     `11 KB Goblet Squats — ${KB53}`,"12 Cal Row (or 200m run)"],
+   notes:"Pace early."}
 ];
 
-/* Helper to find a named WOD index by title */
-function findBench(title){return BENCH.findIndex(b=>b.title===title)}
+/* ---------- Generators (20–60 min only, using YOUR kit) ---------- */
+const MONO = ["Run 400m","Run 600m","Run 800m","Run 1000m","Row 500m","Row 750m","Row 1000m","Row 1500m","150 Single-unders","100 Double-unders"];
+const GYM  = ["15 Pull-ups","20 Push-ups","25 Sit-ups","20 Air Squats","15 Burpees","12 Pike Push-ups","20 V-ups"];
+const DBB  = [
+  `16 DB Thrusters — ${DB2H}`,
+  `14 DB Push Press — ${DB2H}`,
+  `16 DB Front Squats — ${DB2H}`,
+  `14 DB Power Cleans — ${DB2H}`,
+  `20 DB Deadlifts — ${DB2H}`,
+  `20 Single-DB Goblet Squats — ${DB1H}`,
+  `16 Alt DB Snatches — ${DB1H}`
+];
+const KBB  = [
+  `25 KB Swings — ${KB53}`,
+  `20 KB Goblet Squats — ${KB53}`,
+  `14 KB Clean & Press (alt) — ${KB53}`,
+  `20 KB Swings — ${KB35}`
+];
+const BOXM = [
+  `20 Box Jumps — ${BOX}`,
+  `14 Burpee Box Jump-Overs — ${BOX}`
+];
 
-/* ==================== SCHEDULER (365d, long domains only) ==================== */
-/* Types cycle A (AMRAP 20–30 triplet), B (EMOM 24/30/36/40), C (Long chipper 24–45) */
-const MONO = ["Run 400m","Run 600m","Run 800m","Run 1000m","Row 500m","Row 750m","Row 1000m","Row 1500m",
-              "100 Double-unders","150 Single-unders","200 Single-unders"];
-const GYM  = ["15 Pull-ups","20 Push-ups","25 Sit-ups","20 Air Squats","15 Burpees","12 Pike Push-ups","12 Toes-to-Bar → 18 V-ups"];
-const DBB  = ["16 DB Thrusters — RX","14 DB Push Press — RX","16 DB Front Squats — RX","14 DB Power Cleans — RX","20 DB Deadlifts — RX","16 Alt DB Snatches — RX"];
-const KBB  = ["25 KB Swings — RX","20 KB Goblet Squats — RX","14 KB Clean & Press (alt) — RX"];
-const BOX  = ["20 Box Jumps — 24\"","14 Burpee Box Jump-Overs — 24\""];
-
-function replaceLoads(line, rxOn){
-  return line.replaceAll("— RX","— "+(rxOn?LOADS.db.rx:LOADS.db.sc))
-             .replaceAll("53 lb", (rxOn?LOADS.kb.rx:LOADS.kb.sc))
-}
-
-function applySubs(line, prefs){
-  let L=line;
-  if(prefs.noRun && /Run \d+m/.test(L)){
-    if(prefs.equipRower) L=L.replace(/Run (\d+)m/,"Row $1m");
-    else if(prefs.equipRope) L=L.replace(/Run (\d+)m/,"100 Single-unders");
-  }
-  if(!prefs.equipRower && /Row \d+m/.test(L)){
-    if(!prefs.noRun) L=L.replace(/Row (\d+)m/,"Run $1m");
-    else if(prefs.equipRope) L=L.replace(/Row (\d+)m/,"100 Single-unders");
-  }
-  if(!prefs.equipRope && /Double-unders|Single-unders/.test(L)){
-    L=L.replace(/[\d]+ Double-unders/,"Row 500m").replace(/[\d]+ Single-unders/,"Row 500m");
-  }
-  if(!prefs.equipPU && /Pull-ups/.test(L)){
-    L=L.replace(/Pull-ups/g,"Ring Rows");
-  }
-  return L;
-}
-
-function amrapLong(day,rng){
-  const mins = choice(rng,[20,24,30]);
+function amrapLong(rng){
+  const mins = choice(rng,[20,24,30,40]);
   const mono = choice(rng,MONO);
   const gym  = choice(rng,GYM);
-  const load = choice(rng, DBB.concat(KBB).concat(BOX));
-  return {
-    title:`AMRAP ${mins} — Long Triplet`,
-    type:"AMRAP", time:String(mins), pill:"typeA",
+  const load = choice(rng, DBB.concat(KBB).concat(BOXM));
+  return {title:`AMRAP ${mins} — Triplet`, type:"AMRAP", time:String(mins),
     body:[`As many rounds as possible in ${mins} minutes:`,`• ${mono}`,`• ${load}`,`• ${gym}`],
-    notes:"Aim even splits; ~2–3 min per round."
-  }
+    notes:"Aim ~2–3 min per round; smooth pacing."
+  };
 }
-function emomRotate(rng){
+
+function emomLong(rng){
   const mins = choice(rng,[24,30,36,40]);
   const s1 = choice(rng, DBB.concat(KBB));
-  const s2 = choice(rng, GYM.concat(BOX));
+  const s2 = choice(rng, GYM.concat(BOXM));
   const s3 = choice(rng, MONO);
-  return {
-    title:`EMOM ${mins} — 3-Station Rotate`,
-    type:"EMOM", time:String(mins), pill:"typeB",
-    body:[`Every minute for ${mins} min, rotate:`,`1) ${s1}`,`2) ${s2}`,`3) ${s3}`,"Pick reps to finish each minute in ~40–45s."],
-    notes:"Quality first. Hold windows."
-  }
+  return {title:`EMOM ${mins} — Rotate 3`, type:"EMOM", time:String(mins),
+    body:[`Every minute for ${mins} min, rotate:`,`1) ${s1}`,`2) ${s2}`,`3) ${s3}`,"Finish each minute in ~40–45s."],
+    notes:"Hold positions; quality > speed."
+  };
 }
-function longChipper(rng){
-  const base = shuffle(rng,[choice(rng,MONO),choice(rng,DBB.concat(KBB)),choice(rng,GYM),choice(rng,BOX),choice(rng,MONO)]);
-  const seq = base.concat(rng()<0.5?[choice(rng,GYM)]:[]);
+
+/* Long chipper: 8–12 movements, intended 30–60 min */
+function chipperLong(rng){
+  const pool = MONO.concat(DBB).concat(KBB).concat(GYM).concat(BOXM);
+  const count = choice(rng,[8,9,10,11,12]);
+  const seq = [];
+  const used = new Set();
+  // Guarantee variety: mono + DB/KB + gym + box
+  [choice(rng,MONO), choice(rng,DBB.concat(KBB)), choice(rng,GYM), choice(rng,BOXM)]
+    .forEach(m=>{seq.push(m); used.add(m)});
+  while(seq.length<count){
+    const pick = choice(rng,pool);
+    if(!used.has(pick)){ seq.push(pick); used.add(pick); }
+  }
   return {
     title:"Chipper — For Time (Long)",
-    type:"For Time", time:"24–45", pill:"typeC",
-    body:seq.map((x,i)=> (i===0?"Complete for time:":"• ")+x),
-    notes:"Break early. Smooth is fast; target 24–45 min."
-  }
+    type:"For Time",
+    time:"30–60",
+    body: seq.map((x,i)=> (i===0?"Complete for time:":"• ")+x),
+    notes:"Break small and keep moving. Target 30–60 min."
+  };
 }
 
-/* Benchmarks distribution + seasonal pins */
-function memorialDay(y){ // last Monday in May
-  const d=new Date(Date.UTC(y,4,31)); // May 31
-  const day=d.getUTCDay(); // 0 Sun..6 Sat
-  const delta=(day===1)?0:(day===0?6:day-1); // distance back to Monday
-  return 31-delta;
-}
+/* ---------- Year schedule (A=AMRAP, B=EMOM, C=Chipper) + benchmark drops ---------- */
+function memorialDayUTC(y){const last=new Date(Date.UTC(y,4,31));const dow=last.getUTCDay();const offset=(dow+6)%7;return 31-offset}
 function namedSchedule(year){
-  const map=new Map();
-  // Monthly cadence: drop one benchmark on the 10th of each month (or next available)
-  for(let m=0;m<12;m++){
-    const day = Math.min(365, Math.floor(new Date(Date.UTC(year,m,10))-Date.UTC(year,0,0))/(24*3600*1000));
-    map.set(day, m % BENCH.length);
-  }
-  // Extra every ~9 days so they show up often
-  let idx=0; for(let d=9; d<=365; d+=9){ map.set(d, idx++ % BENCH.length); }
-  // Pins
-  const md = memorialDay(year); // in May
+  const slots=new Map();
+  let idx=0; for(let d=8; d<=365; d+=9){ slots.set(d, idx++ % BENCH.length); }
+  const md = memorialDayUTC(year);
   const mdoy = Math.floor((Date.UTC(year,4,md)-Date.UTC(year,0,0))/(24*3600*1000));
-  map.set(mdoy, findBench("Murph (Partitioned)")>-1?findBench("Murph (Partitioned)"):findBench("Glen (Home)"));
+  slots.set(mdoy, BENCH.findIndex(b=>b.title==="Glen (Home)"));
   const xmas = Math.floor((Date.UTC(year,11,25)-Date.UTC(year,0,0))/(24*3600*1000));
-  map.set(xmas, findBench("12 Days of Christmas (Home)"));
-  return map;
+  slots.set(xmas, BENCH.findIndex(b=>b.title.startsWith("12 Days")));
+  return slots;
 }
-
-function buildYear(seed, year){
+function buildYear(){
   const out=new Array(365);
-  const rng=mulberry32(seed);
-  const slots=namedSchedule(year);
+  const rng=mulberry32(1337); // fixed schedule
+  const slots=namedSchedule(new Date().getFullYear());
   for(let d=1; d<=365; d++){
     if(slots.has(d)){
-      const b=BENCH[slots.get(d) % BENCH.length];
-      out[d-1]={title:b.title,type:b.type,time:b.time,pill:"typeA",body:b.body.slice(),notes:b.notes,named:true}
+      const b=BENCH[slots.get(d)];
+      out[d-1]={title:b.title,type:b.type,time:b.time,body:b.body.slice(),notes:b.notes,named:true};
     }else{
-      const typeIdx = (d-1)%3;
-      out[d-1] = (typeIdx===0)?amrapLong(d,rng):(typeIdx===1)?emomRotate(rng):longChipper(rng);
+      const t=(d-1)%3;
+      out[d-1]=(t===0)?amrapLong(rng):(t===1)?emomLong(rng):chipperLong(rng);
     }
   }
   return out;
 }
+const YEAR = buildYear();
 
-/* ==================== UI HOOKS ==================== */
+/* ---------- UI ---------- */
 const elTitle=document.getElementById("wodTitle");
 const elBody=document.getElementById("wodBody");
 const elNotes=document.getElementById("wodNotes");
-const elTodayStr=document.getElementById("todayStr");
-const elTypePill=document.getElementById("typePill");
-const elTD=document.getElementById("timeDomain");
+const elType=document.getElementById("typePill");
+const elTime=document.getElementById("timePill");
 const elTarget=document.getElementById("targetPill");
-const elWarmups=document.getElementById("warmups");
-const elScaling=document.getElementById("scaling");
-const elCooldown=document.getElementById("cooldown");
-const elBenchList=document.getElementById("benchList");
-const backToday=document.getElementById("backToday");
-const weekView=document.getElementById("weekView");
-const weekBody=document.getElementById("weekBody");
 
-function setTypePill(w){elTypePill.textContent=w.type; elTypePill.className="pill "+(w.pill||"typeA"); elTD.textContent=w.time||""}
-function paceHint(w){
-  if(w.type==="AMRAP"){ const m=+w.time||20; return `Target: ${m} min · ~2–3 min/round`; }
-  if(w.type==="EMOM"){ const m=+w.time||30; return `Target: ${m} min · finish each min in ~40–45s`; }
-  return "Target: 24–45 min · break early, steady pace";
-}
-
-function renderWarmups(recoTag){
-  // Show recommended first
-  const sorted = WARMUPS.slice().sort((a,b)=> (b.tags.includes(recoTag)?1:0)-(a.tags.includes(recoTag)?1:0));
-  elWarmups.innerHTML = sorted.map(w=>`
-    <div class="notice" style="margin-bottom:8px">
-      <div><strong>${w.name}${w.tags.includes(recoTag)?' — ★ recommended':''}</strong></div>
-      <div class="muted">${w.body.join("<br>")}</div>
-    </div>`).join("");
-}
-function renderScaling(){
-  const rx=PREF.rx;
-  const dbLoad = rx?LOADS.db.rx:LOADS.db.sc;
-  const kbLoad = rx?LOADS.kb.rx:LOADS.kb.sc;
-  elScaling.innerHTML = `
-    <div class="notice" style="margin-bottom:8px">
-      <div><strong>Default Loads</strong></div>
-      <div class="muted">DB: ${dbLoad} (EZ: ${LOADS.db.ez}), KB: ${kbLoad} (EZ: ${LOADS.kb.ez}), Box: ${LOADS.box.std} (low: ${LOADS.box.low})</div>
-    </div>
-    <ul>
-      <li><strong>Pull-ups:</strong> banded / jumping / ring rows to maintain quality.</li>
-      <li><strong>HSPU:</strong> pike push-ups or DB strict press (light).</li>
-      <li><strong>Rope:</strong> 2:1 singles or 30–60s practice if DU not available.</li>
-      <li><strong>Run/Row:</strong> 1:1 distance or equal time substitution.</li>
-      <li><strong>RX toggle:</strong> switches DB/KB loads across the page.</li>
-    </ul>`;
-}
-function cooldownFor(body){
-  const hasPull=/Pull-ups|Ring Rows/.test(body.join(" "));
-  const hasHinge=/Deadlifts|KB Swings|Power Cleans/.test(body.join(" "));
-  const hasSquat=/Squats|Thrusters|Lunges|Box Jumps/.test(body.join(" "));
-  const lines=[];
-  if(hasPull) lines.push("• 2× :30–:45 hang or banded lat stretch");
-  if(hasHinge) lines.push("• 2× :45 couch stretch + hamstring floss");
-  if(hasSquat) lines.push("• 2× 10 dragon squat rocks / ankle mobs");
-  lines.push("• Easy 3–5 min walk/row to down-regulate");
-  elCooldown.innerHTML = `<div class="notice"><strong>Cooldown</strong><div class="muted" style="margin-top:6px">${lines.join("<br>")}</div></div>`;
-}
-
-function renderBenchList(){
-  elBenchList.innerHTML = BENCH.map((b,i)=>`
-    <div class="notice" style="margin-bottom:8px">
-      <div><span class="bench">#${i+1} — ${b.title}</span> <span class="pill typeA">${b.type}</span> <span class="pill">${b.time}</span></div>
-      <div style="margin-top:6px">${b.body.map(l=>l.startsWith("•")||l.match(/rounds|For Time|AMRAP|EMOM|Rest|Perform/)?l:`• ${l}`).join("<br>")}</div>
-      <div class="meta" style="margin-top:6px">${b.notes||""}</div>
-    </div>`).join("");
-}
-
-function adaptLine(line){
-  const rxLine=replaceLoads(line,PREF.rx);
-  return applySubs(rxLine, PREF);
-}
-
-let YEAR = buildYear(PREF.seed, new Date().getFullYear());
+function paceHint(w){ return (w.type==="For Time")?"Target: 30–60 min":`Target: ${w.time} min`; }
 
 function renderDay(day){
-  const idx=day-1, src=YEAR[idx];
-  // Copy + adapt body for prefs
-  const body = src.body.map(adaptLine);
-  const w = {...src, body};
-  // Title + pills
-  elTitle.textContent = w.named ? `${w.title} (Benchmark)` : w.title;
-  setTypePill(w);
+  const w = YEAR[day-1];
+  elTitle.textContent = w.named? `${w.title} (Benchmark)` : w.title;
+  elType.textContent = w.type;
+  elTime.textContent = w.time;
   elTarget.textContent = paceHint(w);
-  // Body
-  let html="<ul>";
-  for(const L of w.body){ html += `<li>${L}</li>`; }
-  html+="</ul>";
-  elBody.innerHTML = html;
-  elNotes.textContent = w.notes||"";
-  // Warm-up recommendation
-  const rec = /Pull-ups|Ring Rows/.test(html) ? "pull" : (/Run|Row/.test(html)?"run":"press");
-  renderWarmups(rec);
-  renderScaling();
-  cooldownFor(w.body);
-  // Controls + url
+  elBody.innerHTML = "<ul>"+w.body.map(l=>`<li>${l}</li>`).join("")+"</ul>";
+  elNotes.textContent = w.notes || "";
   document.getElementById("dayPicker").value = day;
-  const u=new URL(window.location); u.searchParams.set("day",String(day)); u.searchParams.set("seed",String(PREF.seed)); history.replaceState({}, "", u);
-  // Floating Back-to-Today
-  const today=((dayOfYear(new Date())-1)%365)+1;
-  backToday.style.display = (day===today) ? "none":"block";
+  const u=new URL(location); u.searchParams.set("day",String(day)); history.replaceState({}, "", u);
 }
 
-function renderWeek(startDay){
-  const days=[0,1,2,3,4,5,6].map(x=> ((startDay-1+x)%365)+1);
-  weekBody.innerHTML = days.map(d=>{
-    const w=YEAR[d-1];
-    const li=w.body.map(adaptLine).map(L=>`<li>${L}</li>`).join("");
-    return `<div style="margin:10px 0;padding:10px;border:1px solid #2a3345;border-radius:8px">
-      <div><strong>Day ${d}</strong> — ${w.named?`${w.title} (Benchmark)`:w.title} <span class="pill">${w.type}</span> <span class="pill">${w.time}</span></div>
-      <ul style="margin-top:6px">${li}</ul>
-    </div>`;
-  }).join("");
-}
-
-/* ==================== INIT ==================== */
 function getInitialDay(){
-  const qp = url.searchParams.get("day");
-  if(qp){ return clamp(parseInt(qp,10)||1,1,365); }
-  const doy=((dayOfYear(new Date())-1)%365)+1; // leap-year guard
+  const qp=new URL(location).searchParams.get("day");
+  if(qp){ const n=Math.max(1,Math.min(365,parseInt(qp,10)||1)); return n; }
+  const doy=((dayOfYear(new Date())-1)%365)+1; // leap-year wrap
   return doy;
 }
 
 function init(){
-  const d=new Date(); elTodayStr.textContent=fmtDate(d);
-  document.getElementById("seedBox").value = PREF.seed;
-  document.getElementById("rxToggle").checked = PREF.rx;
-  document.getElementById("noRunToggle").checked = PREF.noRun;
-  document.getElementById("equipRower").checked = PREF.equipRower;
-  document.getElementById("equipRope").checked = PREF.equipRope;
-  document.getElementById("equipPU").checked = PREF.equipPU;
+  document.getElementById("todayStr").textContent = fmtDate(new Date());
+  document.getElementById("warmup").innerHTML = `<div class="notice">${ONE_WARMUP}</div>`;
+  document.getElementById("cooldown").innerHTML = `<div class="notice">${ONE_COOLDOWN}</div>`;
 
-  renderBenchList();
-  const startDay=getInitialDay();
-  renderDay(startDay);
-
-  document.getElementById("prevBtn").onclick=()=>{const cur=+document.getElementById("dayPicker").value; renderDay(cur<=1?365:cur-1)};
-  document.getElementById("nextBtn").onclick=()=>{const cur=+document.getElementById("dayPicker").value; renderDay(cur>=365?1:cur+1)};
-  document.getElementById("todayBtn").onclick=()=>{renderDay(((dayOfYear(new Date())-1)%365)+1)};
-  document.getElementById("goBtn").onclick=()=>{const n=clamp(+document.getElementById("dayPicker").value||1,1,365); renderDay(n)};
-  document.getElementById("copyLinkBtn").onclick=async()=>{try{await navigator.clipboard.writeText(location.href); alert("Link copied.");}catch(e){alert("Copy failed; copy URL bar manually.")}};
-  document.getElementById("weekBtn").onclick=()=>{weekView.style.display=weekView.style.display==="block"?"none":"block"; renderWeek(+document.getElementById("dayPicker").value)};
-  backToday.onclick=()=>{renderDay(((dayOfYear(new Date())-1)%365)+1)};
-
-  // Pref toggles
-  document.getElementById("rxToggle").onchange=(e)=>{PREF.rx=e.target.checked; localStorage.setItem("wod_rx",PREF.rx?"1":"0"); renderDay(+document.getElementById("dayPicker").value)};
-  document.getElementById("noRunToggle").onchange=(e)=>{PREF.noRun=e.target.checked; localStorage.setItem("wod_noRun",PREF.noRun?"1":"0"); renderDay(+document.getElementById("dayPicker").value)};
-  document.getElementById("equipRower").onchange=(e)=>{PREF.equipRower=e.target.checked; localStorage.setItem("equip_rower",PREF.equipRower?"1":"0"); renderDay(+document.getElementById("dayPicker").value)};
-  document.getElementById("equipRope").onchange=(e)=>{PREF.equipRope=e.target.checked; localStorage.setItem("equip_rope",PREF.equipRope?"1":"0"); renderDay(+document.getElementById("dayPicker").value)};
-  document.getElementById("equipPU").onchange=(e)=>{PREF.equipPU=e.target.checked; localStorage.setItem("equip_pu",PREF.equipPU?"1":"0"); renderDay(+document.getElementById("dayPicker").value)};
-  document.getElementById("seedApply").onclick=()=>{const s=+document.getElementById("seedBox").value||1337; PREF.seed=s; localStorage.setItem("wod_seed",String(s)); YEAR=buildYear(PREF.seed,new Date().getFullYear()); renderDay(getInitialDay())};
+  const start=getInitialDay(); renderDay(start);
+  document.getElementById("prevBtn").onclick=()=>{const cur=+document.getElementById("dayPicker").value; renderDay(cur<=1?365:cur-1);};
+  document.getElementById("nextBtn").onclick=()=>{const cur=+document.getElementById("dayPicker").value; renderDay(cur>=365?1:cur+1);};
+  document.getElementById("todayBtn").onclick=()=>{renderDay(((dayOfYear(new Date())-1)%365)+1);};
+  document.getElementById("goBtn").onclick=()=>{const n=Math.max(1,Math.min(365,+document.getElementById("dayPicker").value||1)); renderDay(n);};
+  document.getElementById("copyLinkBtn").onclick=async()=>{try{await navigator.clipboard.writeText(location.href); alert("Link copied.");}catch(e){alert("Copy failed; copy from the URL bar.");}};
 }
-
 document.addEventListener("DOMContentLoaded", init);
 </script>
 </body>
