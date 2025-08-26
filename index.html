@@ -49,7 +49,7 @@
   .cal .hdr-btn:hover{border-color:var(--accent)}
   .cal .label{font-weight:700;color:#e8eaf0}
   .cal .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:8px}
-  .cal .dow{font-size:12px;color:var(--muted);text-align:center}
+  .cal .dow{font-size:12px;color:#aab0c0;text-align:center}
   .cal .day{font-size:13px;text-align:center;padding:6px 0;border-radius:8px;border:1px solid transparent;cursor:pointer}
   .cal .day:hover{border-color:var(--accent);background:#0d1320}
   .cal .muted{opacity:.4}
@@ -111,6 +111,7 @@
 /* ========= UTIL ========= */
 function mulberry32(a){return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}}
 function choice(rng,arr){return arr[Math.floor(rng()*arr.length)]}
+function shuffleInPlace(rng,arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
 function clamp(n,min,max){return Math.max(min,Math.min(max,n))}
 function daysInYear(y){return ((y%4===0 && y%100!==0) || (y%400===0)) ? 366 : 365;}
 function doyFromDate(dt){const start=new Date(dt.getFullYear(),0,1); return Math.floor((dt - start)/86400000)+1;}
@@ -130,8 +131,8 @@ const ONE_COOLDOWN =
   `Ankle rocks x10/side.`;
 
 /* ========= KNOWN WODS + TRIBUTES FROM EXTERNAL FILE ========= */
-const BENCH = Array.isArray(window.WOD_BANK) ? window.WOD_BANK : [];
-const TRIBUTES = window.WOD_TRIBUTES || {};
+let BENCH = [];     // filled at init, after confirming wods.js
+let TRIBUTES = {};  // filled at init
 
 /* ========= GENERATORS (20–60 mins; chipper weekly) ========= */
 const MONO=["Run 400m","Run 600m","Run 800m","Run 1000m","Row 500m","Row 750m","Row 1000m","Row 1500m","150 Single-unders","100 Double-unders","Shuttle Run 200m"];
@@ -222,6 +223,7 @@ function chipperLong(rng){
 }
 
 /* ========= PINS (Holidays & Hero memorial dates) =========
+   Local dates:
    - Memorial Day (last Monday in May)  → Murph
    - Sept 11 → Glen (Home)
    - Nov 11 (Veterans Day) → Chad 1000X (24")
@@ -231,56 +233,68 @@ function chipperLong(rng){
 function lastMondayOfMayLocal(year){
   const last=new Date(year,4,31); // May 31 local
   const dow=last.getDay();        // 0..6
-  const offset=(dow+6)%7;         // back to Monday
+  const offset=(dow+6)%7;
   return 31-offset;
 }
 function localDOY(year,month,day){ // month 0..11
   const d=new Date(year,month,day);
   return Math.floor((d - new Date(year,0,0))/86400000);
 }
+function pinIndexByTitle(title){
+  return BENCH.findIndex(b=>b.title===title);
+}
 function buildPins(year){
   const pins=new Map();
-  const pin=(month,day,title)=>{
-    const idx=BENCH.findIndex(b=>b.title===title);
+  const put=(month,day,title)=>{
+    const idx=pinIndexByTitle(title);
     if(idx>-1) pins.set(localDOY(year,month,day), idx);
   };
-  // Memorial Day (last Monday of May)
-  pin(4, lastMondayOfMayLocal(year), "Murph");
-  // Sept 11
-  pin(8, 11, "Glen (Home)");
-  // Veterans Day
-  pin(10, 11, 'Chad 1000X (24")');
-  // July 4
-  pin(6, 4, 'Kalsu (DB Thruster)');
-  // Christmas
-  pin(11, 25, '12 Days of Christmas (Home)');
+  put(4, lastMondayOfMayLocal(year), "Murph");
+  put(8, 11, "Glen (Home)");
+  put(10, 11, 'Chad 1000X (24")');
+  put(6, 4, 'Kalsu (DB Thruster)');
+  put(11, 25, '12 Days of Christmas (Home)');
   return pins;
 }
 
-/* ========= Schedule builder =========
-   1) Place pins first.
-   2) Sprinkle EVERY known WOD from wods.js exactly once across remaining days (even spacing).
-   3) Remaining days use generators with a 3-day movement guard; 1 chipper/week (Sun).
-*/
-function buildSchedule(year,days){
-  const schedule = buildPins(year);                // Map<doy, benchIndex>
-  // Build list of open days (1..days)
-  const open=[];
-  for(let d=1; d<=days; d++){ if(!schedule.has(d)) open.push(d); }
-
-  // Evenly distribute all known WODs across open days
-  const N = Math.min(BENCH.length, open.length);
-  if(N>0){
-    const spacing = open.length / N;
-    for(let i=0; i<N; i++){
-      const pos = Math.min(open.length-1, Math.floor(i*spacing + spacing/2));
-      const day = open[pos];
-      schedule.set(day, i); // i maps to BENCH[i]
+/* Sprinkle EVERY named WOD once (even spacing, deterministic shuffle) */
+function distributeNamed(openDays, rng){
+  const N = Math.min(BENCH.length, openDays.length);
+  const order = [...Array(BENCH.length).keys()];
+  shuffleInPlace(rng, order);                 // shuffle which named WOD comes first
+  const used = new Set();
+  const map = new Map();
+  if(N===0) return map;
+  for(let i=0;i<N;i++){
+    const pos = Math.floor((i + 0.5) * openDays.length / N);
+    // find nearest unused day to pos
+    let k = pos, step = 1;
+    while(k>=0 && k<openDays.length && used.has(k)) { k = pos + (step%2?step:-step); step++; }
+    if(k<0 || k>=openDays.length){ // fallback linear scan
+      for(let j=0;j<openDays.length;j++){ if(!used.has(j)){ k=j; break; } }
     }
+    used.add(k);
+    map.set(openDays[k], order[i]); // day -> BENCH index
   }
+  return map;
+}
+
+/* Build full-year schedule */
+function buildSchedule(year,days){
+  const pins = buildPins(year);                 // Map<doy, benchIndex>
+  const open=[];
+  for(let d=1; d<=days; d++){ if(!pins.has(d)) open.push(d); }
+
+  // Even spread of all named WODs across open days
+  const rng=mulberry32(1337);
+  const spread = distributeNamed(open, rng);
+  // Merge pins first, then spread
+  const schedule = new Map(pins);
+  spread.forEach((v,k)=> schedule.set(k,v));
   return schedule;
 }
 
+/* Guard to avoid smashing same modality 3 days in a row */
 function tagBody(lines){
   const t=lines.join(" ");
   return {
@@ -299,6 +313,8 @@ function violates(tags,p1,p2){
   if(tags.mono && p1 && p2 && p1.mono && p2.mono) return true;
   return false;
 }
+
+let YEAR=[]; // filled after WODs load
 
 function buildYear(year){
   const days=daysInYear(year);
@@ -340,16 +356,34 @@ const cal=document.getElementById("cal");
 
 let currentDate=new Date();
 let currentYear=currentDate.getFullYear();
-let YEAR=buildYear(currentYear);
 
-/* ========= Renderers ========= */
+/* Commemorative override at render-time (belt & suspenders) */
+function pinnedOverrideForDate(dt){
+  const y=dt.getFullYear(), m=dt.getMonth(), d=dt.getDate();
+  const want = (m===4 && d===lastMondayOfMayLocal(y)) ? "Murph"
+             : (m===8 && d===11) ? "Glen (Home)"
+             : (m===10 && d===11) ? 'Chad 1000X (24")'
+             : (m===6 && d===4) ? 'Kalsu (DB Thruster)'
+             : (m===11 && d===25) ? '12 Days of Christmas (Home)'
+             : null;
+  if(!want) return null;
+  const idx = pinIndexByTitle(want);
+  if(idx<0) return null;
+  const b = BENCH[idx];
+  return {title:b.title,type:b.type,time:b.time,body:b.body.slice(),notes:b.notes,named:true};
+}
+
 function isCommemorative(title){return TRIBUTES && TRIBUTES[title]!==undefined;}
 function paceHint(w){return (w.type==="For Time")?"Target: 30–60 min":`Target: ${w.time} min`;}
 
 function renderByDate(dt){
   if(dt.getFullYear()!==currentYear){ currentYear=dt.getFullYear(); YEAR=buildYear(currentYear); }
   const doy=doyFromDate(dt); const days=daysInYear(currentYear);
-  const dayIndex=clamp(doy,1,days); const w=YEAR[dayIndex-1];
+  let w=YEAR[clamp(doy,1,days)-1];
+
+  // Force commemoratives on their dates even if something weird happens
+  const forced = pinnedOverrideForDate(dt);
+  if(forced) w = forced;
 
   dateChip.textContent = fmtDate(dt);
   elTitle.textContent = w.named? `${w.title} (Benchmark)` : w.title;
@@ -365,12 +399,11 @@ function renderByDate(dt){
   if(cal.classList.contains('show')) buildCalendar(currentDate.getFullYear(), currentDate.getMonth());
 }
 
-/* ========= Calendar (custom; stopPropagation so it doesn’t auto-close) ========= */
+/* ========= Calendar ========= */
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
 const DOW=["S","M","T","W","T","F","S"];
 
 function buildCalendar(year, month){
-  const calEl = cal;
   const first=new Date(year,month,1);
   const firstDow=first.getDay();
   const daysThis=new Date(year,month+1,0).getDate();
@@ -400,20 +433,19 @@ function buildCalendar(year, month){
   const need = (7 - (used % 7)) % 7;
   for(let i=1;i<=need;i++) html += `<div class="day muted">${i}</div>`;
   html += `</div>`;
-  calEl.innerHTML = html;
+  cal.innerHTML = html;
 
-  // Bind with stopPropagation
   document.getElementById('calPrev').onclick=(ev)=>{
     ev.stopPropagation();
-    const m=month-1, y = m<0? year-1: year, nm = m<0? 11: m;
+    const m=currentDate.getMonth()-1, y = m<0? currentDate.getFullYear()-1: currentDate.getFullYear(), nm = m<0? 11: m;
     buildCalendar(y, nm);
   };
   document.getElementById('calNext').onclick=(ev)=>{
     ev.stopPropagation();
-    const m=month+1, y = m>11? year+1: year, nm = m>11? 0: m;
+    const m=currentDate.getMonth()+1, y = m>11? currentDate.getFullYear()+1: currentDate.getFullYear(), nm = m>11? 0: m;
     buildCalendar(y, nm);
   };
-  calEl.querySelectorAll('.day[data-day]').forEach(el=>{
+  cal.querySelectorAll('.day[data-day]').forEach(el=>{
     el.onclick=(ev)=>{
       ev.stopPropagation();
       const day=Number(el.getAttribute('data-day'));
@@ -422,7 +454,6 @@ function buildCalendar(year, month){
     };
   });
 }
-
 function openCalendar(){
   buildCalendar(currentDate.getFullYear(), currentDate.getMonth());
   cal.classList.add('show'); cal.setAttribute('aria-hidden','false');
@@ -437,58 +468,80 @@ function outsideClose(e){
   if(!inside && e.target!==dateChip){ closeCalendar(); }
 }
 
-/* ========= Init ========= */
+/* ========= Ensure wods.js is loaded, then init ========= */
+function ensureWodsLoaded(next){
+  if(Array.isArray(window.WOD_BANK) && window.WOD_BANK.length){
+    BENCH = window.WOD_BANK;
+    TRIBUTES = window.WOD_TRIBUTES || {};
+    next(); return;
+  }
+  // Recovery attempt: inject script if missing
+  const s=document.createElement('script'); s.src='wods.js'; s.onload=()=>{
+    if(Array.isArray(window.WOD_BANK) && window.WOD_BANK.length){
+      BENCH = window.WOD_BANK; TRIBUTES = window.WOD_TRIBUTES || {}; next();
+    }else{
+      console.warn('wods.js loaded but WOD_BANK missing/empty.');
+      BENCH = []; TRIBUTES = {}; next();
+    }
+  };
+  s.onerror=()=>{ console.warn('Failed to load wods.js'); BENCH=[]; TRIBUTES={}; next(); };
+  document.head.appendChild(s);
+}
+
 function init(){
   document.getElementById("warmup").innerHTML = ONE_WARMUP;
   document.getElementById("cooldown").innerHTML = ONE_COOLDOWN;
 
-  renderByDate(new Date());
+  ensureWodsLoaded(()=>{
+    YEAR = buildYear(currentYear);
+    renderByDate(new Date());
 
-  document.getElementById("prevBtn").onclick=()=>{ const d=new Date(currentDate); d.setDate(d.getDate()-1); renderByDate(d); };
-  document.getElementById("nextBtn").onclick=()=>{ const d=new Date(currentDate); d.setDate(d.getDate()+1); renderByDate(d); };
-  document.getElementById("todayBtn").onclick=()=>{ renderByDate(new Date()); };
+    document.getElementById("prevBtn").onclick=()=>{ const d=new Date(currentDate); d.setDate(d.getDate()-1); renderByDate(d); };
+    document.getElementById("nextBtn").onclick=()=>{ const d=new Date(currentDate); d.setDate(d.getDate()+1); renderByDate(d); };
+    document.getElementById("todayBtn").onclick=()=>{ renderByDate(new Date()); };
 
-  dateChip.addEventListener('click', (e)=>{
-    e.stopPropagation();
-    if(cal.classList.contains('show')) closeCalendar(); else openCalendar();
+    dateChip.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      if(cal.classList.contains('show')) closeCalendar(); else openCalendar();
+    });
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && cal.classList.contains('show')) closeCalendar(); });
+
+    // PWA manifest + service worker
+    const icon192 = document.querySelector('link[rel="apple-touch-icon"]').href;
+    const manifest = {
+      name: "BAMBAM — Daily WOD",
+      short_name: "Daily WOD",
+      start_url: "./",
+      display: "standalone",
+      background_color: "#0f1115",
+      theme_color: "#0f1115",
+      icons: [
+        { src: icon192, sizes: "192x192", type: "image/png" },
+        { src: icon192, sizes: "512x512", type: "image/png" }
+      ]
+    };
+    const manBlob = new Blob([JSON.stringify(manifest)], {type:"application/manifest+json"});
+    const manLink = document.createElement('link'); manLink.rel='manifest'; manLink.href=URL.createObjectURL(manBlob);
+    document.head.appendChild(manLink);
+
+    if('serviceWorker' in navigator){
+      const swCode = `
+        const CACHE='bb-wod-v1';
+        self.addEventListener('install',e=>{
+          e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./'])));
+          self.skipWaiting();
+        });
+        self.addEventListener('activate',e=>{ self.clients.claim(); });
+        self.addEventListener('fetch',e=>{
+          const req=e.request;
+          if(req.mode==='navigate'){ e.respondWith(fetch(req).catch(()=>caches.match('./'))); return; }
+          e.respondWith(caches.match(req).then(r=>r||fetch(req)));
+        });
+      `;
+      const swURL = URL.createObjectURL(new Blob([swCode], {type:'text/javascript'}));
+      navigator.serviceWorker.register(swURL, {scope:'./'}).catch(()=>{});
+    }
   });
-  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && cal.classList.contains('show')) closeCalendar(); });
-
-  // PWA manifest + service worker
-  const icon192 = document.querySelector('link[rel="apple-touch-icon"]').href;
-  const manifest = {
-    name: "BAMBAM — Daily WOD",
-    short_name: "Daily WOD",
-    start_url: "./",
-    display: "standalone",
-    background_color: "#0f1115",
-    theme_color: "#0f1115",
-    icons: [
-      { src: icon192, sizes: "192x192", type: "image/png" },
-      { src: icon192, sizes: "512x512", type: "image/png" }
-    ]
-  };
-  const manBlob = new Blob([JSON.stringify(manifest)], {type:"application/manifest+json"});
-  const manLink = document.createElement('link'); manLink.rel='manifest'; manLink.href=URL.createObjectURL(manBlob);
-  document.head.appendChild(manLink);
-
-  if('serviceWorker' in navigator){
-    const swCode = `
-      const CACHE='bb-wod-v1';
-      self.addEventListener('install',e=>{
-        e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./'])));
-        self.skipWaiting();
-      });
-      self.addEventListener('activate',e=>{ self.clients.claim(); });
-      self.addEventListener('fetch',e=>{
-        const req=e.request;
-        if(req.mode==='navigate'){ e.respondWith(fetch(req).catch(()=>caches.match('./'))); return; }
-        e.respondWith(caches.match(req).then(r=>r||fetch(req)));
-      });
-    `;
-    const swURL = URL.createObjectURL(new Blob([swCode], {type:'text/javascript'}));
-    navigator.serviceWorker.register(swURL, {scope:'./'}).catch(()=>{});
-  }
 }
 document.addEventListener("DOMContentLoaded", init);
 </script>
