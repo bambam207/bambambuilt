@@ -1,28 +1,27 @@
-/* wods.js — ALL known WODs (100+), adapted to your gear
-   Gear covered: jump rope (DU/SU), 2×50 lb DBs, KB 53 & 35, rower, running,
-   box jumps (20/24/32), pull-up bar (PU/C2B/BMU), bodyweight, wall ball.
-   Exports:
-     window.WOD_BANK      = [ {title,type,time,body:[...],notes?}, ... ]
-     window.WOD_TRIBUTES  = { "Murph":"...", "Glen (Home)":"...", ... }
-     window.WOD_DATE_MAP  = { "MM-DD":"Title or Index", ... }  (optional)
+/* ===========================
+   wods.js  —  Bambam Built
+   ===========================
+   Exposes:
+     window.WOD_BANK       -> array of known WOD objects
+     window.WOD_TRIBUTES   -> { title : short story }
+     window.WOD_DATE_MAP   -> { "MM-DD": "Title" } optional pins
+   Your index.html already reads these.
 */
 
-/* Optional explicit date overrides (your app already pins the big ones).
-   Keys MUST be "MM-DD" (two digits each). Leave this object in place; edit if you want more pins.
-*/
+/* ---- Optional date pins (MM-DD) ---- */
 window.WOD_DATE_MAP = {
-  "09-11": "Glen (Home)",
-  "11-11": 'Chad 1000X (24")',
-  "07-04": "Kalsu (DB Thruster)",
+  "09-11": "Glen (Home)",             // Sept 11 — Glen Doherty
+  "11-11": 'Chad 1000X (24")',        // Veterans Day — Chad
+  "07-04": "Kalsu (DB Thruster)",     // July 4 — Kalsu
   "12-25": "12 Days of Christmas (Home)"
 };
 
-(function(){
-  const DB1 = "1×50 lb", DB2 = "2×50 lb", KB53 = "53 lb", KB35 = "35 lb", BOX='24"';
-  const W=(title,type,time,body,notes="")=>({title,type,time,body,notes});
+(function () {
+  const DB1 = "1×50 lb", DB2 = "2×50 lb", KB53 = "53 lb", KB35 = "35 lb", BOX = '24"';
+  const W = (title, type, time, body, notes = "") => ({ title, type, time, body, notes });
 
   /* ============================== GIRLS ============================== */
-  const GIRLS=[
+  const GIRLS = [
     W("Angie","For Time","20–40",["For time:","• 100 Pull-ups","• 100 Push-ups","• 100 Sit-ups","• 100 Air Squats"],"Partition as needed."),
     W("Annie","For Time","10–20",["For time:","• 50-40-30-20-10 Double-unders","• 50-40-30-20-10 Sit-ups"],"If <20, add 800m jog."),
     W("Barbara","For Time (5 rds)","40–50",["5 rounds:","• 20 Pull-ups","• 30 Push-ups","• 40 Sit-ups","• 50 Air Squats","Rest 3 min"],"Even splits."),
@@ -53,7 +52,7 @@ window.WOD_DATE_MAP = {
   ];
 
   /* ============================== HEROES ============================== */
-  const HEROES=[
+  const HEROES = [
     W("Murph","For Time","40–60",["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Air Squats","• 1 mile Run"],"Partition as needed."),
     W("Glen (Home)","For Time","45–60",["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Sit-ups","• 1 mile Run"],"Partition calisthenics."),
     W("Michael (Home)","For Time (3 rds)","20–35",["3 rounds:","• 800m Run","• 50 Sit-ups","• 50 Supermans"],"Back ext sub."),
@@ -69,7 +68,7 @@ window.WOD_DATE_MAP = {
     W("Ryan (BMU+Burpee)","5 RFT","20–35",["5 rounds:","• 7 Bar Muscle-ups","• 21 Burpees"],"Bar MU."),
     W("Erin (DB)","For Time (5 rds)","30–45",["5 rounds:","• 15 DB Split Cleans — "+DB1,"• 21 Pull-ups"],"DB split clean."),
     W("Danny (DB PP)","AMRAP 20","20",["AMRAP 20:","• 30 Box Jumps — "+BOX,"• 20 DB Push Press — "+DB2,"• 30 Pull-ups"],"DB for 115#."),
-    W("Hansen (Sub GHD)","For Time (5 rds)","25–45",["5 rounds:","• 30 KB Swings — "+KB53","• 30 Burpees","• 30 Sit-ups"],"Sit-ups for GHD."),
+    W("Hansen (Sub GHD)","For Time (5 rds)","25–45",["5 rounds:","• 30 KB Swings — "+KB53,"• 30 Burpees","• 30 Sit-ups"],"Sit-ups for GHD."),
     W("Loredo","For Time (6 rds)","25–45",["6 rounds:","• 24 Air Squats","• 24 Push-ups","• 24 Walking Lunges","• 400m Run"],"Bodyweight + run."),
     W("Gallant (WB/Run)","For Time","25–45",["For time:","• 1 km Run","• 60 Burpees","• 800m Run","• 30 Wall Balls","• 400m Run"],"WB + running."),
     W("Weston (DB Carry)","For Time (5 rds)","30–50",["5 rounds:","• 100m DB Farmers Carry — "+DB2,"• 100m DB Front Rack Carry — "+DB2,"• 100m DB Overhead Carry — "+DB1],"Measure distance."),
@@ -93,14 +92,14 @@ window.WOD_DATE_MAP = {
     W("Roy (DB DL)","For Time (5 rds)","25–45",["5 rounds:","• 15 DB Deadlifts — "+DB2,"• 20 Box Jumps — "+BOX,"• 25 Pull-ups"],"DB for 225#."),
     W("Holleyman (DB Clean)","For Time (30 rds)","30–50",["30 rounds:","• 5 Wall Balls","• 3 Handstand Push-ups","• 1 DB Clean — "+DB2],"DB clean for 225#."),
     W("McGhee (DB DL)","AMRAP 30","30",["AMRAP 30:","• 5 DB Deadlifts — "+DB2,"• 13 Push-ups","• 9 Box Jumps — "+BOX],"DB for 275#."),
-    W("Kalsu (DB Thruster)","For Time","30–60",["For time:","• 100 DB Thrusters — "+DB2","At the top of every minute: 5 Burpees"],"DB thruster variant."),
-    W('Chad 1000X (24")',"For Time","30–60",["For time:","• 1,000 Box Step-ups — "+BOX],"Add ruck if desired."),
+    W("Kalsu (DB Thruster)","For Time","30–60",["For time:","• 100 DB Thrusters — "+DB2,"At the top of every minute: 5 Burpees"],"DB thruster variant."),
+    W('Chad 1000X (24")',"For Time","30–60",[ "For time:","• 1,000 Box Step-ups — "+BOX ],"Add ruck if desired."),
     W("Luce","For Time (3 rds)","25–45",["3 rounds:","• 1000m Run","• 10 Bar Muscle-ups","• 100 Air Squats"],"BMU allowed on PU bar."),
     W("Jared (BW)","For Time (4 rds)","25–45",["4 rounds:","• 800m Run","• 40 Pull-ups","• 70 Push-ups"],"Bodyweight engine.")
   ];
 
-  /* ============================== OPEN (DB/Box/PU/DU/WB/Row/Run variants) ============================== */
-  const OPEN=[
+  /* ============================== OPEN (adapted) ============================== */
+  const OPEN = [
     W("Open 11.1 / 14.1 (DB)","AMRAP 10","20 (cap)",["AMRAP 10:","• 30 Double-unders","• 15 Alt DB Snatches — "+DB1],"DB swap for barbell."),
     W("Open 12.1","AMRAP 7","20 (cap)",["AMRAP 7:","• Burpees"],"Add easy row to hit ≥20."),
     W("Open 13.1 (DB)","AMRAP 17","20",["Burpee ladder + Alt DB Snatches — "+DB1],"Keep moving."),
@@ -146,8 +145,8 @@ window.WOD_DATE_MAP = {
     W("Open 23.3 (DB)","For Time (3 parts)","12–25",["Wall Walks / DU / DB Snatch","Then Strict HSPU","Then Bar MU"],"Adapt part loads.")
   ];
 
-  /* ============================== OTHER CLASSICS / BENCHMARKS ============================== */
-  const OTHER=[
+  /* ============================== OTHER / CLASSICS ============================== */
+  const OTHER = [
     W("Fight Gone Bad (3 rnd)","AMRAP (Reps)","17",["3 rounds, 1 min stations:","• Wall Balls","• Sumo DL High Pull — "+DB1,"• Box Jumps — "+BOX,"• Push Press — "+DB1,"• Row (Calories)","Rest 1 min"],"Score = total reps."),
     W("Filthy Fifty (Home)","Chipper","30–45",["50 each:","• Box Jumps — "+BOX,"• Jumping Pull-ups","• KB Swings — "+KB35,"• Walking Lunges (50 steps)","• Knees-to-Elbows (or V-ups)","• Push Press — "+DB1,"• Supermans","• Wall Balls","• Burpees","• 50 Double-unders"],"All your kit."),
     W("The Chief (DB Clean)","Intervals 5×3:00","25–35",["5 cycles of 3-min AMRAP + 1-min rest:","• 3 DB Power Cleans — "+DB2,"• 6 Push-ups","• 9 Air Squats"],"DB for 135# bar."),
@@ -172,9 +171,9 @@ window.WOD_DATE_MAP = {
     "Murph":"Honors U.S. Navy Lt. Michael P. Murphy (Medal of Honor), killed in Afghanistan in 2005 during Operation Red Wings.",
     "Glen (Home)":"Honors former U.S. Navy SEAL Glen Doherty, killed on Sept 11, 2012 during the Benghazi attacks.",
     "Michael (Home)":"Honors Navy LT Michael McGreevy Jr., killed in Afghanistan in 2005.",
-    "JT (BW)":"Honors Navy Petty Officer 1st Class Jeff Taylor, killed in Afghanistan in 2005.",
-    "Daniel (DB)":"Honors Army Sgt. 1st Class Daniel Crabtree, killed in Iraq in 2006.",
-    "Josh (DB OHS)":"Honors Army Staff Sgt. Joshua Whitaker, killed in Afghanistan in 2007.",
+    "JT (BW)":"Honors Navy PO1 Jeff Taylor, killed in Afghanistan in 2005.",
+    "Daniel (DB)":"Honors Army SFC Daniel Crabtree, killed in Iraq in 2006.",
+    "Josh (DB OHS)":"Honors Army SSG Joshua Whitaker, killed in Afghanistan in 2007.",
     "Jason (Bar MU)":"Honors SO1 Jason Dale Lewis, killed in Iraq in 2007.",
     "Badger (DB Squat Clean)":"Honors Navy CPO Mark Carter, killed in Iraq in 2007.",
     "Joshie (KB alt)":"Honors PO1 Joshua Harris, died in 2008.",
@@ -182,35 +181,35 @@ window.WOD_DATE_MAP = {
     "Randy (DB)":"Honors LAPD SWAT Officer Randy Simmons, killed in the line of duty in 2008.",
     "Griff":"Honors SSgt Travis Griffith, USAF Pararescue, died in 2003.",
     "Ryan (BMU+Burpee)":"Honors Firefighter Ryan Hummert, killed in 2008.",
-    "Erin (DB)":"Honors South Carolina Trooper Mark Coates (memorial WOD).",
+    "Erin (DB)":"Honors SC Trooper Mark Coates (memorial WOD).",
     "Danny (DB PP)":"Honors Sgt. Daniel Sakai, killed in 2009.",
-    "Hansen (Sub GHD)":"Honors Marine SSgt Daniel Hansen, killed in Afghanistan in 2009.",
-    "Loredo":"Honors Army Staff Sgt. Edwardo Loredo, killed in Afghanistan in 2010.",
-    "Gallant (WB/Run)":"Honors USN Petty Officer Marc A. Gallant, died in 2011.",
+    "Hansen (Sub GHD)":"Honors Marine SSgt Daniel Hansen, KIA Afghanistan 2009.",
+    "Loredo":"Honors Army SSG Edwardo Loredo, KIA Afghanistan 2010.",
+    "Gallant (WB/Run)":"Honors USN PO Marc A. Gallant, died in 2011.",
     "Weston (DB Carry)":"Honors Officer Bryon “Shane” Weston, killed in 2009.",
-    "Hamilton":"Honors Army Sgt. First Class Derek Hamilton, died in 2003.",
+    "Hamilton":"Honors Army SFC Derek Hamilton, died in 2003.",
     "Schmalls":"Honors USMC Sgt. Justin E. Schmalls, died in 2008.",
-    "Bradley":"Honors U.S. Army 1LT Bradley A. Smith, killed in Afghanistan in 2010.",
-    "Riley":"Honors Army Sgt. 1st Class Riley Stephens, killed in Afghanistan in 2012.",
-    "Severin":"Honors U.S. Army Sgt. Severin Summers, killed in Afghanistan in 2009.",
-    "Helton (DB)":"Honors USAF 1st Lt. Joseph Helton, killed in Iraq in 2009.",
-    "Jack (DB PP)":"Honors U.S. Army Staff Sgt. Jack M. Martin III, killed in 2009.",
-    "Forrest":"Honors USAF Pararescueman SSgt Forrest Sibley, killed in 2015.",
-    "Omar (DB Thruster)":"Honors U.S. Army 1st Lt. Omar Vazquez, killed in Iraq in 2011.",
+    "Bradley":"Honors U.S. Army 1LT Bradley A. Smith, KIA Afghanistan 2010.",
+    "Riley":"Honors Army SFC Riley Stephens, KIA Afghanistan 2012.",
+    "Severin":"Honors U.S. Army Sgt. Severin Summers, KIA Afghanistan 2009.",
+    "Helton (DB)":"Honors USAF 1st Lt. Joseph Helton, KIA Iraq 2009.",
+    "Jack (DB PP)":"Honors U.S. Army SSG Jack M. Martin III, KIA 2009.",
+    "Forrest":"Honors USAF Pararescueman SSgt Forrest Sibley, KIA 2015.",
+    "Omar (DB Thruster)":"Honors U.S. Army 1LT Omar Vazquez, KIA Iraq 2011.",
     "Arnie (KB)":"Honors LA County Firefighter Arnaldo “Arnie” Quinones, died in 2009.",
     "Jerry":"Honors U.S. Army Sgt. Maj. Jerry D. Patton, died during training in 2008.",
     "Ship (DB/Row)":"Honors U.S. Navy Lt. Jon “Ship” Shipman, died in 2009.",
-    "DT (DB)":"Honors USAF SSgt Timothy P. Davis (callsign “DT”), killed in Afghanistan in 2009.",
-    "Manion (DB Front Squat)":"Honors 1st Lt. Travis Manion, USMC, killed in Iraq in 2007.",
+    "DT (DB)":"Honors USAF SSgt Timothy P. Davis (callsign “DT”), KIA Afghanistan 2009.",
+    "Manion (DB Front Squat)":"Honors 1st Lt. Travis Manion, USMC, KIA Iraq 2007.",
     "Sisson (PU sub)":"Honors U.S. Army 1LT Donnie W. Sisson, died in 2011.",
-    "Blake (DB OH Lunge)":"Honors U.S. Navy SEAL Lt. Brendan Looney, killed in 2010.",
-    "White (PU sub)":"Honors U.S. Army 1LT Ashley White-Stumpf, killed in Afghanistan in 2011.",
-    "Roy (DB DL)":"Honors USMC Sgt. Michael C. Roy, killed in Afghanistan in 2009.",
-    "Holleyman (DB Clean)":"Honors U.S. Army Staff Sgt. Aaron N. Holleyman, killed in Iraq in 2004.",
-    "McGhee (DB DL)":"Honors USMC Cpl. Ryan C. McGhee, killed in Iraq in 2009.",
-    "Kalsu (DB Thruster)":"Honors 1LT James Robert Kalsu (US Army/ Buffalo Bills), killed in Vietnam in 1970.",
-    'Chad 1000X (24")':"Honors Navy SEAL Chad Wilkinson, died by suicide in 2018; WOD raises awareness for veteran mental health.",
-    "Luce":"Honors Capt. Ronald A. Luce Jr., USAF, killed in 2009.",
+    "Blake (DB OH Lunge)":"Honors U.S. Navy SEAL Lt. Brendan Looney, KIA 2010.",
+    "White (PU sub)":"Honors U.S. Army 1LT Ashley White-Stumpf, KIA Afghanistan 2011.",
+    "Roy (DB DL)":"Honors USMC Sgt. Michael C. Roy, KIA Afghanistan 2009.",
+    "Holleyman (DB Clean)":"Honors U.S. Army SSG Aaron N. Holleyman, KIA Iraq 2004.",
+    "McGhee (DB DL)":"Honors USMC Cpl. Ryan C. McGhee, KIA Iraq 2009.",
+    "Kalsu (DB Thruster)":"Honors 1LT James Robert Kalsu (US Army/Buffalo Bills), KIA Vietnam 1970.",
+    'Chad 1000X (24")':"Honors Navy SEAL Chad Wilkinson (2018); raises awareness for veteran mental health.",
+    "Luce":"Honors Capt. Ronald A. Luce Jr., USAF, KIA 2009.",
     "Jared (BW)":"Honors U.S. Army Capt. Jared C. Monti, Medal of Honor, KIA Afghanistan 2006."
   };
 })();
