@@ -2,219 +2,159 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>BAMBAM BUILT — 365 Garage WODs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BAMBAM — Daily WOD</title>
 <style>
-  :root{
-    --bg:#0f1115; --card:#171922; --ink:#e7e9ee; --muted:#9aa3af; --accent:#87e8a3; --accent2:#58a6ff; --danger:#ff6b6b;
-    --mono: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-    --sans: Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
-  }
+  :root{ --bg:#0f1115; --card:#151922; --ink:#e8eaf0; --muted:#aab0c0; --accent:#61dafb; }
   *{box-sizing:border-box}
-  html,body{height:100%}
-  body{margin:0;background:radial-gradient(1200px 800px at 20% -10%,#1a1e29 0%,transparent 60%),var(--bg); color:var(--ink); font:16px/1.5 var(--sans)}
-  .wrap{max-width:920px;margin:32px auto;padding:0 16px}
-  header{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
-  .brand{font-weight:800;letter-spacing:.5px}
-  .chip{background:#10121a;border:1px solid #22263a;color:var(--muted);padding:6px 10px;border-radius:999px;font-size:12px}
-  .controls{display:flex;gap:8px;flex-wrap:wrap}
-  button{background:linear-gradient(180deg,#1d2131,#121423);border:1px solid #282c3f;color:#e7e9ee;border-radius:10px;padding:10px 14px;cursor:pointer}
-  button:hover{border-color:#3a3f57}
-  main{display:grid;grid-template-columns:1fr;gap:14px}
-  .card{background:linear-gradient(180deg,#151826,#121420);border:1px solid #24283a;border-radius:16px;padding:16px}
-  .title{font-size:26px;font-weight:800;margin:0 0 4px}
-  .sub{color:var(--muted);font-size:14px;margin:0 0 12px}
-  .grid{display:grid;grid-template-columns:1fr;gap:10px}
-  @media(min-width:800px){.grid{grid-template-columns:1.2fr .8fr}}
-  .section h3{margin:0 0 6px;font-size:14px;letter-spacing:.4px;color:#a9b6ff;text-transform:uppercase}
-  .wod{font-family:var(--mono);white-space:pre-wrap;background:#0d0f17;border:1px dashed #2a2f4a;border-radius:12px;padding:12px}
-  .badge{display:inline-flex;gap:6px;align-items:center;font-size:12px;color:#b9c1d6}
-  .badge b{color:#e6ecff}
-  .tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-  .tag{background:#111423;border:1px solid #1f2440;color:#b9c1d6;padding:4px 8px;border-radius:999px;font-size:12px}
-  .tribute{border-left:3px solid var(--accent2);background:#0e1320;padding:12px;border-radius:10px;margin-top:10px}
-  .muted{color:var(--muted)}
-  footer{margin-top:16px;color:#7c8599;font-size:12px;text-align:center}
-  a{color:var(--accent2);text-decoration:none}
+  body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
+       font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+  h1,h2,h3{margin:0 0 8px;line-height:1.15}
+  h1{font-size:28px} h2{font-size:20px;color:var(--muted);font-weight:600} h3{font-size:16px;color:var(--muted);font-weight:600}
+  .wrap{max-width:900px;margin:0 auto;display:grid;gap:16px}
+  .card{background:var(--card);border:1px solid #222937;border-radius:12px;padding:16px;box-shadow:0 4px 18px rgba(0,0,0,.25)}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center}
+  button{background:#111723;color:var(--ink);border:1px solid #2a3345;border-radius:8px;padding:10px 12px;cursor:pointer;font:inherit}
+  button:hover{border-color:var(--accent)}
+  .pill{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid #2a3345;background:#0d1320;color:var(--muted);font-size:12px;margin-right:6px}
+  .meta{color:var(--muted);font-size:14px}
+  ul{margin:8px 0 0 20px} li{margin:4px 0}
+  .notice{background:#1a2030;border-left:4px solid var(--accent);padding:10px 12px;border-radius:8px}
+  .center{text-align:center}
+  @media print{ .controls, .footer {display:none} body{background:white;color:#111} .card{box-shadow:none;border-color:#ddd}}
+  footer{margin-top:24px;text-align:center;color:#9aa3b2;font-size:12px}
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div>
-        <div class="brand">BAMBAM BUILT</div>
-        <div id="dateChip" class="chip">loading…</div>
-      </div>
-      <div class="controls">
-        <button id="prevBtn">← Prev</button>
-        <button id="todayBtn">Today</button>
-        <button id="nextBtn">Next →</button>
-      </div>
-    </header>
+<div class="wrap">
 
-    <main>
-      <section class="card">
-        <h1 class="title" id="wodTitle">…</h1>
-        <p class="sub" id="wodMeta">…</p>
-        <div class="grid">
-          <div class="section">
-            <h3>Workout</h3>
-            <div id="wodText" class="wod"></div>
-            <div id="wodTags" class="tags"></div>
-            <div id="tribute" class="tribute" style="display:none"></div>
-          </div>
-          <div class="section">
-            <h3>Warm-Up</h3>
-            <div id="warmup" class="wod"></div>
-            <h3 style="margin-top:12px">Cool-Down</h3>
-            <div id="cooldown" class="wod"></div>
-            <div class="badge" style="margin-top:10px">
-              <span>Target duration: <b id="cap">—</b></span>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section class="card">
-        <h3>Notes</h3>
-        <div id="notes" class="muted"></div>
-      </section>
-    </main>
-
-    <footer>No excuses. No whining. Just work.</footer>
+  <!-- HEADER + CONTROLS -->
+  <div class="card">
+    <h1 class="center">Daily WOD</h1>
+    <div id="todayStr" class="meta center"></div>
+    <div class="row controls" style="margin-top:8px;">
+      <button id="prevBtn">◀ Prev</button>
+      <button id="todayBtn">Today</button>
+      <button id="nextBtn">Next ▶</button>
+    </div>
   </div>
 
+  <!-- WOD CARD -->
+  <div class="card">
+    <div class="row" style="justify-content:space-between">
+      <h2 id="wodTitle">Workout</h2>
+      <div>
+        <span class="pill" id="typePill"></span>
+        <span class="pill" id="timePill"></span>
+        <span class="pill" id="targetPill"></span>
+      </div>
+    </div>
+    <div id="wodBody"></div>
+    <div class="meta" id="wodNotes" style="margin-top:8px;"></div>
+    <div id="wodTribute" class="notice" style="display:none;margin-top:8px;"></div>
+  </div>
+
+  <!-- WARMUP / COOLDOWN -->
+  <div class="card">
+    <h3>Warm-Up</h3>
+    <div id="warmup" class="notice"></div>
+  </div>
+
+  <div class="card">
+    <h3>Cooldown</h3>
+    <div id="cooldown" class="notice"></div>
+  </div>
+
+  <footer>© 2025 Bambambuilt. All Rights Reserved. Unauthorized use prohibited.</footer>
+</div>
+
 <script>
-/* ========= Tiny helpers ========= */
-const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
-const fmt=(d)=>d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+/* ========= UTIL ========= */
 function mulberry32(a){return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}}
 function choice(rng,arr){return arr[Math.floor(rng()*arr.length)]}
-function dayOfYear(d){const s=new Date(Date.UTC(d.getFullYear(),0,1));const x=Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-s;return Math.floor(x/(24*3600*1000))+1}
-function doyFromYMD(y,m,d){return Math.floor((Date.UTC(y,m,d)-Date.UTC(y,0,0))/(24*3600*1000))}
+function dayOfYear(d){const start=new Date(Date.UTC(d.getFullYear(),0,1));const diff=Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-start;return Math.floor(diff/(24*60*60*1000))+1}
+function fmtDate(d){return d.toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
+const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
 
-/* ========= Gear constants (for labels) ========= */
-const DB2="2×50 lb";
-const DB1="1×50 lb";
-const KB53="53 lb";
-const KB35="35 lb";
-const BOX='24"';
+/* ========= YOUR GEAR =========
+   - DB: 2×50 lb (double) & 1×50 lb (single)
+   - KB: 53 & 35
+   - Wall Ball: (you scale)
+   - Plus: rope, rower, run, box (20/24/32, text uses 24"), pull-up bar, bodyweight
+*/
+const DB2 = "2×50 lb", DB1 = "1×50 lb", KB53 = "53 lb", KB35 = "35 lb", BOX = '24"';
 
-/* ========= One Warm-up / One Cool-down ========= */
+/* ========= ONE WARMUP / ONE COOLDOWN ========= */
 const ONE_WARMUP =
-  `8–10 min easy build: row or jog (progress every 2 min).\n`+
+  `8–10 min easy build: row or jog (progress every 2 min).<br>` +
   `Then 2 rounds (quality): 10 Wall Balls, 6 lunges/leg, 15s active hang or kip swings, 8 push-ups.`;
-
 const ONE_COOLDOWN =
-  `3–5 min easy walk/row to drop HR.\n`+
-  `2× :45 couch stretch / side.\n`+
-  `2× :30–:45 banded lat stretch or passive hang.\n`+
-  `Ankle rocks ×10/side.`;
+  `3–5 min easy walk/row to drop HR.<br>` +
+  `2× :45 couch stretch / side.<br>` +
+  `2× :30–:45 banded lat stretch or passive hang.<br>` +
+  `Ankle rocks x10/side.`;
 
-/* ========= Tributes (shown on pinned commemorative days) ========= */
+/* ========= TRIBUTES (shown on pinned days) ========= */
 const TRIBUTES = {
   "Murph":
-    "Honors U.S. Navy Lt. Michael P. Murphy (Medal of Honor), killed in Afghanistan in 2005 during Operation Red Wings. His courage under fire saved teammates.",
+    "Honors U.S. Navy Lt. Michael P. Murphy (Medal of Honor), killed in Afghanistan in 2005 during Operation Red Wings.",
   "Glen (Home)":
-    "Honors former U.S. Navy SEAL Glen Doherty, killed on September 11, 2012, in the Benghazi attacks while protecting U.S. personnel.",
+    "Honors former U.S. Navy SEAL Glen Doherty, killed on September 11, 2012, during the Benghazi attacks.",
   "12 Days of Christmas (Home)":
-    "Seasonal suffer-fest inspired by the song. Pace early verses; it stacks up fast."
+    "Seasonal suffer-fest inspired by the song. Pace early; it stacks up fast."
 };
 
-/* ========= Named / Benchmark WODs (Girls, Heroes, Open, Classics) ========= */
-/* DB subs are used where a barbell was in the original to keep intent with your gear. */
+/* ========= NAMED / BENCHMARK WODS (trimmed to home-gear) ========= */
 const BENCH = [
-  /* ==== GIRLS ==== */
-  {title:"Angie", type:"For Time", time:"20–40", body:["For time:","• 100 Pull-ups","• 100 Push-ups","• 100 Sit-ups","• 100 Air Squats"], notes:"Strict quality; partition if needed."},
-  {title:"Annie", type:"For Time", time:"10–20", body:["For time:","• 50-40-30-20-10 Double-unders","• 50-40-30-20-10 Sit-ups"], notes:"If <20 min, add 800m jog/row."},
-  {title:"Barbara", type:"For Time (5 rds)", time:"40–50", body:["5 rounds:","• 20 Pull-ups","• 30 Push-ups","• 40 Sit-ups","• 50 Air Squats","Rest 3 min between rounds"], notes:"Keep round splits consistent."},
-  {title:"Candy", type:"For Time (5 rds)", time:"30–50", body:["5 rounds:","• 20 Pull-ups","• 40 Push-ups","• 60 Air Squats"], notes:"Bodyweight grinder."},
-  {title:"Chelsea", type:"EMOM 30", time:"30", body:["Every minute for 30 min:","• 5 Pull-ups, 10 Push-ups, 15 Air Squats"], notes:"Scale to ≤45s work each minute."},
-  {title:"Cindy", type:"AMRAP 20", time:"20", body:["AMRAP 20:","• 5 Pull-ups","• 10 Push-ups","• 15 Air Squats"], notes:"Even splits; no redline."},
-  {title:"Eva", type:"For Time (5 rds)", time:"35–55", body:["5 rounds:","• 800m Run",`• 30 KB Swings — ${KB53}`,"• 30 Pull-ups"], notes:"Grip management."},
-  {title:"Fran (DB)", type:"For Time", time:"10–20", body:["21-15-9:","• DB Thrusters — "+DB2,"• Pull-ups"], notes:"DBs instead of bar. If <20, add easy 1k row."},
-  {title:"Grace (DB C&J)", type:"For Time", time:"10–20", body:["For time:","• 30 DB Clean & Jerks — "+DB2], notes:"DBs instead of 135# bar. If <20, add 800m jog."},
-  {title:"Helen", type:"For Time (3 rds)", time:"12–20", body:["3 rounds:","• 400m Run",`• 21 KB Swings — ${KB53}`,"• 12 Pull-ups"], notes:"If <20, add 800m jog."},
-  {title:"Jackie (DB Thruster)", type:"For Time", time:"12–20", body:["For time:","• 1000m Row","• 50 Thrusters — "+DB1,"• 30 Pull-ups"], notes:"DB goblet/DB pair instead of 45# bar."},
-  {title:"Karen", type:"For Time", time:"12–20", body:["For time:","• 150 Wall Balls"], notes:"Break early; steady cadence."},
-  {title:"Kelly", type:"For Time (5 rds)", time:"25–40", body:["5 rounds:","• 400m Run",`• 30 Box Jumps — ${BOX}`,"• 30 Wall Balls"], notes:"Classic triplet pace."},
-  {title:"Maggie", type:"For Time (5 rds)", time:"35–55", body:["5 rounds:","• 20 Handstand Push-ups","• 40 Pull-ups","• 60 Pistols (alt)"], notes:"Gymnastics stamina. Scale HSPU/pistols as needed."},
-  {title:"Marguerita", type:"For Time", time:"20–40", body:["For time, 50 reps:","• Burpee + Push-up + Jumping Jack + Sit-up + Handstand (kick up)"], notes:"All bodyweight circus."},
-  {title:"Mary", type:"AMRAP 20", time:"20", body:["AMRAP 20:","• 5 Handstand Push-ups","• 10 Pistols (alt)","• 15 Pull-ups"], notes:"Gymnastics control."},
-  {title:"Megan", type:"For Time", time:"12–25", body:["21-15-9:","• Burpees",`• KB Swings — ${KB53}`,"• Double-unders"], notes:"If <20, add 800m jog."},
-  {title:"Nancy (DB/KB OHS)", type:"For Time (5 rds)", time:"20–35", body:["5 rounds:","• 400m Run","• 15 Overhead Squats — Single DB/KB"], notes:"No bar: single DB/KB OH squat each round."},
-  {title:"Nicole", type:"AMRAP 20", time:"20", body:["AMRAP 20:","• 400m Run","• Max Pull-ups"], notes:"Score total pull-ups."},
+  // Girls
+  {title:"Angie",type:"For Time",time:"20–40",body:["For time:","• 100 Pull-ups","• 100 Push-ups","• 100 Sit-ups","• 100 Air Squats"],notes:"Partition if needed."},
+  {title:"Annie",type:"For Time",time:"10–20",body:["For time:","• 50-40-30-20-10 Double-unders","• 50-40-30-20-10 Sit-ups"],notes:"If <20 min, add easy row/jog."},
+  {title:"Barbara",type:"For Time (5 rds)",time:"40–50",body:["5 rounds:","• 20 Pull-ups","• 30 Push-ups","• 40 Sit-ups","• 50 Air Squats","Rest 3 min"],notes:"Even splits."},
+  {title:"Candy",type:"For Time (5 rds)",time:"30–50",body:["5 rounds:","• 20 Pull-ups","• 40 Push-ups","• 60 Air Squats"],notes:"Bodyweight grinder."},
+  {title:"Chelsea",type:"EMOM 30",time:"30",body:["Every min for 30:","• 5 Pull-ups, 10 Push-ups, 15 Air Squats"],notes:"Keep ≤45s of work."},
+  {title:"Cindy",type:"AMRAP 20",time:"20",body:["AMRAP 20:","• 5 Pull-ups","• 10 Push-ups","• 15 Air Squats"],notes:"No redline."},
+  {title:"Eva",type:"For Time (5 rds)",time:"35–55",body:["5 rounds:","• 800m Run",`• 30 KB Swings — ${KB53}`,"• 30 Pull-ups"],notes:"Grip management."},
+  {title:"Fran (DB)",type:"For Time",time:"10–20",body:["21-15-9:","• DB Thrusters — "+DB2,"• Pull-ups"],notes:"DBs sub for barbell."},
+  {title:"Grace (DB C&J)",type:"For Time",time:"10–20",body:["For time:","• 30 DB Clean & Jerks — "+DB2],notes:"DBs instead of 135# bar."},
+  {title:"Helen",type:"For Time (3 rds)",time:"12–20",body:["3 rounds:","• 400m Run",`• 21 KB Swings — ${KB53}`,"• 12 Pull-ups"],notes:"If <20, add 800m jog."},
+  {title:"Jackie (DB Thruster)",type:"For Time",time:"12–20",body:["For time:","• 1000m Row","• 50 Thrusters — "+DB1,"• 30 Pull-ups"],notes:"Goblet/DB thrusters."},
+  {title:"Karen",type:"For Time",time:"12–20",body:["For time:","• 150 Wall Balls"],notes:"Break early; steady cadence."},
+  {title:"Kelly",type:"For Time (5 rds)",time:"25–40",body:["5 rounds:","• 400m Run",`• 30 Box Jumps — ${BOX}`,"• 30 Wall Balls"],notes:"Triplet pace."},
+  {title:"Mary",type:"AMRAP 20",time:"20",body:["AMRAP 20:","• 5 Handstand Push-ups","• 10 Pistols (alt)","• 15 Pull-ups"],notes:"Gymnastics control."},
+  {title:"Megan",type:"For Time",time:"12–25",body:["21-15-9:","• Burpees",`• KB Swings — ${KB53}`,"• Double-unders"],notes:"If <20, add 800m jog."},
+  {title:"Nancy (DB/KB OHS)",type:"For Time (5 rds)",time:"20–35",body:["5 rounds:","• 400m Run","• 15 Overhead Squats — Single DB/KB"],notes:"Single OH squat each round."},
+  {title:"Nicole",type:"AMRAP 20",time:"20",body:["AMRAP 20:","• 400m Run","• Max Pull-ups"],notes:"Score total pull-ups."},
 
-  /* ==== HEROES (DB/KB subs where barbell used) ==== */
-  {title:"Murph", type:"For Time", time:"40–60", body:["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Air Squats","• 1 mile Run"], notes:"Partition as needed. Vest optional."},
-  {title:"Michael", type:"For Time (3 rds)", time:"20–35", body:["3 rounds:","• 800m Run","• 50 Back Extensions (Supermans)","• 50 Sit-ups"], notes:"No GHD → floor supermans."},
-  {title:"Daniel (DB Thruster)", type:"For Time", time:"30–50", body:["For time:","• 50 Pull-ups","• 400m Run","• 21 Thrusters — "+DB2,"• 800m Run","• 21 Thrusters — "+DB2,"• 400m Run","• 50 Pull-ups"], notes:"DBs instead of barbell."},
-  {title:"Josh (DB OHS)", type:"For Time", time:"20–40", body:["For time:","• 21 OHS — Single DB/KB","• 42 Pull-ups","• 15 OHS — Single DB/KB","• 30 Pull-ups","• 9 OHS — Single DB/KB","• 18 Pull-ups"], notes:"Single implement OH squat."},
-  {title:"Jason (Bar MU)", type:"For Time", time:"25–45", body:["For time:","• 100 Air Squats","• 5 Bar Muscle-ups","• 75 Air Squats","• 10 Bar Muscle-ups","• 50 Air Squats","• 15 Bar Muscle-ups","• 25 Air Squats","• 20 Bar Muscle-ups"], notes:"Bar MU instead of rings."},
-  {title:"Badger (DB Clean)", type:"For Time (3 rds)", time:"35–55", body:["3 rounds:","• 30 DB Squat Cleans — "+DB2,"• 30 Pull-ups","• 800m Run"], notes:"DBs instead of bar."},
-  {title:"Joshie", type:"For Time (3 rds)", time:"20–40", body:["3 rounds:","• 21 DB Snatches (Right) — "+DB1,"• 21 L-Pull-ups","• 21 DB Snatches (Left) — "+DB1,"• 21 L-Pull-ups"], notes:"Classic nasty combo."},
-  {title:"Nate (Bar MU + KB)", type:"AMRAP 20", time:"20", body:["AMRAP 20:","• 2 Bar Muscle-ups","• 4 Handstand Push-ups",`• 8 KB Swings — ${KB53}`], notes:"Rx calls rings/70#; bar MU + 53# here."},
-  {title:"Randy (DB Snatch)", type:"For Time", time:"10–20", body:["For time:","• 75 DB Power Snatches — "+DB1], notes:"DB instead of 75# bar."},
-  {title:"Griff", type:"For Time", time:"15–30", body:["For time:","• 800m Run","• 400m Run Backwards","• 800m Run","• 400m Run Backwards"], notes:"Stay upright on the backwards bits."},
-  {title:"Ryan (Bar MU + Burpees)", type:"For Time (5 rds)", time:"15–30", body:["5 rounds:","• 7 Bar Muscle-ups","• 21 Burpees"], notes:"Bar MU instead of rings."},
-  {title:"Erin", type:"For Time (5 rds)", time:"20–40", body:["5 rounds:","• 15 DB Split Cleans — "+DB2,"• 21 Pull-ups"], notes:"Uses DBs + PU bar."},
-  {title:"Danny (DB PP)", type:"AMRAP 20", time:"20", body:["AMRAP 20:","• 30 Box Jumps — "+BOX,"• 20 Push Press — "+DB2,"• 30 Pull-ups"], notes:"DB PP instead of 115# bar."},
-  {title:"Hansen (scaled GHD)", type:"For Time (5 rds)", time:"35–55", body:["5 rounds:","• 30 KB Swings — "+KB53,"• 30 Burpees","• 30 Sit-ups"], notes:"No GHD, use regular sit-ups."},
-  {title:"Loredo", type:"For Time (6 rds)", time:"25–45", body:["6 rounds:","• 24 Air Squats","• 24 Push-ups","• 24 Walking Lunges","• 400m Run"], notes:"Bodyweight + run."},
-  {title:"Gallant (WB Run)", type:"For Time", time:"30–50", body:["For time:","• 1 mile Run (carry Wall Ball)","• 60 Burpee Pull-ups","• 800m Run (carry Wall Ball)","• 30 Burpee Pull-ups","• 400m Run (carry Wall Ball)","• 15 Burpee Pull-ups"], notes:"Med-ball carry = wall ball."},
-  {title:"Weston (Carries)", type:"For Time (5 rds)", time:"35–55", body:["5 rounds:","• Row 1000m","• 200m Farmer Carry — "+DB2,"• 50m Waiter Walk (Right) — "+DB1,"• 50m Waiter Walk (Left) — "+DB1], notes:"Grip savage."},
-  {title:"Hamilton", type:"For Time (3 rds)", time:"35–55", body:["3 rounds:","• Row 1000m","• 50 Push-ups","• Run 1000m","• 50 Pull-ups"], notes:"Row + run + calisthenics."},
-  {title:"Schmalls", type:"For Time", time:"35–60", body:["For time:","• 800m Run","Then 2 rounds:","• 50 Burpees","• 40 Pull-ups","• 30 Pistols (alt)","• 20 KB Swings — "+KB53,"• 10 HSPU","Then:","• 800m Run"], notes:"Huge volume; scale early."},
-  {title:"Bradley", type:"For Time (10 rds)", time:"30–50", body:["10 rounds (rest 30s btwn):","• 100m Sprint","• 10 Pull-ups","• 100m Sprint","• 10 Burpees"], notes:"Keep rest honest."},
-  {title:"Riley", type:"For Time", time:"40–60", body:["For time:","• Run 1.5 miles","• 150 Burpees","• Run 1.5 miles"], notes:"Mental war."},
-  {title:"Feeks (DB SCT)", type:"For Time (ladder)", time:"25–45", body:["Ladder up by 2s of both:","• 100m Shuttle Runs (2,4,6…16)","• DB Squat Clean Thrusters — "+DB2+" (2,4,6…16)"], notes:"Shuttle/run space."},
-  {title:"Severin", type:"For Time", time:"30–60", body:["For time:","• 50 Strict Pull-ups","• 100 Hand-Release Push-ups","• Run 5 km"], notes:"Vest optional."},
-  {title:"Helton", type:"For Time (3 rds)", time:"25–45", body:["3 rounds:","• 800m Run","• 30 DB Squat Cleans — "+DB2,"• 30 Burpees"], notes:"DBs + engine."},
-  {title:"Jack (DB PP+KB)", type:"AMRAP 20", time:"20", body:["AMRAP 20:","• 10 Push Press — "+DB2,"• 10 KB Swings — "+KB53,"• 10 Box Jumps — "+BOX], notes:"Triplet rhythm."},
-  {title:"Forrest", type:"For Time (3 rds)", time:"30–50", body:["3 rounds:","• 20 L-Pull-ups","• 30 Toes-to-Bar","• 40 Burpees","• 800m Run"], notes:"Grip + midline."},
-  {title:"Omar (DB Thruster)", type:"For Time", time:"20–40", body:["For time:","• 10 Thrusters — "+DB2,"• 15 Burpees Over DB","• 20 Thrusters — "+DB2,"• 25 Burpees Over DB","• 30 Thrusters — "+DB2,"• 35 Burpees Over DB"], notes:"Jump over a DB instead of bar."},
-  {title:"Arnie (KB)", type:"For Time", time:"35–60", body:["For time (single KB):","• 21 Turkish Get-ups (Right)","• 50 KB Swings — "+KB53,"• 21 Overhead Squats (Left, KB)","• 50 KB Swings — "+KB53,"• 21 Overhead Squats (Right, KB)","• 50 KB Swings — "+KB53,"• 21 Turkish Get-ups (Left)"], notes:"Use 53# KB."},
-  {title:"Jerry", type:"For Time", time:"25–45", body:["For time:","• Run 1 mile","• Row 2000m","• Run 1 mile"], notes:"Steady pace throughout."},
+  // Heroes (home-gear adapted where needed)
+  {title:"Murph",type:"For Time",time:"40–60",body:["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Air Squats","• 1 mile Run"],notes:"Partition as needed."},
+  {title:"Glen (Home)",type:"For Time",time:"45–60",body:["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Sit-ups","• 1 mile Run"],notes:"Partition calisthenics."},
+  {title:"Loredo",type:"For Time (6 rds)",time:"25–45",body:["6 rounds:","• 24 Air Squats","• 24 Push-ups","• 24 Walking Lunges","• 400m Run"],notes:"Bodyweight + run."},
+  {title:"Hamilton",type:"For Time (3 rds)",time:"35–55",body:["3 rounds:","• Row 1000m","• 50 Push-ups","• Run 1000m","• 50 Pull-ups"],notes:"Row + run + calisthenics."},
+  {title:"Riley",type:"For Time",time:"40–60",body:["For time:","• Run 1.5 miles","• 150 Burpees","• Run 1.5 miles"],notes:"Mental war."},
 
-  /* ==== OPEN (DB/PU/DU/WB/Row/Run variants only) ==== */
-  {title:"Open 12.1", type:"AMRAP 7+", time:"20 (cap with cash-out)", body:["AMRAP 7:","• Burpees"], notes:"Then add easy row/jog to reach ≥20 if you want."},
-  {title:"Open 13.2 (DB ver.)", type:"AMRAP 10", time:"20 (cap with cash-out)", body:["AMRAP 10:","• 5 Shoulder-to-Overhead — "+DB2,"• 10 Deadlifts — "+DB2,"• 15 Box Jumps — "+BOX], notes:"DB swap for bar."},
-  {title:"Open 13.5 (DB Thruster)", type:"AMRAP 4+ ext", time:"20 (cap with cash-out)", body:["AMRAP 4 (extend by work):","• 15 Thrusters — "+DB2,"• 15 Chest-to-Bar Pull-ups"], notes:"If you don't extend, add easy row to 20."},
-  {title:"Open 14.1 (DB Snatch)", type:"AMRAP 10", time:"20 (cap with cash-out)", body:["AMRAP 10:","• 30 Double-unders","• 15 DB Power Snatches — "+DB1], notes:"DB swap for 75# bar."},
-  {title:"Open 14.5 / 16.5 (DB)", type:"For Time", time:"20–40", body:["21-18-15-12-9-6-3:","• DB Thrusters — "+DB2,"• Bar-Facing Burpees → Burpees Over DB"], notes:"Jump over DB."},
-  {title:"Open 15.3", type:"AMRAP 14", time:"20–30", body:["AMRAP 14:","• 7 Bar Muscle-ups","• 50 Wall Balls","• 100 Double-unders"], notes:"Bar MU in place of rings."},
-  {title:"Open 15.5 (DB Thruster)", type:"For Time", time:"20–30", body:["For time:","• 27-21-15-9 Cal Row & DB Thrusters — "+DB2], notes:"DBs instead of 95#."},
-  {title:"Open 16.3 (DB Snatch + BMU)", type:"AMRAP 7", time:"20 (cap with cash-out)", body:["AMRAP 7:","• 10 DB Power Snatches — "+DB1,"• 3 Bar Muscle-ups"], notes:"Add easy work to meet 20 if wanted."},
-  {title:"Open 17.1 / 21.2", type:"For Time", time:"20–30", body:["10-20-30-40-50:","• Alt DB Snatches — "+DB1,"After each set: 15 Burpee Box Jump-Overs — "+BOX], notes:"As written for DB era."},
-  {title:"Open 17.2", type:"AMRAP 12", time:"20–30", body:["AMRAP 12:","• 50-ft DB Front Rack Lunge — "+DB2,"• 16 Toes-to-Bar","• 8 DB Power Cleans — "+DB2,"(later rounds: Bar Muscle-ups)"], notes:"Bar MU on your PU bar."},
-  {title:"Open 17.5 (DB Thruster)", type:"For Time", time:"20–35", body:["10 rounds:","• 9 DB Thrusters — "+DB2,"• 35 Double-unders"], notes:"Classic closer."},
-  {title:"Open 18.1", type:"AMRAP 20", time:"20", body:["AMRAP 20:","• 8 Toes-to-Bar","• 10 DB Hang Clean & Jerks — "+DB1,"• 14 Cal Row"], notes:"Grip tax."},
-  {title:"Open 19.1", type:"AMRAP 15", time:"20 (cap with cash-out)", body:["AMRAP 15:","• 19 Wall Balls","• 19 Cal Row"], notes:"Add easy row to 20 if you want."},
-  {title:"Open 19.5 (DB Thruster)", type:"For Time", time:"20–40", body:["33-27-21-15-9:","• DB Thrusters — "+DB2,"• Chest-to-Bar Pull-ups"], notes:"DB swap for bar."},
-  {title:"Open 20.2", type:"AMRAP 20", time:"20", body:["AMRAP 20:","• 4 DB Thrusters — "+DB2,"• 6 Toes-to-Bar","• 24 Double-unders"], notes:"Triplet engine."},
-  {title:"Open 20.5 (bar MU ver.)", type:"For Time", time:"20–35", body:["Partition any order:","• 40 Bar Muscle-ups","• 80 Cal Row","• 120 Wall Balls"], notes:"No rings → bar MU."},
-  {title:"Open 21.1", type:"For Time", time:"20–30", body:["For time:","• Wall Walks (1-3-6-9-15-21)","• Double-unders (10-30-60-90-150-210)"], notes:"Clear wall & rope."},
-  {title:"Open 22.1", type:"AMRAP 15", time:"20 (cap with cash-out)", body:["AMRAP 15:","• 3 Wall Walks","• 12 DB Snatches — "+DB1,"• 15 Box Jumps — "+BOX], notes:"Add easy row to 20 if you want."},
-  {title:"Open 22.3 (DB Thruster)", type:"For Time", time:"15–30", body:["For time (cap 15):","• 21 Pull-ups / 42 DUs / 21 DB Thrusters — "+DB2,"• 18 C2B / 36 DUs / 18 DB Thrusters — "+DB2,"• 15 Bar MU / 30 DUs / 15 DB Thrusters — "+DB2], notes:"DB swap for barbell."},
+  // Open / Classics
+  {title:"Open 17.1 / 21.2",type:"For Time",time:"20–30",body:["10-20-30-40-50:","• Alt DB Snatches — "+DB1,"After each set: 15 Burpee Box Jump-Overs — "+BOX],notes:"As written for DB era."},
+  {title:"Open 19.1",type:"AMRAP 15",time:"20 (cap w/ cash-out)",body:["AMRAP 15:","• 19 Wall Balls","• 19 Cal Row"],notes:"Add easy row to hit ≥20 if you want."},
+  {title:"Open 20.2",type:"AMRAP 20",time:"20",body:["AMRAP 20:","• 4 DB Thrusters — "+DB2,"• 6 Toes-to-Bar","• 24 Double-unders"],notes:"Triplet engine."},
+  {title:"Open 22.1",type:"AMRAP 15",time:"20 (cap w/ cash-out)",body:["AMRAP 15:","• 3 Wall Walks","• 12 DB Snatches — "+DB1,"• 15 Box Jumps — "+BOX],notes:"Add easy row to 20 if you want."},
+  {title:"Open 22.3 (DB Thruster)",type:"For Time",time:"15–30",body:["For time (cap 15):","• 21 Pull-ups / 42 DUs / 21 DB Thrusters — "+DB2,"• 18 C2B / 36 DUs / 18 DB Thrusters — "+DB2,"• 15 Bar MU / 30 DUs / 15 DB Thrusters — "+DB2],notes:"DB swap for barbell."},
 
-  /* ==== OTHER CLASSICS ==== */
-  {title:"Fight Gone Bad (3 rnd)", type:"AMRAP (Reps)", time:"17", body:["3 rounds, 1 min stations:","• Wall Balls","• Sumo DL High Pull — "+DB1,"• Box Jumps — "+BOX,"• Push Press — "+DB1,"• Row (Calories)","Rest 1 min"], notes:"Score = total reps. DB swaps for bar."},
-  {title:"Filthy Fifty (Home)", type:"Chipper", time:"30–45", body:["50 each:","• Box Jumps — "+BOX,"• Jumping Pull-ups","• KB Swings — "+KB35,"• Walking Lunges (50 steps)","• Knees-to-Elbows (or V-ups)","• Push Press — "+DB1,"• Supermans (back ext)","• Wall Balls","• Burpees","• 50 Double-unders"], notes:"All in your kit."},
-  {title:"The Chief (DB Clean)", type:"Intervals 5×3:00", time:"25–35", body:["5 cycles of 3-min AMRAP + 1-min rest:","• 3 DB Power Cleans — "+DB2,"• 6 Push-ups","• 9 Air Squats"], notes:"DBs instead of 135# bar."},
-  {title:"Tabata Something Else", type:"Tabata x4", time:"20–30", body:["8×(20s on/10s off) each:","• Pull-ups","• Push-ups","• Sit-ups","• Air Squats"], notes:"Score total reps."},
-  {title:"Nasty Girls (DB HPC + BMU)", type:"For Time (3 rds)", time:"15–30", body:["3 rounds:","• 50 Air Squats","• 7 Bar Muscle-ups","• 10 DB Hang Power Cleans — "+DB2], notes:"DBs & bar MU instead of rings/barbell."},
-  {title:"Baseline", type:"For Time", time:"8–15", body:["For time:","• Row 500m","• 40 Air Squats","• 30 Sit-ups","• 20 Push-ups","• 10 Pull-ups"], notes:"If <20, add easy 1k row."},
-  {title:"5K Run", type:"For Time", time:"20–35", body:["For time:","• 5 km Run"], notes:"Negative split."},
-  {title:"5K Row", type:"For Time", time:"20–25", body:["For time:","• 5 km Row"], notes:"Steady split."},
-  {title:"12 Days of Christmas (Home)", type:"For Time", time:"30–50", body:[
+  // Other staples
+  {title:"Fight Gone Bad (3 rnd)",type:"AMRAP (Reps)",time:"17",body:["3 rounds, 1 min stations:","• Wall Balls","• Sumo DL High Pull — "+DB1,"• Box Jumps — "+BOX,"• Push Press — "+DB1,"• Row (Calories)","Rest 1 min"],notes:"Score = total reps."},
+  {title:"Filthy Fifty (Home)",type:"Chipper",time:"30–45",body:["50 each:","• Box Jumps — "+BOX,"• Jumping Pull-ups","• KB Swings — "+KB35,"• Walking Lunges (50 steps)","• Knees-to-Elbows (or V-ups)","• Push Press — "+DB1,"• Supermans","• Wall Balls","• Burpees","• 50 Double-unders"],notes:"All in your kit."},
+  {title:"The Chief (DB Clean)",type:"Intervals 5×3:00",time:"25–35",body:["5 cycles of 3-min AMRAP + 1-min rest:","• 3 DB Power Cleans — "+DB2,"• 6 Push-ups","• 9 Air Squats"],notes:"DBs instead of 135# bar."},
+  {title:"Baseline",type:"For Time",time:"8–15",body:["For time:","• Row 500m","• 40 Air Squats","• 30 Sit-ups","• 20 Push-ups","• 10 Pull-ups"],notes:"If <20, add easy 1k row."},
+  {title:"5K Run",type:"For Time",time:"20–35",body:["For time:","• 5 km Run"],notes:"Negative split."},
+  {title:"5K Row",type:"For Time",time:"20–25",body:["For time:","• 5 km Row"],notes:"Steady split."},
+  {title:"12 Days of Christmas (Home)",type:"For Time",time:"30–50",body:[
     "Perform like the song (1→12, then 12→1):",
     "1 Burpee","2 KB Swings — "+KB53,"3 Wall Balls","4 Pull-ups","5 Box Jumps — "+BOX,
     "6 Sit-ups","7 Push-ups","8 Alt DB Snatches — "+DB1,"9 Lunges/leg","10 Double-unders",
     "11 KB Goblet Squats — "+KB53,"12 Cal Row"
-  ], notes:"Annual suffering."}
+  ],notes:"Annual suffering."}
 ];
 
-/* ========= GENERATORS (20–60 mins; 1 chipper/week) ========= */
-/* Movement bases (rep-capable where it makes sense) */
+/* ========= GENERATORS (20–60 mins; AMRAP can be 3–6 deep) ========= */
 const MONO = [
   "Run 400m","Run 600m","Run 800m","Run 1000m",
   "Row 500m","Row 750m","Row 1000m","Row 1500m",
@@ -227,94 +167,47 @@ const GYM_BASE = [
   "Pike Push-ups","V-ups","Wall Walks","Hanging Knee Raises"
 ];
 const DB_BASE = [
-  {name:"DB Thrusters", load: DB2},
-  {name:"DB Push Press", load: DB2},
-  {name:"DB Front Squats", load: DB2},
-  {name:"DB Power Cleans", load: DB2},
-  {name:"DB Deadlifts", load: DB2},
-  {name:"Alt DB Snatches", load: DB1},
-  {name:"DB Hang Clean & Jerks", load: DB1},
+  {name:"DB Thrusters",load:DB2},{name:"DB Push Press",load:DB2},{name:"DB Front Squats",load:DB2},
+  {name:"DB Power Cleans",load:DB2},{name:"DB Deadlifts",load:DB2},{name:"Alt DB Snatches",load:DB1},
+  {name:"DB Hang Clean & Jerks",load:DB1},
 ];
 const KB_BASE = [
-  {name:"KB Swings", load: KB53},
-  {name:"KB Goblet Squats", load: KB53},
-  {name:"KB Clean & Press (alt)", load: KB53},
-  {name:"KB Swings", load: KB35},
+  {name:"KB Swings",load:KB53},{name:"KB Goblet Squats",load:KB53},{name:"KB Clean & Press (alt)",load:KB53},{name:"KB Swings",load:KB35},
 ];
 const BOX_BASE = ["Box Jumps","Burpee Box Jump-Overs"];
-const WB_BASE  = ["Wall Balls"];
+const WB_BASE = ["Wall Balls"];
 
-/* Rep rules (includes 10s, 5 pistols, classic ladders support) */
 const REP_RULES = {
-  "Pull-ups":[10,12,15,20],
-  "Chest-to-Bar Pull-ups":[10,12,15],
-  "Bar Muscle-ups":[5,6,8],
-  "Toes-to-Bar":[10,12,15],
-  "Push-ups":[10,15,20,25],
-  "Sit-ups":[20,30,40],
-  "Air Squats":[20,30,40,50],
-  "Pistols (alt)":[5,10,16,20],
-  "Handstand Push-ups":[6,9,12],
-  "Burpees":[12,15,20],
-  "Pike Push-ups":[12,15,20],
-  "V-ups":[15,20,25],
-  "Wall Walks":[3,4,5],
-  "Hanging Knee Raises":[15,20,25],
-  "DB Thrusters":[9,12,15],
-  "DB Push Press":[10,12,15],
-  "DB Front Squats":[12,15,20],
-  "DB Power Cleans":[10,12,14],
-  "DB Deadlifts":[16,20,24],
-  "Alt DB Snatches":[12,16,20],
-  "DB Hang Clean & Jerks":[10,12,16],
-  "KB Swings":[20,25,30],
-  "KB Goblet Squats":[16,20,24],
-  "KB Clean & Press (alt)":[10,12,14],
-  "Box Jumps":[15,20,24],
-  "Burpee Box Jump-Overs":[10,12,14],
-  "Wall Balls":[20,25,30,40],
+  "Pull-ups":[10,12,15,20], "Chest-to-Bar Pull-ups":[10,12,15], "Bar Muscle-ups":[5,6,8],
+  "Toes-to-Bar":[10,12,15], "Push-ups":[10,15,20,25], "Sit-ups":[20,30,40],
+  "Air Squats":[20,30,40,50], "Pistols (alt)":[5,10,16,20], "Handstand Push-ups":[6,9,12],
+  "Burpees":[12,15,20], "Pike Push-ups":[12,15,20], "V-ups":[15,20,25], "Wall Walks":[3,4,5], "Hanging Knee Raises":[15,20,25],
+  "DB Thrusters":[9,12,15], "DB Push Press":[10,12,15], "DB Front Squats":[12,15,20],
+  "DB Power Cleans":[10,12,14], "DB Deadlifts":[16,20,24], "Alt DB Snatches":[12,16,20], "DB Hang Clean & Jerks":[10,12,16],
+  "KB Swings":[20,25,30], "KB Goblet Squats":[16,20,24], "KB Clean & Press (alt)":[10,12,14],
+  "Box Jumps":[15,20,24], "Burpee Box Jump-Overs":[10,12,14], "Wall Balls":[20,25,30,40],
 };
-
-/* AMRAP schemes by length */
 const AMRAP_SCHEMES = {
-  3:[
-    {label:"Triplet", pattern:null},
-    {label:"15/10/5", pattern:[15,10,5]},
-    {label:"21/15/9", pattern:[21,15,9]},
-  ],
-  4:[
-    {label:"Quad", pattern:null},
-    {label:"12/9/6/3", pattern:[12,9,6,3]},
-    {label:"10s", pattern:[10,10,10,10]},
-  ],
-  5:[
-    {label:"Quint", pattern:null},
-    {label:"Desc 10→2", pattern:[10,8,6,4,2]},
-  ],
-  6:[
-    {label:"Sextet", pattern:null},
-    {label:"All 12s", pattern:[12,12,12,12,12,12]},
-  ]
+  3:[{label:"Triplet",pattern:null},{label:"15/10/5",pattern:[15,10,5]},{label:"21/15/9",pattern:[21,15,9]}],
+  4:[{label:"Quad",pattern:null},{label:"12/9/6/3",pattern:[12,9,6,3]},{label:"10s",pattern:[10,10,10,10]}],
+  5:[{label:"Quint",pattern:null},{label:"Desc 10→2",pattern:[10,8,6,4,2]}],
+  6:[{label:"Sextet",pattern:null},{label:"All 12s",pattern:[12,12,12,12,12,12]}]
 };
 
-/* Rep helpers */
-function repFor(moveName,rng){const a=REP_RULES[moveName]||[12,15,20];return a[Math.floor(rng()*a.length)]}
-function fmtRep(rep, mv){ if(typeof mv==="string"){return `${rep} ${mv}`;} return `${rep} ${mv.name} — ${mv.load}`; }
+function repFor(name,rng){const a=REP_RULES[name]||[12,15,20];return a[Math.floor(rng()*a.length)]}
+function fmtRep(rep, mv){return (typeof mv==="string")? `${rep} ${mv}` : `${rep} ${mv.name} — ${mv.load}`}
 function pickGym(rng){return choice(rng, GYM_BASE)}
 function pickDB(rng){return choice(rng, DB_BASE)}
 function pickKB(rng){return choice(rng, KB_BASE)}
 function pickBOX(rng){return choice(rng, BOX_BASE)}
 function pickWB(rng){return choice(rng, WB_BASE)}
-function pickAnyRepName(rng){const b=choice(rng,["GYM","DB","KB","BOX","WB"]);if(b==="GYM")return pickGym(rng);if(b==="DB")return pickDB(rng);if(b==="KB")return pickKB(rng);if(b==="BOX")return pickBOX(rng);return pickWB(rng)}
+function pickAnyRepName(rng){const b=choice(rng,["GYM","DB","KB","BOX","WB"]);return b==="GYM"?pickGym(rng):b==="DB"?pickDB(rng):b==="KB"?pickKB(rng):b==="BOX"?pickBOX(rng):pickWB(rng)}
 
-/* ---------- AMRAP / EMOM / CHIPPER generators with scheme variety ---------- */
 function amrapLong(rng){
   const mins = choice(rng,[20,24,30,40]);
   const depth = choice(rng,[3,3,4,4,5,6]);
   const scheme = choice(rng, AMRAP_SCHEMES[depth]);
   const titleLabel = scheme.pattern ? scheme.label : (depth===3?"Triplet":depth===4?"Quad":depth===5?"Quint":"Sextet");
-
-  // build unique set, max 1 mono
   const items=[]; let monoUsed=false;
   while(items.length<depth){
     const useMono = (!monoUsed) && (rng()<0.35);
@@ -326,69 +219,52 @@ function amrapLong(rng){
       items.push(mv);
     }
   }
-
-  // format lines with pattern or per-move reps
   const lines=[]; let pIndex=0;
   for(const mv of items){
-    if(typeof mv==="string" && MONO.includes(mv)) { lines.push("• "+mv); continue; }
+    if(typeof mv==="string" && MONO.includes(mv)){ lines.push("• "+mv); continue; }
     const name = (typeof mv==="string")? mv : mv.name;
     const rep = scheme.pattern ? scheme.pattern[clamp(pIndex,0,scheme.pattern.length-1)] : repFor(name,rng);
     pIndex += scheme.pattern ? 1 : 0;
     lines.push("• "+fmtRep(rep,mv));
   }
-
   return { title:`AMRAP ${mins} — ${titleLabel}`, type:"AMRAP", time:String(mins),
            body:[`As many rounds as possible in ${mins} minutes:`].concat(lines),
-           notes:"Tight transitions. Keep round time consistent." };
+           notes:"Tight transitions. Keep round times consistent." };
 }
 
 function emomLong(rng){
-  const variant = choice(rng,["rotate3","rotate4"]);
   const mins = choice(rng,[24,30,36,40]);
-  if(variant==="rotate4"){
-    const a=pickAnyRepName(rng), b=pickGym(rng), c=choice(rng,MONO), d=pickAnyRepName(rng);
-    return { title:`EMOM ${mins} — 4-Station`, type:"EMOM", time:String(mins),
-      body:[`Every minute for ${mins} minutes, rotate:`,
-            `1) ${fmtRep(repFor((a.name||a),rng),a)}`,
-            `2) ${fmtRep(repFor(b,rng),b)}`,
-            `3) ${c}`,
-            `4) ${fmtRep(repFor((d.name||d),rng),d)}`,
-            `Finish each minute in ~40–45s.`],
-      notes:"Hold windows; quality over panic."
-    };
-  }
-  const a=pickAnyRepName(rng), b=pickGym(rng), c=choice(rng,MONO);
-  return { title:`EMOM ${mins} — 3-Station`, type:"EMOM", time:String(mins),
-    body:[`Every minute for ${mins} minutes, rotate:`,
-          `1) ${fmtRep(repFor((a.name||a),rng),a)}`,
-          `2) ${fmtRep(repFor(b,rng),b)}`,
-          `3) ${c}`,
-          `Finish each minute in ~40–45s.`],
-    notes:"Keep each station sub-45s."
+  const s1=pickAnyRepName(rng), s2=pickGym(rng), s3=choice(rng,MONO);
+  return { title:`EMOM ${mins} — Rotate 3`, type:"EMOM", time:String(mins),
+    body:[`Every minute for ${mins} min, rotate:`,
+          `1) ${fmtRep(repFor((s1.name||s1),rng),s1)}`,
+          `2) ${fmtRep(repFor(s2,rng),s2)}`,
+          `3) ${s3}`,
+          "Finish each minute in ~40–45s."],
+    notes:"Hold windows; quality first."
   };
 }
 
 function chipperLong(rng){
   const count = choice(rng,[8,9,10,11,12]);
   const tasks=[];
-  // breadth guarantees
   tasks.push(choice(rng,["25 Wall Balls","30 Wall Balls","40 Wall Balls"]));
   tasks.push(choice(rng, MONO));
   const x=pickAnyRepName(rng); tasks.push(fmtRep(repFor((x.name||x),rng),x));
   const y=pickGym(rng); tasks.push(fmtRep(repFor(y,rng),y));
   const z=pickBOX(rng); tasks.push(fmtRep(repFor(z,rng),z));
-
   while(tasks.length<count){
     const add = (rng()<0.3) ? choice(rng,MONO) : (()=>{const m=pickAnyRepName(rng);return fmtRep(repFor((m.name||m),rng),m)})();
     if(!tasks.includes(add)) tasks.push(add);
   }
   return { title:"Chipper — For Time (Long)", type:"For Time", time:"30–60",
     body:["Complete for time:"].concat(tasks.map(t=>"• "+t)),
-    notes:"Break small, keep moving. Target 30–60 min." };
+    notes:"Break small and keep moving. Target 30–60 min."
+  };
 }
 
-/* ========= Tagger + 3-day guard ========= */
-function tagBody(lines){
+/* ========= 3-day guard ========= */
+function tagWorkoutBody(lines){
   const t = lines.join(" ");
   return {
     wb:/Wall Balls?/.test(t),
@@ -400,47 +276,29 @@ function tagBody(lines){
     box:/Box Jumps?/.test(t),
   };
 }
-function violates(tags,p1,p2){
+function violates3Day(tags,p1,p2){
   if(!p1&&!p2) return false;
   if(p1){ if(tags.wb&&p1.wb) return true; if(tags.pull&&p1.pull) return true; if(tags.hspu&&p1.hspu) return true; if(tags.db&&p1.db) return true; if(tags.kb&&p1.kb) return true; }
   if(tags.mono && p1 && p2 && p1.mono && p2.mono) return true;
   return false;
 }
 
-/* ========= Scheduler: weekly rhythm + pinned commemorations ========= */
-function memorialDayUTC(year){const last=new Date(Date.UTC(year,4,31));const dow=last.getUTCDay();const offset=(dow+6)%7;return 31-offset}
+/* ========= Scheduler =========
+   - Weekly pattern: Mon AMRAP, Tue EMOM, Wed AMRAP, Thu EMOM, Fri AMRAP, Sat EMOM, Sun CHIPPER
+   - Benchmarks every ~9 days
+   - Pins: Murph (Memorial Day), Glen (9/11), 12 Days (Dec 25)
+*/
+function memorialDayUTC(y){const last=new Date(Date.UTC(y,4,31));const dow=last.getUTCDay();const offset=(dow+6)%7;return 31-offset}
+function doyFromYMD(y,m,d){return Math.floor((Date.UTC(y,m,d)-Date.UTC(y,0,0))/(24*3600*1000))}
 function namedSchedule(year){
   const map=new Map();
-  // cycle all benchmarks every ~9 days
-  let i=0; for(let d=9; d<=365; d+=9){ map.set(d, i++ % BENCH.length); }
-
-  // Pins:
-  // Memorial Day (last Monday in May) -> Murph
-  const md=memorialDayUTC(year);
-  const mdoy=doyFromYMD(year,4,md); // May (4)
-  const murphI=BENCH.findIndex(b=>b.title==="Murph"); if(murphI>-1) map.set(mdoy,murphI);
-
-  // Sept 11 -> Glen
-  const gldoy=doyFromYMD(year,8,11); // Sep (8)
-  const glI=BENCH.findIndex(b=>b.title==="Glen (Home)"); // If not in list yet, add a home version
-  if(glI===-1){
-    const idx = BENCH.push({
-      title:"Glen (Home)", type:"For Time", time:"45–60",
-      body:["For time:","• Run 1 mile","• 100 Pull-ups","• 200 Push-ups","• 300 Sit-ups","• Run 1 mile"],
-      notes:"Partition calisthenics. Cap 60."
-    })-1;
-    map.set(gldoy, idx);
-  } else {
-    map.set(gldoy, glI);
-  }
-
-  // Dec 25 -> 12 Days of Christmas (Home)
-  const xmas=doyFromYMD(year,11,25);
-  const xmi=BENCH.findIndex(b=>b.title.startsWith("12 Days of Christmas")); if(xmi>-1) map.set(xmas,xmi);
-
+  let idx=0; for(let d=9; d<=365; d+=9){ map.set(d, idx++ % BENCH.length); }
+  const md = memorialDayUTC(year); const mdoy = doyFromYMD(year,4,md);
+  const murphI = BENCH.findIndex(b=>b.title==="Murph"); if(murphI>-1) map.set(mdoy, murphI);
+  const gldoy = doyFromYMD(year,8,11); const glI = BENCH.findIndex(b=>b.title==="Glen (Home)"); if(glI>-1) map.set(gldoy, glI);
+  const xmas = doyFromYMD(year,11,25); const xmi = BENCH.findIndex(b=>b.title.startsWith("12 Days of Christmas")); if(xmi>-1) map.set(xmas, xmi);
   return map;
 }
-
 function buildYear(){
   const out=new Array(365), tags=new Array(365);
   const rng=mulberry32(1337);
@@ -452,59 +310,56 @@ function buildYear(){
       w={title:b.title,type:b.type,time:b.time,body:b.body.slice(),notes:b.notes,named:true};
     }else{
       const dow=(d-1)%7;
-      const gen = (dow===6)?chipperLong : (dow%2===0? amrapLong : emomLong);
+      const gen=(dow===6)?chipperLong:(dow%2===0?amrapLong:emomLong);
       for(let tries=0; tries<6; tries++){
         const cand=gen(rng);
-        const tg=tagBody(cand.body);
+        const tg=tagWorkoutBody(cand.body);
         const p1=d>1?tags[d-2]:null, p2=d>2?tags[d-3]:null;
-        if(!violates(tg,p1,p2)){ w=cand; tags[d-1]=tg; break; }
+        if(!violates3Day(tg,p1,p2)){ w=cand; tags[d-1]=tg; break; }
         if(tries===5){ w=cand; tags[d-1]=tg; }
       }
     }
-    if(!tags[d-1]) tags[d-1]=tagBody(w.body);
+    if(!tags[d-1]) tags[d-1]=tagWorkoutBody(w.body);
     out[d-1]=w;
   }
   return out;
 }
-const YEAR=buildYear();
+const YEAR = buildYear();
 
 /* ========= UI ========= */
-const $ = (id)=>document.getElementById(id);
-const elTitle=$("wodTitle"), elMeta=$("wodMeta"), elText=$("wodText"), elTags=$("wodTags"), elCap=$("cap"), elNotes=$("notes"), elTrib=$("tribute");
-const dateChip=$("dateChip");
-let currentDay=((dayOfYear(new Date())-1)%365)+1; // leap-year safe
+const elTitle=document.getElementById("wodTitle");
+const elBody=document.getElementById("wodBody");
+const elNotes=document.getElementById("wodNotes");
+const elType=document.getElementById("typePill");
+const elTime=document.getElementById("timePill");
+const elTarget=document.getElementById("targetPill");
+const elTribute=document.getElementById("wodTribute");
+let currentDay = ((dayOfYear(new Date())-1)%365)+1; // leap-year safe
 
-function isCommemorative(w){ return TRIBUTES[w.title] !== undefined; }
-function paceHint(w){ return (w.type==="For Time")? "30–60 min" : `${w.time} min`; }
-function tagPills(w){
-  elTags.innerHTML="";
-  const pills=[w.type, (w.named?"Benchmark":""), (w.title.includes("Open")?"Open":"")].filter(Boolean);
-  for(const t of pills){ const span=document.createElement("span"); span.className="tag"; span.textContent=t; elTags.appendChild(span); }
-}
+function isCommemorative(title){ return TRIBUTES[title] !== undefined; }
+function paceHint(w){ return (w.type==="For Time")?"Target: 30–60 min":`Target: ${w.time} min`; }
 
 function renderDay(day){
-  const today=new Date(); dateChip.textContent=fmt(today);
-  const w=YEAR[day-1];
+  const w = YEAR[day-1];
+  document.getElementById("todayStr").textContent = fmtDate(new Date());
   elTitle.textContent = w.named? `${w.title} (Benchmark)` : w.title;
-  elMeta.textContent = `Time domain: ${paceHint(w)} • Gear: DB/KB/Wall Ball/PU Bar/Row/Run/Box/Jump Rope`;
-  elText.textContent = w.body.join("\n");
-  elCap.textContent = paceHint(w);
+  elType.textContent = w.type;
+  elTime.textContent = w.time;
+  elTarget.textContent = paceHint(w);
+  elBody.innerHTML = "<ul>"+w.body.map(l=>`<li>${l}</li>`).join("")+"</ul>";
   elNotes.textContent = w.notes || "";
-  tagPills(w);
-
-  if(isCommemorative(w)){ elTrib.style.display="block"; elTrib.textContent=TRIBUTES[w.title]; }
-  else { elTrib.style.display="none"; elTrib.textContent=""; }
-
-  currentDay=day;
+  if(isCommemorative(w.title)){ elTribute.style.display="block"; elTribute.textContent=TRIBUTES[w.title]; }
+  else { elTribute.style.display="none"; elTribute.textContent=""; }
+  currentDay = day;
 }
 
 function init(){
-  $("warmup").textContent=ONE_WARMUP;
-  $("cooldown").textContent=ONE_COOLDOWN;
+  document.getElementById("warmup").innerHTML = ONE_WARMUP;
+  document.getElementById("cooldown").innerHTML = ONE_COOLDOWN;
   renderDay(currentDay);
-  $("prevBtn").onclick=()=>renderDay(currentDay<=1?365:currentDay-1);
-  $("nextBtn").onclick=()=>renderDay(currentDay>=365?1:currentDay+1);
-  $("todayBtn").onclick=()=>renderDay(((dayOfYear(new Date())-1)%365)+1);
+  document.getElementById("prevBtn").onclick=()=>{renderDay(currentDay<=1?365:currentDay-1);};
+  document.getElementById("nextBtn").onclick=()=>{renderDay(currentDay>=365?1:currentDay+1);};
+  document.getElementById("todayBtn").onclick=()=>{renderDay(((dayOfYear(new Date())-1)%365)+1);};
 }
 document.addEventListener("DOMContentLoaded", init);
 </script>
