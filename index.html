@@ -13,6 +13,9 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Crect width='100%25' height='100%25' fill='%230f1115'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' fill='%23e8eaf0' font-size='64' font-family='Arial'%3E%F0%9F%8F%8B%EF%B8%8F%3C/text%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABb0P4JAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAABcUlEQVR42u3RAQ0AAAwCoNm/9C1gkQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwqgkAAQh7b7cAAAAASUVORK5CYII=" />
 
+<!-- Load your known WODs -->
+<script src="wods.js"></script>
+
 <style>
   :root{ --bg:#0f1115; --card:#151922; --ink:#e8eaf0; --muted:#aab0c0; --accent:#61dafb; --border:#2a3345; }
   *{box-sizing:border-box}
@@ -25,16 +28,15 @@
   .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center}
   button{background:#111723;color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;font:inherit}
   button:hover{border-color:var(--accent)}
-  .pill{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:#0d1320;color:var(--muted);font-size:12px;margin-right:6px}
-  .meta{color:var(--muted);font-size:14px}
+  .pill{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:#0d1320;color:#aab0c0;font-size:12px;margin-right:6px}
+  .meta{color:#aab0c0;font-size:14px}
+  .warn{color:#ffb85c;font-size:12px;margin-top:6px;text-align:center}
   ul{margin:8px 0 0 20px} li{margin:4px 0}
   .notice{background:#1a2030;border-left:4px solid var(--accent);padding:10px 12px;border-radius:8px}
   .center{text-align:center}
   .date-chip{cursor:pointer;display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#0d1320;user-select:none}
   .date-chip:hover{border-color:var(--accent)}
   #dateWrap{display:flex;justify-content:center;position:relative}
-  .libstat{margin-top:6px;text-align:center;font-size:12px;color:#7e88a0}
-
   /* Calendar dropdown */
   .cal{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);
        width:320px;background:var(--card);border:1px solid var(--border);border-radius:12px;
@@ -45,13 +47,12 @@
   .cal .hdr-btn:hover{border-color:var(--accent)}
   .cal .label{font-weight:700;color:#e8eaf0}
   .cal .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:8px}
-  .cal .dow{font-size:12px;color:var(--muted);text-align:center}
+  .cal .dow{font-size:12px;color:#aab0c0;text-align:center}
   .cal .day{font-size:13px;text-align:center;padding:6px 0;border-radius:8px;border:1px solid transparent;cursor:pointer}
   .cal .day:hover{border-color:var(--accent);background:#0d1320}
   .cal .muted{opacity:.4}
   .cal .today{outline:1px dashed var(--accent);outline-offset:2px}
   .cal .selected{background:#0d1320;border-color:var(--accent)}
-
   @media print{ .controls, .footer, .cal {display:none} body{background:white;color:#111} .card{box-shadow:none;border-color:#ddd}}
   footer{margin-top:24px;text-align:center;color:#9aa3b2;font-size:12px}
   footer a{color:#9aa3b2;text-decoration:none}
@@ -68,7 +69,7 @@
       <div id="todayStr" class="meta center date-chip" title="Pick a date"></div>
       <div id="cal" class="cal" aria-hidden="true"></div>
     </div>
-    <div id="libstat" class="libstat">Loading workouts…</div>
+    <div id="warn" class="warn" style="display:none"></div>
     <div class="row controls" style="margin-top:8px;">
       <button id="prevBtn">◀ Prev</button>
       <button id="todayBtn">Today</button>
@@ -105,320 +106,374 @@
   <footer>© 2025 <a href="https://bambambuilt.com" target="_blank" rel="noopener">bambambuilt.com</a>. All Rights Reserved.</footer>
 </div>
 
-<!-- Load the big list -->
-<script src="wods.js"></script>
-
 <script>
-/* ========= UTIL ========= */
-const dayMS = 86400000;
-const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
-const DOW=["S","M","T","W","T","F","S"];
-const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
-function daysInYear(y){return ((y%4===0 && y%100!==0) || (y%400===0)) ? 366 : 365;}
-function fmtDate(d){return d.toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
-function doyFromDate(d){const start=new Date(d.getFullYear(),0,1);return Math.floor((d-start)/dayMS)+1;}
-function dateFromDoy(y,doy){const d=new Date(y,0,1);d.setDate(doy);return d;}
-function memorialDayDOY(y){ // last Monday in May
-  const lastMay = new Date(y,4,31);
-  const dow = lastMay.getDay(); // 0 Sun..6 Sat
-  const monday = 31 - ((dow+6)%7);
-  return doyFromDate(new Date(y,4,monday));
-}
-function mdToDoy(y, mmdd){ // "MM-DD" -> DOY
-  const mm = parseInt(mmdd.slice(0,2),10);
-  const dd = parseInt(mmdd.slice(3,5),10);
-  return doyFromDate(new Date(y, mm-1, dd));
-}
-
-/* ========= YOUR GEAR strings used inside generators ========= */
-const DB2="2×50 lb", DB1="1×50 lb", KB53="53 lb", KB35="35 lb", BOX='24"';
-
-/* ========= ONE WARMUP / ONE COOLDOWN ========= */
-const ONE_WARMUP =
-  `8–10 min easy build: row or jog (progress every 2 min).<br>`+
-  `Then 2 rounds (quality): 10 Wall Balls, 6 lunges/leg, 15s active hang or kip swings, 8 push-ups.`;
-const ONE_COOLDOWN =
-  `3–5 min easy walk/row to drop HR.<br>`+
-  `2× :45 couch stretch / side.<br>`+
-  `2× :30–:45 banded lat stretch or passive hang.<br>`+
-  `Ankle rocks x10/side.`;
-
-/* ========= PULL IN THE LIBRARY ========= */
-const BANK = Array.isArray(window.WOD_BANK) ? window.WOD_BANK.slice() : [];
-const TRIBUTES = window.WOD_TRIBUTES || {};
-const DATE_MAP = window.WOD_DATE_MAP || {};
-const libstat = document.getElementById('libstat');
-libstat.textContent = BANK.length ? `Known WODs: ${BANK.length}` : 'wods.js not found (using generators only)';
-
-/* ========= QUICK LOOKUP BY TITLE ========= */
-const TITLE_INDEX = new Map();
-BANK.forEach((w,i)=>TITLE_INDEX.set(w.title,i));
-
-/* ========= SIMPLE GENERATORS for non-benchmark days ========= */
+/* ===== UTIL ===== */
 function mulberry32(a){return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}}
 function choice(rng,arr){return arr[Math.floor(rng()*arr.length)]}
+function shuffleInPlace(rng,arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}}
+function clamp(n,min,max){return Math.max(min,Math.min(max,n))}
+function daysInYear(y){return ((y%4===0 && y%100!==0) || (y%400===0)) ? 366 : 365;}
+function doyFromDate(dt){const start=new Date(dt.getFullYear(),0,1); return Math.floor((dt - start)/86400000)+1;}
+function fmtDate(d){return d.toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
+function localDOY(year,month,day){const d=new Date(year,month,day);return Math.floor((d - new Date(year,0,0))/86400000)}
+function lastMondayOfMayLocal(year){const last=new Date(year,4,31);const dow=last.getDay();return 31-((dow+6)%7)}
 
-const MONO = ["Run 400m","Run 600m","Run 800m","Run 1000m","Row 500m","Row 750m","Row 1000m","Row 1500m","150 Single-unders","100 Double-unders"];
-const GYM  = ["15 Pull-ups","20 Push-ups","25 Sit-ups","20 Air Squats","15 Burpees","12 Pike Push-ups","20 V-ups","30 Wall Balls"];
-const DBB  = [`16 DB Thrusters — ${DB2}`,`14 DB Push Press — ${DB2}`,`16 DB Front Squats — ${DB2}`,`14 DB Power Cleans — ${DB2}`,`20 DB Deadlifts — ${DB2}`,`16 Alt DB Snatches — ${DB1}`];
-const KBB  = [`25 KB Swings — ${KB53}`,`20 KB Goblet Squats — ${KB53}`,`14 KB Clean & Press (alt) — ${KB53}`,`20 KB Swings — ${KB35}`];
-const BOXM = [`20 Box Jumps — ${BOX}`,`14 Burpee Box Jump-Overs — ${BOX}`];
-const WB   = ["25 Wall Balls","30 Wall Balls","40 Wall Balls"];
+/* ===== GEAR TEXT ===== */
+const DB2="2×50 lb", DB1="1×50 lb", KB53="53 lb", KB35="35 lb", BOX='24"';
 
-function amrapLong(rng){
-  const mins=choice(rng,[20,24,30,40]);
-  const a=choice(rng,MONO.concat(WB)); const b=choice(rng,DBB.concat(KBB).concat(BOXM)); const c=choice(rng,GYM);
-  return {title:`AMRAP ${mins} — Triplet`, type:"AMRAP", time:String(mins),
-    body:[`As many rounds as possible in ${mins} minutes:`,`• ${a}`,`• ${b}`,`• ${c}`], notes:"Aim ~2–3 min/round; smooth pacing."};
+/* ===== DYNAMIC WARM-UP / COOLDOWN ===== */
+function modalitiesFrom(w){
+  const t=w.body.join(" ");
+  return {
+    run:/\b(\d+\s?m Run|km Run|mile Run)\b/i.test(t),
+    row:/\b(Row( \d+m|\sfor\sCalories)?|Cal Row|km Row|5k Row)\b/i.test(t),
+    rope:/Double-unders|Single-unders/i.test(t),
+    wb:/Wall Balls?/i.test(t),
+    pull:/Pull-ups|Chest-to-Bar|Bar Muscle-ups|L-Pull-ups/i.test(t),
+    ttb:/Toes-to-Bar|Hanging Knee Raises/i.test(t),
+    hspu:/Handstand Push-ups|Wall Walks/i.test(t),
+    box:/Box Jump/i.test(t),
+    kb:/\bKB\b/i.test(t),
+    db:/\bDB\b/i.test(t),
+    squat:/Squats?|Thrusters|Front Squats|Goblet Squats/i.test(t),
+    hinge:/Deadlifts?|Power Cleans?|Swings|Snatches|Clean & Jerk/i.test(t)
+  };
 }
-function emomLong(rng){
-  const mins=choice(rng,[24,30,36,40]);
-  const s1=choice(rng, DBB.concat(KBB).concat(WB)); const s2=choice(rng, GYM.concat(BOXM)); const s3=choice(rng, MONO);
-  return {title:`EMOM ${mins} — Rotate 3`, type:"EMOM", time:String(mins),
-    body:[`Every minute for ${mins} min, rotate:`,`1) ${s1}`,`2) ${s2}`,`3) ${s3}`,"Finish each minute in ~40–45s."], notes:"Hold windows; quality first."};
-}
-function chipperLong(rng){
-  const count=choice(rng,[8,9,10,11,12]);
-  const pool = WB.concat(MONO, DBB, KBB, GYM, BOXM);
-  const tasks = [];
-  while(tasks.length<count){
-    const pick = choice(rng,pool);
-    if(!tasks.includes(pick)) tasks.push(pick);
-  }
-  return {title:"Chipper — For Time (Long)", type:"For Time", time:"30–60",
-    body:["Complete for time:"].concat(tasks.map(t=>"• "+t)), notes:"Break small and keep moving. Target 30–60 min."};
-}
+const WU={ run:`5–8 min easy jog → 2 rounds: 20s A-skips · 20s high knees · 20s butt kicks · 10 walking lunges/leg.`,
+           row:`4 min easy row (build each min). Drill x10 strokes, then 2× (:20 hard / :40 easy).`,
+           rope:`2 min singles → 3× (20 DU attempts or 30 singles + 10 penguin taps). 20 calf raises + 10 ankle rocks/side.`,
+           pull:`2× :20 active hang + 8 scap pulls · 2×10 kip swings · 2–3 easy pull-up/row sets.`,
+           ttb:`8 hollow rocks + 8 beat swings ×2 · 10 hanging knee raises or small TTB sets.`,
+           hspu:`Wrist circles 60s · 2×8 pike HSPU to abmat · 2 wall walks to :20 hold.`,
+           squat:`2 rounds: 10 air squats · 8 Cossack (4/side) · 10 light wall balls · 10 ankle rocks/side.`,
+           hinge:`2 rounds: 10 glute bridges · 10 light DB RDL · 10 easy KB swings.`,
+           kb:`10 halos each way · 10 front rack shrugs · 10 squat-to-stand.`,
+           db:`Front rack flow: 10s rack hold + 8 strict press light + 8 front squats light.`,
+           box:`10 step-ups/leg · 10 pogo jumps · 10 small box jumps.`,
+           wb:`10 wall slides · 10–15 easy wall balls + ankle rocks.`,
+           general:`5–7 min easy cardio → 2 rounds: 8 push-ups · 10 air squats · 10 sit-ups.` };
+const CD={ run:`3–5 min walk, then :45 calf + :45 hamstring/side.`,
+           row:`2–3 min easy row, then :45 thoracic child’s pose + :45 pec doorway/side.`,
+           rope:`:45 calf/side + foot/plantar massage 1–2 min.`,
+           pull:`:60 passive hang or banded lat/side · thread-the-needle :30/side.`,
+           ttb:`Banded lat + :45 hip flexor/side.`,
+           hspu:`:45 triceps/side + :45 pec doorway/side.`,
+           squat:`2× :45 couch stretch/side + :45 adductor hold.`,
+           hinge:`:45 hamstring/side + 5× gentle McKenzie press-ups.`,
+           kb:`:45 rack/forearm stretch/side + :45 lat stretch/side.`,
+           db:`:45 front-rack/pec/side + :45 triceps/side.`,
+           box:`:45 hip flexor/side + :45 calves.`,
+           wb:`:45 thoracic open (foam/bench) + :45 ankle (knee-to-wall)/side.`,
+           general:`3–5 min easy spin/walk, breathe down.` };
+function buildWarmup(w){const m=modalitiesFrom(w),p=[]; if(m.run)p.push(WU.run); if(m.row)p.push(WU.row); if(m.rope)p.push(WU.rope);
+  if(m.pull)p.push(WU.pull); if(m.ttb)p.push(WU.ttb); if(m.hspu)p.push(WU.hspu); if(m.wb||m.squat)p.push(WU.squat);
+  if(m.hinge)p.push(WU.hinge); if(m.kb)p.push(WU.kb); if(m.db)p.push(WU.db); if(m.box)p.push(WU.box); if(!p.length)p.push(WU.general); return p.slice(0,3).join('<br><br>'); }
+function buildCooldown(w){const m=modalitiesFrom(w),p=[]; if(m.run)p.push(CD.run); if(m.row)p.push(CD.row); if(m.rope)p.push(CD.rope);
+  if(m.pull)p.push(CD.pull); if(m.ttb)p.push(CD.ttb); if(m.hspu)p.push(CD.hspu); if(m.wb||m.squat)p.push(CD.squat); if(m.hinge)p.push(CD.hinge);
+  if(m.kb)p.push(CD.kb); if(m.db)p.push(CD.db); if(m.box)p.push(CD.box); if(!p.length)p.push(CD.general); return p.slice(0,2).join('<br><br>'); }
 
-/* ========= YEAR BUILDER =========
-   - Pins specific dates from DATE_MAP
-   - Pins Memorial Day -> Murph (overrides)
-   - Ensures EVERY WOD in BANK appears at least once (sprinkled)
-   - Fills remaining days with generators (AMRAP/EMOM/Chipper weekly)
+/* ===== KNOWN WODS (from wods.js) =====
+   REQUIRED in wods.js:
+     window.WOD_BANK = [ {title,type,time,body:[...],notes?}, ... ];
+   OPTIONAL:
+     window.WOD_TRIBUTES = { "Title": "Story...", ... };
+     window.WOD_DATE_MAP = { "MM-DD":"Title or Index", ... }  // e.g., "09-11":"Glen (Home)"
 */
-function buildSchedule(year){
+let BENCH=[], TRIBUTES={}, DATE_MAP={};
+const DEFAULT_TRIBUTES={
+  "Murph":"Honors U.S. Navy Lt. Michael P. Murphy (MOH), killed during Operation Red Wings (2005).",
+  "Glen (Home)":"Honors former U.S. Navy SEAL Glen Doherty, killed Sept 11, 2012 (Benghazi).",
+  'Chad 1000X (24")':"Honors Navy SEAL Chad Wilkinson (2018). 1,000 step-ups for mental health awareness.",
+  "Kalsu (DB Thruster)":"Honors 1LT James Robert Kalsu (KIA 1970). Heavy thrusters + burpees.",
+  "12 Days of Christmas (Home)":"Seasonal suffer-fest performed like the song."
+};
+
+/* ===== GENERATORS (used for the non-named days) ===== */
+const MONO=["Run 400m","Run 600m","Run 800m","Run 1000m","Row 500m","Row 750m","Row 1000m","Row 1500m","150 Single-unders","100 Double-unders","Shuttle Run 200m"];
+const GYM=["Pull-ups","Chest-to-Bar Pull-ups","Bar Muscle-ups","Toes-to-Bar","Push-ups","Sit-ups","Air Squats","Pistols (alt)","Handstand Push-ups","Burpees","Pike Push-ups","V-ups","Wall Walks","Hanging Knee Raises","Wall Balls"];
+const DBB=[{name:"DB Thrusters",load:DB2},{name:"DB Push Press",load:DB2},{name:"DB Front Squats",load:DB2},{name:"DB Power Cleans",load:DB2},{name:"DB Deadlifts",load:DB2},{name:"Alt DB Snatches",load:DB1},{name:"DB Hang Clean & Jerks",load:DB1}];
+const KBB=[{name:"KB Swings",load:KB53},{name:"KB Goblet Squats",load:KB53},{name:"KB Clean & Press (alt)",load:KB53},{name:"KB Swings",load:KB35}];
+const BOXM=["Box Jumps","Burpee Box Jump-Overs"];
+const REP_RULES={ "Pull-ups":[10,12,15,20],"Chest-to-Bar Pull-ups":[10,12,15],"Bar Muscle-ups":[5,6,8],
+  "Toes-to-Bar":[10,12,15],"Push-ups":[10,15,20,25],"Sit-ups":[20,30,40],"Air Squats":[20,30,40,50],
+  "Pistols (alt)":[5,10,16,20],"Handstand Push-ups":[6,9,12],"Burpees":[12,15,20],"Pike Push-ups":[12,15,20],"V-ups":[15,20,25],
+  "Wall Walks":[3,4,5],"Hanging Knee Raises":[15,20,25],"Wall Balls":[20,25,30,40],
+  "DB Thrusters":[9,12,15],"DB Push Press":[10,12,15],"DB Front Squats":[12,15,20],
+  "DB Power Cleans":[10,12,14],"DB Deadlifts":[16,20,24],"Alt DB Snatches":[12,16,20],"DB Hang Clean & Jerks":[10,12,16],
+  "KB Swings":[20,25,30],"KB Goblet Squats":[16,20,24],"KB Clean & Press (alt)":[10,12,14],
+  "Box Jumps":[15,20,24],"Burpee Box Jump-Overs":[10,12,14] };
+const AMRAP_SCHEMES={ 3:[{label:"Triplet",pattern:null},{label:"15/10/5",pattern:[15,10,5]},{label:"21/15/9",pattern:[21,15,9]}],
+  4:[{label:"Quad",pattern:null},{label:"12/9/6/3",pattern:[12,9,6,3]},{label:"10s",pattern:[10,10,10,10]}],
+  5:[{label:"Quint",pattern:null},{label:"Desc 10→2",pattern:[10,8,6,4,2]}],
+  6:[{label:"Sextet",pattern:null},{label:"All 12s",pattern:[12,12,12,12,12,12]}] };
+function repFor(name,rng){const a=REP_RULES[name]||[12,15,20];return a[Math.floor(rng()*a.length)]}
+function fmtRep(rep,mv){return (typeof mv==="string")?`${rep} ${mv}`:`${rep} ${mv.name} — ${mv.load}`}
+function pickGym(rng){return choice(rng,GYM)} function pickDB(rng){return choice(rng,DBB)} function pickKB(rng){return choice(rng,KBB)} function pickBOX(rng){return choice(rng,BOXM)}
+function pickAny(rng){const b=choice(rng,["GYM","DB","KB","BOX"]);return b==="GYM"?pickGym(rng):b==="DB"?pickDB(rng):b==="KB"?pickKB(rng):pickBOX(rng)}
+function amrapLong(rng){const mins=choice(rng,[20,24,30,40]);const depth=choice(rng,[3,3,4,4,5,6]);const scheme=choice(rng,AMRAP_SCHEMES[depth]);
+  const label=scheme.pattern?scheme.label:(depth===3?"Triplet":depth===4?"Quad":depth===5?"Quint":"Sextet");const items=[];let monoUsed=false;
+  while(items.length<depth){const useMono=!monoUsed && rng()<0.35;if(useMono){items.push(choice(rng,MONO)); monoUsed=true;}else{const mv=pickAny(rng);const id=(typeof mv==='string')?mv:mv.name;if(items.some(x=>((typeof x==='string')?x:(x.name||x))===id)) continue;items.push(mv);}}
+  const lines=[];let p=0;for(const mv of items){if(typeof mv==="string"&&MONO.includes(mv)){lines.push("• "+mv);continue;}const name=(typeof mv==="string")?mv:mv.name;const rep=scheme.pattern?scheme.pattern[clamp(p,0,scheme.pattern.length-1)]:repFor(name,rng);if(scheme.pattern)p++;lines.push("• "+fmtRep(rep,mv));}
+  return {title:`AMRAP ${mins} — ${label}`, type:"AMRAP", time:String(mins), body:[`As many rounds as possible in ${mins} minutes:`].concat(lines), notes:"Tight transitions. Keep round times consistent."};}
+function emomLong(rng){const mins=choice(rng,[24,30,36,40]);const a=pickAny(rng),b=pickGym(rng),c=choice(rng,MONO);
+  return {title:`EMOM ${mins} — Rotate 3`, type:"EMOM", time:String(mins), body:[`Every minute for ${mins} min, rotate:`,`1) ${fmtRep(repFor((a.name||a),rng),a)}`,`2) ${fmtRep(repFor(b,rng),b)}`,`3) ${c}`,"Finish each minute in ~40–45s."], notes:"Hold windows; quality first."};}
+function chipperLong(rng){const count=choice(rng,[8,9,10,11,12]);const tasks=[];tasks.push(choice(rng,["25 Wall Balls","30 Wall Balls","40 Wall Balls"]));tasks.push(choice(rng,MONO));
+  const x=pickAny(rng);tasks.push(fmtRep(repFor((x.name||x),rng),x));const y=pickGym(rng);tasks.push(fmtRep(repFor(y,rng),y));const z=pickBOX(rng);tasks.push(fmtRep(repFor(z,rng),z));
+  while(tasks.length<count){const add=(rng()<0.3)?choice(rng,MONO):( ()=>{const m=pickAny(rng);return fmtRep(repFor((m.name||m),rng),m);} )();if(!tasks.includes(add))tasks.push(add);}
+  return {title:"Chipper — For Time (Long)", type:"For Time", time:"30–60", body:["Complete for time:"].concat(tasks.map(t=>"• "+t)), notes:"Break small and keep moving. Target 30–60 min."};}
+
+/* ===== PINS & DATE MAP ===== */
+const PIN_TITLES={ MURPH:"Murph", GLEN:"Glen (Home)", CHAD:'Chad 1000X (24")', KALSU:'Kalsu (DB Thruster)', XMAS:'12 Days of Christmas (Home)' };
+function pinIndexByTitle(title){ return BENCH.findIndex(b=>b.title===title) }
+function getPinnedTitleForDate(dt){
+  const y=dt.getFullYear(), m=dt.getMonth(), d=dt.getDate();
+  if(m===4 && d===lastMondayOfMayLocal(y)) return PIN_TITLES.MURPH;
+  if(m===8 && d===11) return PIN_TITLES.GLEN;
+  if(m===10 && d===11) return PIN_TITLES.CHAD;
+  if(m===6 && d===4) return PIN_TITLES.KALSU;
+  if(m===11 && d===25) return PIN_TITLES.XMAS;
+  return null;
+}
+const FALLBACK={
+  [PIN_TITLES.MURPH]:{title:"Murph",type:"For Time",time:"40–60",body:["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Air Squats","• 1 mile Run"],notes:"Partition as needed.",named:true},
+  [PIN_TITLES.GLEN]:{title:"Glen (Home)",type:"For Time",time:"45–60",body:["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Sit-ups","• 1 mile Run"],notes:"Partition calisthenics.",named:true},
+  [PIN_TITLES.CHAD]:{title:'Chad 1000X (24")',type:"For Time",time:"35–60",body:[`For time:`,`• 1,000 Step-ups — ${BOX}`],notes:"Break tidy; steady pace.",named:true},
+  [PIN_TITLES.KALSU]:{title:'Kalsu (DB Thruster)',type:"For Time",time:"20–40",body:[`For time:`,`• 100 DB Thrusters — ${DB2}`,`Every minute: 5 Burpees (start with burpees)`],notes:"Grip & lungs.",named:true},
+  [PIN_TITLES.XMAS]:{title:"12 Days of Christmas (Home)",type:"For Time",time:"30–50",body:["Perform like the song (1→12 then 12→1):","1 Burpee","2 KB Swings — "+KB53,"3 Wall Balls","4 Pull-ups","5 Box Jumps — "+BOX,"6 Sit-ups","7 Push-ups","8 Alt DB Snatches — "+DB1,"9 Lunges/leg","10 Double-unders","11 KB Goblet Squats — "+KB53,"12 Cal Row"],notes:"Don’t sprint early.",named:true}
+};
+
+/* Build fixed pins + optional user date-map from wods.js */
+function resolveTitleToIndex(title){
+  const i = BENCH.findIndex(b=>b.title===title);
+  return i>=0 ? i : -1;
+}
+function buildPins(year){
+  const pins=new Map();
+
+  // 1) Hard holiday/hero pins
+  const addPin=(m,d,title)=>{
+    const doy=localDOY(year,m,d);
+    const idx=resolveTitleToIndex(title);
+    pins.set(doy, idx>=0 ? {kind:"index", idx} : {kind:"inline", wod:FALLBACK[title]});
+  };
+  addPin(4, lastMondayOfMayLocal(year), PIN_TITLES.MURPH);
+  addPin(8, 11, PIN_TITLES.GLEN);
+  addPin(10, 11, PIN_TITLES.CHAD);
+  addPin(6, 4, PIN_TITLES.KALSU);
+  addPin(11, 25, PIN_TITLES.XMAS);
+
+  // 2) Optional explicit date map supplied by you
+  if(DATE_MAP && typeof DATE_MAP==='object'){
+    for(const k of Object.keys(DATE_MAP)){
+      const m = parseInt(k.slice(0,2),10)-1;
+      const d = parseInt(k.slice(3,5),10);
+      if(isNaN(m)||isNaN(d)) continue;
+      const val = DATE_MAP[k];
+      let entry=null;
+      if(typeof val==='number' && BENCH[val]) entry={kind:"index", idx:val};
+      else if(typeof val==='string'){
+        const idx=resolveTitleToIndex(val);
+        entry = idx>=0 ? {kind:"index", idx} : null;
+      }
+      if(entry){
+        const doy=localDOY(year,m,d);
+        pins.set(doy, entry); // your map wins (overrides)
+      }
+    }
+  }
+  return pins;
+}
+
+/* Evenly place remaining known WODs exactly once */
+function distributeKnown(openDays){
+  const excludedTitles=new Set(Object.values(PIN_TITLES)); // avoid double-placing pin titles
+  // Also exclude anything explicitly placed by DATE_MAP
+  const dateMapTitles=new Set();
+  if(DATE_MAP && typeof DATE_MAP==='object'){
+    for(const v of Object.values(DATE_MAP)){
+      if(typeof v==='string') dateMapTitles.add(v);
+      if(typeof v==='number' && BENCH[v]) dateMapTitles.add(BENCH[v].title);
+    }
+  }
+  const useIdx = BENCH.map((w,i)=>({i,t:w.title})).filter(x=>!excludedTitles.has(x.t) && !dateMapTitles.has(x.t)).map(x=>x.i);
+  const rng=mulberry32(1337);
+  shuffleInPlace(rng, useIdx);
+  const N=Math.min(useIdx.length, openDays.length);
+  const map=new Map();
+  for(let i=0;i<N;i++){
+    const pos=Math.floor((i+0.5)*openDays.length/N);
+    map.set(openDays[pos], {kind:"index", idx:useIdx[i]});
+  }
+  return map;
+}
+
+/* Movement guard (no same crap 3 days in a row) */
+function tagBody(lines){
+  const t=lines.join(" ");
+  return {
+    wb:/Wall Balls?/.test(t),
+    pull:/(Pull-ups|Chest-to-Bar|Bar Muscle-ups|L-Pull-ups|Toes-to-Bar|Hanging Knee Raises)/i.test(t),
+    hspu:/(Handstand Push-ups|Wall Walks)/i.test(t),
+    db:/DB /.test(t)||/DB/.test(t),
+    kb:/KB /.test(t)||/KB/.test(t),
+    mono:/(Run \d+|Row \d+|Shuttle Run|km Run|km Row|Double-unders|Single-unders|5 km (Run|Row))/i.test(t),
+    box:/Box Jumps?/.test(t),
+  };
+}
+function violates(tags,p1,p2){
+  if(!p1&&!p2) return false;
+  if(p1){ if(tags.wb&&p1.wb) return true; if(tags.pull&&p1.pull) return true; if(tags.hspu&&p1.hspu) return true; if(tags.db&&p1.db) return true; if(tags.kb&&p1.kb) return true; }
+  if(tags.mono && p1 && p2 && p1.mono && p2.mono) return true;
+  return false;
+}
+
+/* Build the plan */
+function buildSchedule(year,days){
+  const pins=buildPins(year);                       // Map<doy,{kind,idx|wod}>
+  const open=[]; for(let d=1; d<=days; d++){ if(!pins.has(d)) open.push(d); }
+  const spread=distributeKnown(open);               // Map<doy,{kind:"index",idx}>
+  const out=new Map(pins); spread.forEach((v,k)=>out.set(k,v));
+  return out;
+}
+function buildYear(year){
   const days=daysInYear(year);
-  const out=new Array(days);
-  const pinned=new Map();
+  const out=new Array(days), tags=new Array(days);
+  const rng=mulberry32(1337);
+  const slots=buildSchedule(year,days);
 
-  // 1) Static pins from DATE_MAP (if the title exists in BANK)
-  Object.entries(DATE_MAP).forEach(([mmdd,title])=>{
-    const idx = TITLE_INDEX.get(title);
-    if(idx!==undefined){
-      const doy = mdToDoy(year, mmdd);
-      pinned.set(doy, idx);
-    }
-  });
-
-  // 2) Dynamic Memorial Day -> Murph (override)
-  const murphIdx = TITLE_INDEX.get("Murph");
-  if(murphIdx!==undefined){
-    pinned.set(memorialDayDOY(year), murphIdx);
-  }
-  // 3) Make sure 09-11 -> Glen (Home) even if someone edited DATE_MAP wrong
-  const glenIdx = TITLE_INDEX.get("Glen (Home)");
-  if(glenIdx!==undefined){
-    pinned.set(mdToDoy(year,"09-11"), glenIdx);
-  }
-
-  // 4) Place pinned
-  pinned.forEach((idx,doy)=>{
-    const w=BANK[idx];
-    out[doy-1] = {title:w.title,type:w.type,time:w.time,body:w.body.slice(),notes:w.notes||"",named:true};
-  });
-
-  // 5) Sprinkle the rest of BANK evenly across the year (on every 9th day if free),
-  //    guaranteeing all appear at least once.
-  const remainingIdx = [];
-  for(let i=0;i<BANK.length;i++){
-    // skip those already pinned, but still include; duplicates are OK if pinned, but we want at least once elsewhere
-    remainingIdx.push(i);
-  }
-  let cursor = 9;
-  while(remainingIdx.length){
-    // find a free day at/after cursor
-    while(cursor<=days && out[cursor-1]) cursor++;
-    if(cursor>days) break;
-    const idx = remainingIdx.shift();
-    const w = BANK[idx];
-    out[cursor-1] = {title:w.title,type:w.type,time:w.time,body:w.body.slice(),notes:w.notes||"",named:true};
-    cursor += 9;
-  }
-  // Any left (because of collisions or end-of-year) — place in next available free days
-  let scan=1;
-  while(remainingIdx.length && scan<=days){
-    if(!out[scan-1]){
-      const idx = remainingIdx.shift();
-      const w = BANK[idx];
-      out[scan-1] = {title:w.title,type:w.type,time:w.time,body:w.body.slice(),notes:w.notes||"",named:true};
-    }
-    scan++;
-  }
-
-  // 6) Fill the rest with generators (pattern: Sun chipper, Mon/Wed/Fri AMRAP, Tue/Thu/Sat EMOM)
-  const rng = mulberry32(1337 + year);
   for(let d=1; d<=days; d++){
-    if(out[d-1]) continue;
-    const dow=(d-1)%7;
-    const gen = (dow===6)?chipperLong : (dow%2===0?amrapLong:emomLong);
-    out[d-1] = gen(rng);
+    let w=null;
+    if(slots.has(d)){
+      const val=slots.get(d);
+      if(val.kind==="index"){ const b=BENCH[val.idx]; w={title:b.title,type:b.type,time:b.time,body:b.body.slice(),notes:b.notes,named:true}; }
+      else { w=Object.assign({}, val.wod); }
+      tags[d-1]=tagBody(w.body);
+    }else{
+      // generators (Sun chipper; otherwise alt AMRAP/EMOM)
+      const dow=(d-1)%7;
+      const gen=(dow===6)?chipperLong:(dow%2===0?amrapLong:emomLong);
+      for(let tries=0; tries<6; tries++){
+        const cand=gen(rng); const tg=tagBody(cand.body);
+        const p1=d>1?tags[d-2]:null, p2=d>2?tags[d-3]:null;
+        if(!violates(tg,p1,p2)){ w=cand; tags[d-1]=tg; break; }
+        if(tries===5){ w=cand; tags[d-1]=tg; }
+      }
+    }
+    out[d-1]=w;
   }
   return out;
 }
 
-/* ========= UI ========= */
-const elTitle   = document.getElementById("wodTitle");
-const elBody    = document.getElementById("wodBody");
-const elNotes   = document.getElementById("wodNotes");
-const elType    = document.getElementById("typePill");
-const elTime    = document.getElementById("timePill");
-const elTarget  = document.getElementById("targetPill");
-const elTribute = document.getElementById("wodTribute");
-const dateChip  = document.getElementById("todayStr");
-const calEl     = document.getElementById("cal");
+/* ===== UI State ===== */
+const elTitle=document.getElementById("wodTitle");
+const elBody=document.getElementById("wodBody");
+const elNotes=document.getElementById("wodNotes");
+const elType=document.getElementById("typePill");
+const elTime=document.getElementById("timePill");
+const elTarget=document.getElementById("targetPill");
+const elTribute=document.getElementById("wodTribute");
+const dateChip=document.getElementById("todayStr");
+const cal=document.getElementById("cal");
+const warn=document.getElementById("warn");
 
-document.getElementById("warmup").innerHTML = ONE_WARMUP;
-document.getElementById("cooldown").innerHTML = ONE_COOLDOWN;
+let currentDate=new Date(); let currentYear=currentDate.getFullYear(); let YEAR=[];
 
-let currentDate=new Date();
-let currentYear=currentDate.getFullYear();
-let YEAR = buildSchedule(currentYear);
-
-function isCommemorative(title){ return !!TRIBUTES[title]; }
-function paceHint(w){ return (w.type==="For Time") ? "Target: 30–60 min" : `Target: ${w.time} min`; }
-
+function isCommemorative(title){return !!(TRIBUTES && TRIBUTES[title])}
+function paceHint(w){return (w.type==="For Time")?"Target: 30–60 min":`Target: ${w.time} min`;}
 function renderByDate(dt){
-  if(dt.getFullYear()!==currentYear){ currentYear=dt.getFullYear(); YEAR=buildSchedule(currentYear); }
-  const doy = doyFromDate(dt);
-  const w = YEAR[clamp(doy,1,daysInYear(currentYear))-1];
+  if(dt.getFullYear()!==currentYear){ currentYear=dt.getFullYear(); YEAR=buildYear(currentYear); }
+  const doy=doyFromDate(dt); const w=YEAR[clamp(doy,1,daysInYear(currentYear))-1];
 
   dateChip.textContent = fmtDate(dt);
-  elTitle.textContent  = w.named ? `${w.title} (Benchmark)` : w.title;
-  elType.textContent   = w.type;
-  elTime.textContent   = w.time;
-  elTarget.textContent = paceHint(w);
-  elBody.innerHTML     = "<ul>"+w.body.map(l=>`<li>${l}</li>`).join("")+"</ul>";
-  elNotes.textContent  = w.notes || "";
-
-  if(isCommemorative(w.title)){ elTribute.style.display="block"; elTribute.textContent=TRIBUTES[w.title]; }
+  elTitle.textContent = w.named? `${w.title} (Benchmark)` : w.title;
+  elType.textContent = w.type; elTime.textContent = w.time; elTarget.textContent = paceHint(w);
+  elBody.innerHTML = "<ul>"+w.body.map(l=>`<li>${l}</li>`).join("")+"</ul>";
+  elNotes.textContent = w.notes || "";
+  if(isCommemorative(w.title)){ elTribute.style.display="block"; elTribute.textContent=(TRIBUTES[w.title]||""); }
   else { elTribute.style.display="none"; elTribute.textContent=""; }
 
-  currentDate = dt;
-  if(calEl.classList.contains('show')) buildCalendar(currentDate.getFullYear(), currentDate.getMonth());
+  document.getElementById("warmup").innerHTML = buildWarmup(w);
+  document.getElementById("cooldown").innerHTML = buildCooldown(w);
+
+  currentDate=dt;
+  if(cal.classList.contains('show')) buildCalendar(calYear, calMonth);
 }
 
-/* ========= Calendar (robust; nav arrows don't close the panel) ========= */
+/* ===== Calendar (unlimited nav) ===== */
+const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DOW=["S","M","T","W","T","F","S"];
 let calYear=currentDate.getFullYear(), calMonth=currentDate.getMonth();
-
 function buildCalendar(year, month){
   calYear=year; calMonth=month;
-  const first=new Date(year,month,1);
-  const firstDow=first.getDay();
-  const daysThis=new Date(year,month+1,0).getDate();
-  const daysPrev=new Date(year,month,0).getDate();
-
-  let html = `
-    <header>
+  const first=new Date(year,month,1), firstDow=first.getDay();
+  const daysThis=new Date(year,month+1,0).getDate(), daysPrev=new Date(year,month,0).getDate();
+  let html=`<header>
       <button class="hdr-btn" id="calPrev">&larr;</button>
       <div class="label">${MONTHS[month]} ${year}</div>
       <button class="hdr-btn" id="calNext">&rarr;</button>
     </header>
     <div class="grid">`;
-  for(const d of DOW) html += `<div class="dow">${d}</div>`;
-  for(let i=0;i<firstDow;i++){ html+=`<div class="day muted">${daysPrev-firstDow+1+i}</div>`; }
-  const today=new Date(); const isThisMonth=(today.getFullYear()===year && today.getMonth()===month);
+  for(const d of DOW) html+=`<div class="dow">${d}</div>`;
+  for(let i=0;i<firstDow;i++){ const day=daysPrev-firstDow+1+i; html+=`<div class="day muted">${day}</div>`; }
+  const today=new Date(); const isThisMonth=(today.getFullYear()===year&&today.getMonth()===month); const sel=isThisMonth?today.getDate():null;
   for(let d=1; d<=daysThis; d++){
     const isSelected=(currentDate.getFullYear()===year && currentDate.getMonth()===month && currentDate.getDate()===d);
-    const cls = "day"+(isThisMonth && d===today.getDate()?" today":"")+(isSelected?" selected":"");
-    html += `<div class="${cls}" data-day="${d}">${d}</div>`;
+    const cls="day"+(isThisMonth&&d===sel?" today":"")+(isSelected?" selected":"");
+    html+=`<div class="${cls}" data-day="${d}">${d}</div>`;
   }
-  const used = firstDow + daysThis;
-  const pad = (7 - (used % 7)) % 7;
-  for(let i=1;i<=pad;i++) html += `<div class="day muted">${i}</div>`;
-  html += `</div>`;
-  calEl.innerHTML = html;
+  const used=firstDow+daysThis; const need=(7-(used%7))%7; for(let i=1;i<=need;i++) html+=`<div class="day muted">${i}</div>`;
+  html+=`</div>`; cal.innerHTML=html;
 
-  // stop clicks inside calendar from closing it
-  calEl.onclick = (e)=> { e.stopPropagation(); };
+  document.getElementById('calPrev').onclick=(ev)=>{ev.stopPropagation(); const m=calMonth-1; const y=m<0?calYear-1:calYear; const nm=m<0?11:m; buildCalendar(y,nm);};
+  document.getElementById('calNext').onclick=(ev)=>{ev.stopPropagation(); const m=calMonth+1; const y=m>11?calYear+1:calYear; const nm=m>11?0:m; buildCalendar(y,nm);};
+  cal.querySelectorAll('.day[data-day]').forEach(el=>{ el.onclick=(ev)=>{ev.stopPropagation(); const day=+el.getAttribute('data-day'); renderByDate(new Date(calYear,calMonth,day)); closeCalendar();}; });
+}
+function openCalendar(){ buildCalendar(currentDate.getFullYear(), currentDate.getMonth()); cal.classList.add('show'); cal.setAttribute('aria-hidden','false'); setTimeout(()=>document.addEventListener('click', outsideClose),0); }
+function closeCalendar(){ cal.classList.remove('show'); cal.setAttribute('aria-hidden','true'); document.removeEventListener('click', outsideClose); }
+function outsideClose(e){ const inside=(e.composedPath&&e.composedPath().includes(cal))||cal.contains(e.target); if(!inside && e.target!==dateChip){ closeCalendar(); } }
 
-  document.getElementById('calPrev').onclick=(e)=>{ e.stopPropagation();
-    const m=month-1; buildCalendar(m<0?year-1:year, m<0?11:m);
-  };
-  document.getElementById('calNext').onclick=(e)=>{ e.stopPropagation();
-    const m=month+1; buildCalendar(m>11?year+1:year, m>11?0:m);
-  };
-  calEl.querySelectorAll('.day[data-day]').forEach(el=>{
-    el.onclick=(e)=>{
-      e.stopPropagation();
-      const day=Number(el.getAttribute('data-day'));
-      renderByDate(new Date(year, month, day));
-      closeCalendar();
-    };
+/* ===== Load wods.js, then init ===== */
+function ensureWodsLoaded(next){
+  BENCH = Array.isArray(window.WOD_BANK)? window.WOD_BANK : [];
+  TRIBUTES = Object.assign({}, DEFAULT_TRIBUTES, window.WOD_TRIBUTES||{});
+  DATE_MAP = (window.WOD_DATE_MAP && typeof window.WOD_DATE_MAP==='object') ? window.WOD_DATE_MAP : {};
+  next();
+}
+
+function init(){
+  ensureWodsLoaded(()=>{
+    // Soft warning if your bank looks empty (helps diagnose “not loading wods.js”)
+    if(!BENCH.length){ warn.style.display='block'; warn.textContent='Heads up: 0 known WODs loaded from wods.js — using generators only.'; }
+    else if(BENCH.length<20){ warn.style.display='block'; warn.textContent=`Only ${BENCH.length} known WODs loaded from wods.js. Double-check the file?`; }
+
+    YEAR=buildYear(currentYear);
+    renderByDate(new Date());
+
+    document.getElementById("prevBtn").onclick=()=>{ const d=new Date(currentDate); d.setDate(d.getDate()-1); renderByDate(d); };
+    document.getElementById("nextBtn").onclick=()=>{ const d=new Date(currentDate); d.setDate(d.getDate()+1); renderByDate(d); };
+    document.getElementById("todayBtn").onclick=()=>{ renderByDate(new Date()); };
+
+    const chip=document.getElementById('todayStr');
+    chip.addEventListener('click',(e)=>{ e.stopPropagation(); if(cal.classList.contains('show')) closeCalendar(); else openCalendar(); });
+    document.addEventListener('keydown',(e)=>{ if(e.key==='Escape' && cal.classList.contains('show')) closeCalendar(); });
+
+    // PWA manifest + SW
+    const icon192=document.querySelector('link[rel="apple-touch-icon"]').href;
+    const manifest={name:"BAMBAM — Daily WOD",short_name:"Daily WOD",start_url:"./",display:"standalone",background_color:"#0f1115",theme_color:"#0f1115",icons:[{src:icon192,sizes:"192x192",type:"image/png"},{src:icon192,sizes:"512x512",type:"image/png"}]};
+    const manBlob=new Blob([JSON.stringify(manifest)],{type:"application/manifest+json"});
+    const manLink=document.createElement('link'); manLink.rel='manifest'; manLink.href=URL.createObjectURL(manBlob); document.head.appendChild(manLink);
+
+    if('serviceWorker' in navigator){
+      const swCode=`const CACHE='bb-wod-v1';
+        self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./'])));self.skipWaiting();});
+        self.addEventListener('activate',e=>{self.clients.claim();});
+        self.addEventListener('fetch',e=>{const req=e.request; if(req.mode==='navigate'){e.respondWith(fetch(req).catch(()=>caches.match('./')));return;} e.respondWith(caches.match(req).then(r=>r||fetch(req)));});`;
+      const swURL=URL.createObjectURL(new Blob([swCode],{type:'text/javascript'}));
+      navigator.serviceWorker.register(swURL,{scope:'./'}).catch(()=>{});
+    }
   });
 }
-
-function openCalendar(){
-  buildCalendar(currentDate.getFullYear(), currentDate.getMonth());
-  calEl.classList.add('show'); calEl.setAttribute('aria-hidden','false');
-  setTimeout(()=>document.addEventListener('click', outsideClose),0);
-}
-function closeCalendar(){
-  calEl.classList.remove('show'); calEl.setAttribute('aria-hidden','true');
-  document.removeEventListener('click', outsideClose);
-}
-function outsideClose(e){
-  if(!calEl.contains(e.target) && e.target!==dateChip){ closeCalendar(); }
-}
-
-/* ========= Controls ========= */
-document.getElementById("prevBtn").onclick=()=>{ const d=new Date(currentDate); d.setDate(d.getDate()-1); renderByDate(d); };
-document.getElementById("nextBtn").onclick=()=>{ const d=new Date(currentDate); d.setDate(d.getDate()+1); renderByDate(d); };
-document.getElementById("todayBtn").onclick=()=>{ renderByDate(new Date()); };
-
-dateChip.addEventListener('click', (e)=>{
-  e.stopPropagation();
-  if(calEl.classList.contains('show')) closeCalendar(); else openCalendar();
-});
-document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && calEl.classList.contains('show')) closeCalendar(); });
-
-/* ========= PWA manifest + SW ========= */
-(function(){
-  const icon192 = document.querySelector('link[rel="apple-touch-icon"]').href;
-  const manifest = {
-    name: "BAMBAM — Daily WOD",
-    short_name: "Daily WOD",
-    start_url: "./",
-    display: "standalone",
-    background_color: "#0f1115",
-    theme_color: "#0f1115",
-    icons: [{ src: icon192, sizes: "192x192", type: "image/png" },
-            { src: icon192, sizes: "512x512", type: "image/png" }]
-  };
-  const manBlob = new Blob([JSON.stringify(manifest)], {type:"application/manifest+json"});
-  const manLink = document.createElement('link'); manLink.rel='manifest'; manLink.href=URL.createObjectURL(manBlob);
-  document.head.appendChild(manLink);
-
-  if('serviceWorker' in navigator){
-    const swCode = `
-      const CACHE='bb-wod-v1';
-      self.addEventListener('install',e=>{
-        e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./'])));
-        self.skipWaiting();
-      });
-      self.addEventListener('activate',e=>{ self.clients.claim(); });
-      self.addEventListener('fetch',e=>{
-        const req=e.request;
-        if(req.mode==='navigate'){ e.respondWith(fetch(req).catch(()=>caches.match('./'))); return; }
-        e.respondWith(caches.match(req).then(r=>r||fetch(req)));
-      });
-    `;
-    const swURL = URL.createObjectURL(new Blob([swCode], {type:'text/javascript'}));
-    navigator.serviceWorker.register(swURL, {scope:'./'}).catch(()=>{});
-  }
-})();
-
-/* ========= Kickoff ========= */
-document.addEventListener("DOMContentLoaded", ()=>{ dateChip.textContent = fmtDate(currentDate); renderByDate(currentDate); });
-
+document.addEventListener("DOMContentLoaded", init);
 </script>
 </body>
 </html>
