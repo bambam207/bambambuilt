@@ -4,8 +4,19 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>BAMBAM — Daily WOD</title>
+
+<!-- iOS standalone + theming -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Daily WOD">
+<meta name="theme-color" content="#0f1115">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Crect width='100%25' height='100%25' fill='%230f1115'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' fill='%23e8eaf0' font-size='64' font-family='Arial'%3E%F0%9F%8F%8B%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABb0P4JAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAABcUlEQVR42u3RAQ0AAAwCoNm/9C1gkQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwqgkAAQh7b7cAAAAASUVORK5CYII=" />
+
 <style>
-  :root{ --bg:#0f1115; --card:#151922; --ink:#e8eaf0; --muted:#aab0c0; --accent:#61dafb; }
+  :root{
+    --bg:#0f1115; --card:#151922; --ink:#e8eaf0; --muted:#aab0c0; --accent:#61dafb;
+  }
   *{box-sizing:border-box}
   body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
        font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
@@ -21,6 +32,9 @@
   ul{margin:8px 0 0 20px} li{margin:4px 0}
   .notice{background:#1a2030;border-left:4px solid var(--accent);padding:10px 12px;border-radius:8px}
   .center{text-align:center}
+  .date-chip{cursor:pointer;display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid #2a3345;background:#0d1320}
+  .date-chip:hover{border-color:var(--accent)}
+  #dateWrap{display:flex;justify-content:center}
   @media print{ .controls, .footer {display:none} body{background:white;color:#111} .card{box-shadow:none;border-color:#ddd}}
   footer{margin-top:24px;text-align:center;color:#9aa3b2;font-size:12px}
 </style>
@@ -31,7 +45,8 @@
   <!-- HEADER + CONTROLS -->
   <div class="card">
     <h1 class="center">Daily WOD</h1>
-    <div id="todayStr" class="meta center"></div>
+    <div id="dateWrap"><div id="todayStr" class="meta center date-chip" title="Pick a date"></div></div>
+    <input id="datePicker" type="date" style="position:absolute;left:-9999px;opacity:0" aria-hidden="true">
     <div class="row controls" style="margin-top:8px;">
       <button id="prevBtn">◀ Prev</button>
       <button id="todayBtn">Today</button>
@@ -72,17 +87,14 @@
 /* ========= UTIL ========= */
 function mulberry32(a){return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}}
 function choice(rng,arr){return arr[Math.floor(rng()*arr.length)]}
-function dayOfYear(d){const start=new Date(Date.UTC(d.getFullYear(),0,1));const diff=Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-start;return Math.floor(diff/(24*60*60*1000))+1}
+function clamp(n,min,max){return Math.max(min,Math.min(max,n))}
+function daysInYear(y){return ((y%4===0 && y%100!==0) || (y%400===0)) ? 366 : 365;}
+function dateFromDOY(y,doy){const dt=new Date(y,0,1); dt.setDate(doy); return dt;}
+function doyFromDate(dt){const start=new Date(dt.getFullYear(),0,1); const diff=dt - start; return Math.floor(diff/(24*3600*1000))+1;}
 function fmtDate(d){return d.toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
-const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
 
-/* ========= YOUR GEAR =========
-   - DB: 2×50 lb (double) & 1×50 lb (single)
-   - KB: 53 & 35
-   - Wall Ball: (you scale)
-   - Plus: rope, rower, run, box (20/24/32, text uses 24"), pull-up bar, bodyweight
-*/
-const DB2 = "2×50 lb", DB1 = "1×50 lb", KB53 = "53 lb", KB35 = "35 lb", BOX = '24"';
+/* ========= YOUR GEAR ========= */
+const DB2="2×50 lb", DB1="1×50 lb", KB53="53 lb", KB35="35 lb", BOX='24"';
 
 /* ========= ONE WARMUP / ONE COOLDOWN ========= */
 const ONE_WARMUP =
@@ -94,18 +106,15 @@ const ONE_COOLDOWN =
   `2× :30–:45 banded lat stretch or passive hang.<br>` +
   `Ankle rocks x10/side.`;
 
-/* ========= TRIBUTES (shown on pinned days) ========= */
-const TRIBUTES = {
-  "Murph":
-    "Honors U.S. Navy Lt. Michael P. Murphy (Medal of Honor), killed in Afghanistan in 2005 during Operation Red Wings.",
-  "Glen (Home)":
-    "Honors former U.S. Navy SEAL Glen Doherty, killed on September 11, 2012, during the Benghazi attacks.",
-  "12 Days of Christmas (Home)":
-    "Seasonal suffer-fest inspired by the song. Pace early; it stacks up fast."
+/* ========= TRIBUTES ========= */
+const TRIBUTES={
+  "Murph":"Honors U.S. Navy Lt. Michael P. Murphy (Medal of Honor), killed in Afghanistan in 2005 during Operation Red Wings.",
+  "Glen (Home)":"Honors former U.S. Navy SEAL Glen Doherty, killed on September 11, 2012, during the Benghazi attacks.",
+  "12 Days of Christmas (Home)":"Seasonal suffer-fest inspired by the song. Pace early; it stacks up fast."
 };
 
-/* ========= NAMED / BENCHMARK WODS (trimmed to home-gear) ========= */
-const BENCH = [
+/* ========= BENCHMARKS (trimmed to home-gear) ========= */
+const BENCH=[
   // Girls
   {title:"Angie",type:"For Time",time:"20–40",body:["For time:","• 100 Pull-ups","• 100 Push-ups","• 100 Sit-ups","• 100 Air Squats"],notes:"Partition if needed."},
   {title:"Annie",type:"For Time",time:"10–20",body:["For time:","• 50-40-30-20-10 Double-unders","• 50-40-30-20-10 Sit-ups"],notes:"If <20 min, add easy row/jog."},
@@ -125,7 +134,7 @@ const BENCH = [
   {title:"Nancy (DB/KB OHS)",type:"For Time (5 rds)",time:"20–35",body:["5 rounds:","• 400m Run","• 15 Overhead Squats — Single DB/KB"],notes:"Single OH squat each round."},
   {title:"Nicole",type:"AMRAP 20",time:"20",body:["AMRAP 20:","• 400m Run","• Max Pull-ups"],notes:"Score total pull-ups."},
 
-  // Heroes (home-gear adapted where needed)
+  // Heroes / Commemoratives
   {title:"Murph",type:"For Time",time:"40–60",body:["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Air Squats","• 1 mile Run"],notes:"Partition as needed."},
   {title:"Glen (Home)",type:"For Time",time:"45–60",body:["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Sit-ups","• 1 mile Run"],notes:"Partition calisthenics."},
   {title:"Loredo",type:"For Time (6 rds)",time:"25–45",body:["6 rounds:","• 24 Air Squats","• 24 Push-ups","• 24 Walking Lunges","• 400m Run"],notes:"Bodyweight + run."},
@@ -139,7 +148,7 @@ const BENCH = [
   {title:"Open 22.1",type:"AMRAP 15",time:"20 (cap w/ cash-out)",body:["AMRAP 15:","• 3 Wall Walks","• 12 DB Snatches — "+DB1,"• 15 Box Jumps — "+BOX],notes:"Add easy row to 20 if you want."},
   {title:"Open 22.3 (DB Thruster)",type:"For Time",time:"15–30",body:["For time (cap 15):","• 21 Pull-ups / 42 DUs / 21 DB Thrusters — "+DB2,"• 18 C2B / 36 DUs / 18 DB Thrusters — "+DB2,"• 15 Bar MU / 30 DUs / 15 DB Thrusters — "+DB2],notes:"DB swap for barbell."},
 
-  // Other staples
+  // Other
   {title:"Fight Gone Bad (3 rnd)",type:"AMRAP (Reps)",time:"17",body:["3 rounds, 1 min stations:","• Wall Balls","• Sumo DL High Pull — "+DB1,"• Box Jumps — "+BOX,"• Push Press — "+DB1,"• Row (Calories)","Rest 1 min"],notes:"Score = total reps."},
   {title:"Filthy Fifty (Home)",type:"Chipper",time:"30–45",body:["50 each:","• Box Jumps — "+BOX,"• Jumping Pull-ups","• KB Swings — "+KB35,"• Walking Lunges (50 steps)","• Knees-to-Elbows (or V-ups)","• Push Press — "+DB1,"• Supermans","• Wall Balls","• Burpees","• 50 Double-unders"],notes:"All in your kit."},
   {title:"The Chief (DB Clean)",type:"Intervals 5×3:00",time:"25–35",body:["5 cycles of 3-min AMRAP + 1-min rest:","• 3 DB Power Cleans — "+DB2,"• 6 Push-ups","• 9 Air Squats"],notes:"DBs instead of 135# bar."},
@@ -154,118 +163,96 @@ const BENCH = [
   ],notes:"Annual suffering."}
 ];
 
-/* ========= GENERATORS (20–60 mins; AMRAP can be 3–6 deep) ========= */
-const MONO = [
-  "Run 400m","Run 600m","Run 800m","Run 1000m",
-  "Row 500m","Row 750m","Row 1000m","Row 1500m",
-  "150 Single-unders","100 Double-unders","Shuttle Run 200m"
-];
-const GYM_BASE = [
-  "Pull-ups","Chest-to-Bar Pull-ups","Bar Muscle-ups",
-  "Toes-to-Bar","Push-ups","Sit-ups","Air Squats",
-  "Pistols (alt)","Handstand Push-ups","Burpees",
-  "Pike Push-ups","V-ups","Wall Walks","Hanging Knee Raises"
-];
-const DB_BASE = [
-  {name:"DB Thrusters",load:DB2},{name:"DB Push Press",load:DB2},{name:"DB Front Squats",load:DB2},
-  {name:"DB Power Cleans",load:DB2},{name:"DB Deadlifts",load:DB2},{name:"Alt DB Snatches",load:DB1},
-  {name:"DB Hang Clean & Jerks",load:DB1},
-];
-const KB_BASE = [
-  {name:"KB Swings",load:KB53},{name:"KB Goblet Squats",load:KB53},{name:"KB Clean & Press (alt)",load:KB53},{name:"KB Swings",load:KB35},
-];
-const BOX_BASE = ["Box Jumps","Burpee Box Jump-Overs"];
-const WB_BASE = ["Wall Balls"];
-
-const REP_RULES = {
-  "Pull-ups":[10,12,15,20], "Chest-to-Bar Pull-ups":[10,12,15], "Bar Muscle-ups":[5,6,8],
-  "Toes-to-Bar":[10,12,15], "Push-ups":[10,15,20,25], "Sit-ups":[20,30,40],
-  "Air Squats":[20,30,40,50], "Pistols (alt)":[5,10,16,20], "Handstand Push-ups":[6,9,12],
-  "Burpees":[12,15,20], "Pike Push-ups":[12,15,20], "V-ups":[15,20,25], "Wall Walks":[3,4,5], "Hanging Knee Raises":[15,20,25],
-  "DB Thrusters":[9,12,15], "DB Push Press":[10,12,15], "DB Front Squats":[12,15,20],
-  "DB Power Cleans":[10,12,14], "DB Deadlifts":[16,20,24], "Alt DB Snatches":[12,16,20], "DB Hang Clean & Jerks":[10,12,16],
-  "KB Swings":[20,25,30], "KB Goblet Squats":[16,20,24], "KB Clean & Press (alt)":[10,12,14],
-  "Box Jumps":[15,20,24], "Burpee Box Jump-Overs":[10,12,14], "Wall Balls":[20,25,30,40],
+/* ========= GENERATORS (AMRAP 3–6 deep; EMOM; 1 chipper/wk) ========= */
+const MONO=["Run 400m","Run 600m","Run 800m","Run 1000m","Row 500m","Row 750m","Row 1000m","Row 1500m","150 Single-unders","100 Double-unders","Shuttle Run 200m"];
+const GYM_BASE=["Pull-ups","Chest-to-Bar Pull-ups","Bar Muscle-ups","Toes-to-Bar","Push-ups","Sit-ups","Air Squats","Pistols (alt)","Handstand Push-ups","Burpees","Pike Push-ups","V-ups","Wall Walks","Hanging Knee Raises"];
+const DB_BASE=[{name:"DB Thrusters",load:DB2},{name:"DB Push Press",load:DB2},{name:"DB Front Squats",load:DB2},{name:"DB Power Cleans",load:DB2},{name:"DB Deadlifts",load:DB2},{name:"Alt DB Snatches",load:DB1},{name:"DB Hang Clean & Jerks",load:DB1}];
+const KB_BASE=[{name:"KB Swings",load:KB53},{name:"KB Goblet Squats",load:KB53},{name:"KB Clean & Press (alt)",load:KB53},{name:"KB Swings",load:KB35}];
+const BOX_BASE=["Box Jumps","Burpee Box Jump-Overs"];
+const WB_BASE=["Wall Balls"];
+const REP_RULES={
+  "Pull-ups":[10,12,15,20],"Chest-to-Bar Pull-ups":[10,12,15],"Bar Muscle-ups":[5,6,8],
+  "Toes-to-Bar":[10,12,15],"Push-ups":[10,15,20,25],"Sit-ups":[20,30,40],"Air Squats":[20,30,40,50],
+  "Pistols (alt)":[5,10,16,20],"Handstand Push-ups":[6,9,12],"Burpees":[12,15,20],"Pike Push-ups":[12,15,20],"V-ups":[15,20,25],
+  "Wall Walks":[3,4,5],"Hanging Knee Raises":[15,20,25],
+  "DB Thrusters":[9,12,15],"DB Push Press":[10,12,15],"DB Front Squats":[12,15,20],"DB Power Cleans":[10,12,14],"DB Deadlifts":[16,20,24],
+  "Alt DB Snatches":[12,16,20],"DB Hang Clean & Jerks":[10,12,16],
+  "KB Swings":[20,25,30],"KB Goblet Squats":[16,20,24],"KB Clean & Press (alt)":[10,12,14],
+  "Box Jumps":[15,20,24],"Burpee Box Jump-Overs":[10,12,14],"Wall Balls":[20,25,30,40],
 };
-const AMRAP_SCHEMES = {
+const AMRAP_SCHEMES={
   3:[{label:"Triplet",pattern:null},{label:"15/10/5",pattern:[15,10,5]},{label:"21/15/9",pattern:[21,15,9]}],
   4:[{label:"Quad",pattern:null},{label:"12/9/6/3",pattern:[12,9,6,3]},{label:"10s",pattern:[10,10,10,10]}],
   5:[{label:"Quint",pattern:null},{label:"Desc 10→2",pattern:[10,8,6,4,2]}],
   6:[{label:"Sextet",pattern:null},{label:"All 12s",pattern:[12,12,12,12,12,12]}]
 };
-
 function repFor(name,rng){const a=REP_RULES[name]||[12,15,20];return a[Math.floor(rng()*a.length)]}
-function fmtRep(rep, mv){return (typeof mv==="string")? `${rep} ${mv}` : `${rep} ${mv.name} — ${mv.load}`}
-function pickGym(rng){return choice(rng, GYM_BASE)}
-function pickDB(rng){return choice(rng, DB_BASE)}
-function pickKB(rng){return choice(rng, KB_BASE)}
-function pickBOX(rng){return choice(rng, BOX_BASE)}
-function pickWB(rng){return choice(rng, WB_BASE)}
+function fmtRep(rep,mv){return (typeof mv==="string")?`${rep} ${mv}`:`${rep} ${mv.name} — ${mv.load}`}
+function pickGym(rng){return choice(rng,GYM_BASE)}
+function pickDB(rng){return choice(rng,DB_BASE)}
+function pickKB(rng){return choice(rng,KB_BASE)}
+function pickBOX(rng){return choice(rng,BOX_BASE)}
+function pickWB(rng){return choice(rng,WB_BASE)}
 function pickAnyRepName(rng){const b=choice(rng,["GYM","DB","KB","BOX","WB"]);return b==="GYM"?pickGym(rng):b==="DB"?pickDB(rng):b==="KB"?pickKB(rng):b==="BOX"?pickBOX(rng):pickWB(rng)}
 
 function amrapLong(rng){
-  const mins = choice(rng,[20,24,30,40]);
-  const depth = choice(rng,[3,3,4,4,5,6]);
-  const scheme = choice(rng, AMRAP_SCHEMES[depth]);
-  const titleLabel = scheme.pattern ? scheme.label : (depth===3?"Triplet":depth===4?"Quad":depth===5?"Quint":"Sextet");
+  const mins=choice(rng,[20,24,30,40]);
+  const depth=choice(rng,[3,3,4,4,5,6]);
+  const scheme=choice(rng,AMRAP_SCHEMES[depth]);
+  const titleLabel=scheme.pattern?scheme.label:(depth===3?"Triplet":depth===4?"Quad":depth===5?"Quint":"Sextet");
   const items=[]; let monoUsed=false;
   while(items.length<depth){
-    const useMono = (!monoUsed) && (rng()<0.35);
-    if(useMono){ items.push(choice(rng, MONO)); monoUsed=true; }
+    const useMono=(!monoUsed)&&(rng()<0.35);
+    if(useMono){items.push(choice(rng,MONO)); monoUsed=true;}
     else{
-      const mv = pickAnyRepName(rng);
-      const id = (typeof mv==='string')? mv : mv.name;
+      const mv=pickAnyRepName(rng);
+      const id=(typeof mv==='string')? mv : mv.name;
       if(items.some(x=>((typeof x==='string')?x:(x.name||x))===id)) continue;
       items.push(mv);
     }
   }
-  const lines=[]; let pIndex=0;
+  const lines=[]; let p=0;
   for(const mv of items){
     if(typeof mv==="string" && MONO.includes(mv)){ lines.push("• "+mv); continue; }
-    const name = (typeof mv==="string")? mv : mv.name;
-    const rep = scheme.pattern ? scheme.pattern[clamp(pIndex,0,scheme.pattern.length-1)] : repFor(name,rng);
-    pIndex += scheme.pattern ? 1 : 0;
+    const name=(typeof mv==="string")?mv:mv.name;
+    const rep=scheme.pattern?scheme.pattern[clamp(p,0,scheme.pattern.length-1)]:repFor(name,rng);
+    if(scheme.pattern) p++;
     lines.push("• "+fmtRep(rep,mv));
   }
-  return { title:`AMRAP ${mins} — ${titleLabel}`, type:"AMRAP", time:String(mins),
-           body:[`As many rounds as possible in ${mins} minutes:`].concat(lines),
-           notes:"Tight transitions. Keep round times consistent." };
+  return {title:`AMRAP ${mins} — ${titleLabel}`, type:"AMRAP", time:String(mins),
+    body:[`As many rounds as possible in ${mins} minutes:`].concat(lines),
+    notes:"Tight transitions. Keep round times consistent."};
 }
-
 function emomLong(rng){
-  const mins = choice(rng,[24,30,36,40]);
-  const s1=pickAnyRepName(rng), s2=pickGym(rng), s3=choice(rng,MONO);
-  return { title:`EMOM ${mins} — Rotate 3`, type:"EMOM", time:String(mins),
+  const mins=choice(rng,[24,30,36,40]);
+  const a=pickAnyRepName(rng), b=pickGym(rng), c=choice(rng,MONO);
+  return {title:`EMOM ${mins} — Rotate 3`, type:"EMOM", time:String(mins),
     body:[`Every minute for ${mins} min, rotate:`,
-          `1) ${fmtRep(repFor((s1.name||s1),rng),s1)}`,
-          `2) ${fmtRep(repFor(s2,rng),s2)}`,
-          `3) ${s3}`,
+          `1) ${fmtRep(repFor((a.name||a),rng),a)}`,
+          `2) ${fmtRep(repFor(b,rng),b)}`,
+          `3) ${c}`,
           "Finish each minute in ~40–45s."],
-    notes:"Hold windows; quality first."
-  };
+    notes:"Hold windows; quality first."};
 }
-
 function chipperLong(rng){
-  const count = choice(rng,[8,9,10,11,12]);
-  const tasks=[];
+  const count=choice(rng,[8,9,10,11,12]); const tasks=[];
   tasks.push(choice(rng,["25 Wall Balls","30 Wall Balls","40 Wall Balls"]));
-  tasks.push(choice(rng, MONO));
+  tasks.push(choice(rng,MONO));
   const x=pickAnyRepName(rng); tasks.push(fmtRep(repFor((x.name||x),rng),x));
   const y=pickGym(rng); tasks.push(fmtRep(repFor(y,rng),y));
   const z=pickBOX(rng); tasks.push(fmtRep(repFor(z,rng),z));
   while(tasks.length<count){
-    const add = (rng()<0.3) ? choice(rng,MONO) : (()=>{const m=pickAnyRepName(rng);return fmtRep(repFor((m.name||m),rng),m)})();
+    const add=(rng()<0.3)?choice(rng,MONO):( ()=>{const m=pickAnyRepName(rng);return fmtRep(repFor((m.name||m),rng),m);} )();
     if(!tasks.includes(add)) tasks.push(add);
   }
-  return { title:"Chipper — For Time (Long)", type:"For Time", time:"30–60",
+  return {title:"Chipper — For Time (Long)", type:"For Time", time:"30–60",
     body:["Complete for time:"].concat(tasks.map(t=>"• "+t)),
-    notes:"Break small and keep moving. Target 30–60 min."
-  };
+    notes:"Break small and keep moving. Target 30–60 min."};
 }
 
 /* ========= 3-day guard ========= */
-function tagWorkoutBody(lines){
-  const t = lines.join(" ");
+function tagBody(lines){
+  const t=lines.join(" ");
   return {
     wb:/Wall Balls?/.test(t),
     pull:/(Pull-ups|Chest-to-Bar|Bar Muscle-ups|L-Pull-ups|Toes-to-Bar|Hanging Knee Raises)/i.test(t),
@@ -276,34 +263,31 @@ function tagWorkoutBody(lines){
     box:/Box Jumps?/.test(t),
   };
 }
-function violates3Day(tags,p1,p2){
+function violates(tags,p1,p2){
   if(!p1&&!p2) return false;
   if(p1){ if(tags.wb&&p1.wb) return true; if(tags.pull&&p1.pull) return true; if(tags.hspu&&p1.hspu) return true; if(tags.db&&p1.db) return true; if(tags.kb&&p1.kb) return true; }
   if(tags.mono && p1 && p2 && p1.mono && p2.mono) return true;
   return false;
 }
 
-/* ========= Scheduler =========
-   - Weekly pattern: Mon AMRAP, Tue EMOM, Wed AMRAP, Thu EMOM, Fri AMRAP, Sat EMOM, Sun CHIPPER
-   - Benchmarks every ~9 days
-   - Pins: Murph (Memorial Day), Glen (9/11), 12 Days (Dec 25)
-*/
-function memorialDayUTC(y){const last=new Date(Date.UTC(y,4,31));const dow=last.getUTCDay();const offset=(dow+6)%7;return 31-offset}
-function doyFromYMD(y,m,d){return Math.floor((Date.UTC(y,m,d)-Date.UTC(y,0,0))/(24*3600*1000))}
-function namedSchedule(year){
-  const map=new Map();
-  let idx=0; for(let d=9; d<=365; d+=9){ map.set(d, idx++ % BENCH.length); }
-  const md = memorialDayUTC(year); const mdoy = doyFromYMD(year,4,md);
-  const murphI = BENCH.findIndex(b=>b.title==="Murph"); if(murphI>-1) map.set(mdoy, murphI);
-  const gldoy = doyFromYMD(year,8,11); const glI = BENCH.findIndex(b=>b.title==="Glen (Home)"); if(glI>-1) map.set(gldoy, glI);
-  const xmas = doyFromYMD(year,11,25); const xmi = BENCH.findIndex(b=>b.title.startsWith("12 Days of Christmas")); if(xmi>-1) map.set(xmas, xmi);
+/* ========= Scheduler (year-aware with pins) ========= */
+function memorialDayUTC(year){const last=new Date(Date.UTC(year,4,31));const dow=last.getUTCDay();const offset=(dow+6)%7;return 31-offset}
+function buildSchedule(year,days){
+  const map=new Map(); let i=0;
+  for(let d=9; d<=days; d+=9){ map.set(d, i++ % BENCH.length); }
+  const md=memorialDayUTC(year), mdoy=Math.floor((Date.UTC(year,4,md)-Date.UTC(year,0,0))/(24*3600*1000));
+  const murphI=BENCH.findIndex(b=>b.title==="Murph"); if(murphI>-1) map.set(mdoy,murphI);
+  const gldoy=Math.floor((Date.UTC(year,8,11)-Date.UTC(year,0,0))/(24*3600*1000));
+  const glI=BENCH.findIndex(b=>b.title==="Glen (Home)"); if(glI>-1) map.set(gldoy,glI);
+  const xmas=Math.floor((Date.UTC(year,11,25)-Date.UTC(year,0,0))/(24*3600*1000));
+  const xmi=BENCH.findIndex(b=>b.title.startsWith("12 Days of Christmas")); if(xmi>-1) map.set(xmas,xmi);
   return map;
 }
-function buildYear(){
-  const out=new Array(365), tags=new Array(365);
-  const rng=mulberry32(1337);
-  const slots=namedSchedule(new Date().getFullYear());
-  for(let d=1; d<=365; d++){
+function buildYear(year){
+  const days=daysInYear(year);
+  const out=new Array(days), tags=new Array(days);
+  const rng=mulberry32(1337); const slots=buildSchedule(year,days);
+  for(let d=1; d<=days; d++){
     let w;
     if(slots.has(d)){
       const b=BENCH[slots.get(d)];
@@ -312,19 +296,17 @@ function buildYear(){
       const dow=(d-1)%7;
       const gen=(dow===6)?chipperLong:(dow%2===0?amrapLong:emomLong);
       for(let tries=0; tries<6; tries++){
-        const cand=gen(rng);
-        const tg=tagWorkoutBody(cand.body);
+        const cand=gen(rng); const tg=tagBody(cand.body);
         const p1=d>1?tags[d-2]:null, p2=d>2?tags[d-3]:null;
-        if(!violates3Day(tg,p1,p2)){ w=cand; tags[d-1]=tg; break; }
+        if(!violates(tg,p1,p2)){ w=cand; tags[d-1]=tg; break; }
         if(tries===5){ w=cand; tags[d-1]=tg; }
       }
     }
-    if(!tags[d-1]) tags[d-1]=tagWorkoutBody(w.body);
+    if(!tags[d-1]) tags[d-1]=tagBody(w.body);
     out[d-1]=w;
   }
   return out;
 }
-const YEAR = buildYear();
 
 /* ========= UI ========= */
 const elTitle=document.getElementById("wodTitle");
@@ -334,14 +316,23 @@ const elType=document.getElementById("typePill");
 const elTime=document.getElementById("timePill");
 const elTarget=document.getElementById("targetPill");
 const elTribute=document.getElementById("wodTribute");
-let currentDay = ((dayOfYear(new Date())-1)%365)+1; // leap-year safe
+const dateChip=document.getElementById("todayStr");
+const datePicker=document.getElementById("datePicker");
 
-function isCommemorative(title){ return TRIBUTES[title] !== undefined; }
-function paceHint(w){ return (w.type==="For Time")?"Target: 30–60 min":`Target: ${w.time} min`; }
+let currentDate=new Date();           // actual calendar date shown
+let currentYear=currentDate.getFullYear();
+let YEAR=buildYear(currentYear);
 
-function renderDay(day){
-  const w = YEAR[day-1];
-  document.getElementById("todayStr").textContent = fmtDate(new Date());
+function isCommemorative(title){return TRIBUTES[title]!==undefined;}
+function paceHint(w){return (w.type==="For Time")?"Target: 30–60 min":`Target: ${w.time} min`;}
+
+function renderByDate(dt){
+  // Rebuild if year changed
+  if(dt.getFullYear()!==currentYear){ currentYear=dt.getFullYear(); YEAR=buildYear(currentYear); }
+  const doy=doyFromDate(dt); const days=daysInYear(currentYear);
+  const dayIndex=clamp(doy,1,days); const w=YEAR[dayIndex-1];
+
+  dateChip.textContent = fmtDate(dt);
   elTitle.textContent = w.named? `${w.title} (Benchmark)` : w.title;
   elType.textContent = w.type;
   elTime.textContent = w.time;
@@ -350,16 +341,78 @@ function renderDay(day){
   elNotes.textContent = w.notes || "";
   if(isCommemorative(w.title)){ elTribute.style.display="block"; elTribute.textContent=TRIBUTES[w.title]; }
   else { elTribute.style.display="none"; elTribute.textContent=""; }
-  currentDay = day;
+
+  currentDate = dt;
 }
 
 function init(){
   document.getElementById("warmup").innerHTML = ONE_WARMUP;
   document.getElementById("cooldown").innerHTML = ONE_COOLDOWN;
-  renderDay(currentDay);
-  document.getElementById("prevBtn").onclick=()=>{renderDay(currentDay<=1?365:currentDay-1);};
-  document.getElementById("nextBtn").onclick=()=>{renderDay(currentDay>=365?1:currentDay+1);};
-  document.getElementById("todayBtn").onclick=()=>{renderDay(((dayOfYear(new Date())-1)%365)+1);};
+
+  // Render today's date WOD
+  renderByDate(currentDate);
+
+  // Buttons move the DATE (and WOD) 1 day
+  document.getElementById("prevBtn").onclick=()=>{
+    const d=new Date(currentDate); d.setDate(d.getDate()-1); renderByDate(d);
+  };
+  document.getElementById("nextBtn").onclick=()=>{
+    const d=new Date(currentDate); d.setDate(d.getDate()+1); renderByDate(d);
+  };
+  document.getElementById("todayBtn").onclick=()=>{ renderByDate(new Date()); };
+
+  // Click date -> open native date picker
+  dateChip.addEventListener('click', ()=>{
+    // initialize picker to currentDate
+    datePicker.value = `${currentDate.getFullYear()}-${String(currentDate.getMonth()+1).padStart(2,'0')}-${String(currentDate.getDate()).padStart(2,'0')}`;
+    if(typeof datePicker.showPicker === 'function'){ datePicker.showPicker(); }
+    else { datePicker.click(); }
+  });
+  datePicker.addEventListener('change', ()=>{
+    if(datePicker.value){
+      const [y,m,d]=datePicker.value.split('-').map(Number);
+      renderByDate(new Date(y, m-1, d));
+    }
+  });
+
+  // ---- PWA: dynamic manifest + service worker (offline + standalone) ----
+  const icon192 = document.querySelector('link[rel="apple-touch-icon"]').href; // reuse png
+  const manifest = {
+    name: "BAMBAM — Daily WOD",
+    short_name: "Daily WOD",
+    start_url: "./",
+    display: "standalone",
+    background_color: "#0f1115",
+    theme_color: "#0f1115",
+    icons: [
+      { src: icon192, sizes: "192x192", type: "image/png" },
+      { src: icon192, sizes: "512x512", type: "image/png" }
+    ]
+  };
+  const manBlob = new Blob([JSON.stringify(manifest)], {type:"application/manifest+json"});
+  const manLink = document.createElement('link'); manLink.rel='manifest'; manLink.href=URL.createObjectURL(manBlob);
+  document.head.appendChild(manLink);
+
+  if('serviceWorker' in navigator){
+    const swCode = `
+      const CACHE='bb-wod-v1';
+      self.addEventListener('install',e=>{
+        e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./'])));
+        self.skipWaiting();
+      });
+      self.addEventListener('activate',e=>{ self.clients.claim(); });
+      self.addEventListener('fetch',e=>{
+        const req=e.request;
+        if(req.mode==='navigate'){ // HTML navigations
+          e.respondWith(fetch(req).catch(()=>caches.match('./')));
+          return;
+        }
+        e.respondWith(caches.match(req).then(r=>r||fetch(req)));
+      });
+    `;
+    const swURL = URL.createObjectURL(new Blob([swCode], {type:'text/javascript'}));
+    navigator.serviceWorker.register(swURL, {scope:'./'}).catch(()=>{});
+  }
 }
 document.addEventListener("DOMContentLoaded", init);
 </script>
