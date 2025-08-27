@@ -1,64 +1,95 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>BAMBAM — Daily WOD</title>
 
-<!-- kill aggressive caching -->
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
-<meta name="theme-color" content="#0f1115">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Crect width='100%25' height='100%25' fill='%230f1115'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' fill='%23e8eaf0' font-size='64' font-family='Arial'%3E%F0%9F%8F%8B%EF%B8%8F%3C/text%3E%3C/svg%3E">
-
 <style>
-  :root{ --bg:#0f1115; --card:#151922; --ink:#e8eaf0; --muted:#aab0c0; --accent:#61dafb; --border:#2a3345; }
-  *{box-sizing:border-box}
-  body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
-       font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
-  h1,h2,h3{margin:0 0 8px;line-height:1.15}
-  h1{font-size:28px} h2{font-size:20px;color:var(--muted);font-weight:600} h3{font-size:16px;color:var(--muted);font-weight:600}
-  .wrap{max-width:900px;margin:0 auto;display:grid;gap:16px}
-  .card{background:var(--card);border:1px solid #222937;border-radius:12px;padding:16px;box-shadow:0 4px 18px rgba(0,0,0,.25)}
-  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center}
-  button{background:#111723;color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;font:inherit}
-  button:hover{border-color:var(--accent)}
-  .pill{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:#0d1320;color:#aab0c0;font-size:12px;margin-right:6px}
-  .meta{color:#aab0c0;font-size:14px}
-  .warn{color:#ffb85c;font-size:12px;margin-top:6px;text-align:center}
-  ul{margin:8px 0 0 20px} li{margin:4px 0}
-  .notice{background:#1a2030;border-left:4px solid var(--accent);padding:10px 12px;border-radius:8px}
-  .center{text-align:center}
-  .date-chip{cursor:pointer;display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#0d1320;user-select:none;min-width:12ch}
-  .date-chip:hover{border-color:var(--accent)}
-  #dateWrap{display:flex;justify-content:center;position:relative}
-  .cal{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:320px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,.45);padding:12px;display:none;z-index:1000}
-  .cal.show{display:block}
-  .cal header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-  .cal .hdr-btn{background:#111723;border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;color:#e8eaf0;cursor:pointer}
-  .cal .hdr-btn:hover{border-color:var(--accent)}
-  .cal .label{font-weight:700;color:#e8eaf0}
-  .cal .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:8px}
-  .cal .dow{font-size:12px;color:#aab0c0;text-align:center}
-  .cal .day{font-size:13px;text-align:center;padding:6px 0;border-radius:8px;border:1px solid transparent;cursor:pointer}
-  .cal .day:hover{border-color:var(--accent);background:#0d1320}
-  .cal .muted{opacity:.4}
-  .cal .today{outline:1px dashed var(--accent);outline-offset:2px}
-  .cal .selected{background:#0d1320;border-color:var(--accent)}
-  @media print{ .controls, .footer, .cal {display:none} body{background:white;color:#111} .card{box-shadow:none;border-color:#ddd}}
-  footer{margin-top:24px;text-align:center;color:#9aa3b2;font-size:12px}
-  footer a{color:#9aa3b2;text-decoration:none}
-  footer a:hover{color:#e8eaf0}
+:root{
+  --bg:#0f1115; --card:#151922; --ink:#e8eaf0; --muted:#aab0c0;
+  --accent:#61dafb; --border:#2a3345;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
+     font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+h1,h2,h3{margin:0 0 8px;line-height:1.15}
+h1{font-size:28px} h2{font-size:20px;color:var(--muted);font-weight:600}
+h3{font-size:16px;color:var(--muted);font-weight:600}
+.wrap{max-width:900px;margin:0 auto;display:grid;gap:16px}
+.card{background:var(--card);border:1px solid #222937;border-radius:12px;padding:16px;box-shadow:0 4px 18px rgba(0,0,0,.25)}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center}
+button{background:#111723;color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;font:inherit}
+button:hover{border-color:var(--accent)}
+.pill{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:#0d1320;color:#aab0c0;font-size:12px;margin-right:6px}
+.meta{color:#aab0c0;font-size:14px}
+.warn{color:#ffb85c;font-size:12px;margin-top:6px;text-align:center}
+ul{margin:8px 0 0 20px} li{margin:4px 0}
+.notice{background:#1a2030;border-left:4px solid var(--accent);padding:10px 12px;border-radius:8px}
+.center{text-align:center}
+
+/* Date chip + calendar */
+.date-chip{cursor:pointer;display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#0d1320;user-select:none}
+.date-chip:hover{border-color:var(--accent)}
+#dateWrap{display:flex;justify-content:center;gap:10px;align-items:center;position:relative}
+.cal{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);
+     width:320px;background:var(--card);border:1px solid var(--border);border-radius:12px;
+     box-shadow:0 12px 36px rgba(0,0,0,.45);padding:12px;display:none;z-index:1000}
+.cal.show{display:block}
+.cal header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.cal .hdr-btn{background:#111723;border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;color:var(--ink);cursor:pointer}
+.cal .hdr-btn:hover{border-color:var(--accent)}
+.cal .label{font-weight:700;color:#e8eaf0}
+.cal .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:8px}
+.cal .dow{font-size:12px;color:#aab0c0;text-align:center}
+.cal .day{font-size:13px;text-align:center;padding:6px 0;border-radius:8px;border:1px solid transparent;cursor:pointer}
+.cal .day:hover{border-color:var(--accent);background:#0d1320}
+.cal .muted{opacity:.4}
+.cal .today{outline:1px dashed var(--accent);outline-offset:2px}
+.cal .selected{background:#0d1320;border-color:var(--accent)}
+
+/* Filters dropdown */
+.filters{position:relative}
+.filter-btn{background:#111723;border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;color:var(--ink);cursor:pointer}
+.filter-btn:hover{border-color:var(--accent)}
+.filter-panel{position:absolute;top:120%;right:0;width:280px;background:var(--card);border:1px solid var(--border);border-radius:12px;
+              box-shadow:0 12px 36px rgba(0,0,0,.45);padding:12px;display:none;z-index:1000}
+.filter-panel.show{display:block}
+.filter-panel h4{margin:0 0 8px;color:#e8eaf0;font-size:14px}
+.filter-panel label{display:flex;align-items:center;gap:8px;font-size:13px;color:#d4d8e3;margin:6px 0}
+.filter-chip{display:inline-block;margin-left:6px;padding:2px 8px;border:1px solid var(--border);border-radius:999px;background:#0d1320;font-size:12px;color:#aab0c0}
+.small{font-size:12px;color:#8a93a7}
+
+@media print{ .controls, .footer, .cal, .filters {display:none} body{background:#fff;color:#111} .card{box-shadow:none;border-color:#ddd}}
+footer{margin-top:24px;text-align:center;color:#9aa3b2;font-size:12px}
+footer a{color:#9aa3b2;text-decoration:none}
+footer a:hover{color:#e8eaf0}
 </style>
 </head>
 <body>
 <div class="wrap">
 
+  <!-- HEADER -->
   <div class="card">
     <h1 class="center">Daily WOD</h1>
     <div id="dateWrap">
       <div id="todayStr" class="meta center date-chip" title="Pick a date"></div>
+      <div class="filters">
+        <button id="filterBtn" class="filter-btn">Filters ▾</button>
+        <div id="filterPanel" class="filter-panel" aria-hidden="true">
+          <h4>Exclude movements/equipment</h4>
+          <label><input type="checkbox" data-key="pull"> Pull-up bar (PU/C2B/MU/T2B)</label>
+          <label><input type="checkbox" data-key="box"> Box jumps / step-overs</label>
+          <label><input type="checkbox" data-key="wb"> Wall ball</label>
+          <label><input type="checkbox" data-key="rope"> Jump rope (DU/SU)</label>
+          <label><input type="checkbox" data-key="run"> Running</label>
+          <label><input type="checkbox" data-key="row"> Rowing</label>
+          <label><input type="checkbox" data-key="db"> Dumbbells</label>
+          <label><input type="checkbox" data-key="kb"> Kettlebell</label>
+          <label><input type="checkbox" data-key="hspu"> HSPU / Wall walks</label>
+          <div class="small">Saved automatically.</div>
+        </div>
+      </div>
       <div id="cal" class="cal" aria-hidden="true"></div>
     </div>
     <div id="warn" class="warn" style="display:none"></div>
@@ -67,8 +98,10 @@
       <button id="todayBtn">Today</button>
       <button id="nextBtn">Next ▶</button>
     </div>
+    <div id="activeFilters" class="small center" style="margin-top:6px;"></div>
   </div>
 
+  <!-- WOD CARD -->
   <div class="card">
     <div class="row" style="justify-content:space-between">
       <h2 id="wodTitle">Workout</h2>
@@ -83,6 +116,7 @@
     <div id="wodTribute" class="notice" style="display:none;margin-top:8px;"></div>
   </div>
 
+  <!-- WARMUP / COOLDOWN -->
   <div class="card">
     <h3>Warm-Up</h3>
     <div id="warmup" class="notice"></div>
@@ -96,367 +130,459 @@
   <footer>© 2025 <a href="https://bambambuilt.com" target="_blank" rel="noopener">bambambuilt.com</a>. All Rights Reserved.</footer>
 </div>
 
-<!-- ================== WOD BANK (embedded; fixed strings) ================== -->
 <script>
-(function () {
-  const DB1='1×50 lb', DB2='2×50 lb', KB53='53 lb', KB35='35 lb', BOX='24"';
-  const W=(t,y,m,b,n='')=>({title:t,type:y,time:m,body:b,notes:n});
-
-  // Hard date pins (you can add more if you want)
-  window.WOD_DATE_MAP = {
-    '09-11':'Glen (Home)',
-    '07-04':'Kalsu (DB Thruster)',
-    '11-11':'Chad 1000X (24")',
-    '12-25':'12 Days of Christmas (Home)'
-  };
-
-  /* GIRLS */
-  const GIRLS=[
-    W('Angie','For Time','20–40',['For time:','100 Pull-ups','100 Push-ups','100 Sit-ups','100 Air Squats'],'Partition as needed.'),
-    W('Annie','For Time','10–20',['For time:','50-40-30-20-10 Double-unders','50-40-30-20-10 Sit-ups']),
-    W('Barbara','For Time (5 rds)','40–50',['5 rounds:','20 Pull-ups','30 Push-ups','40 Sit-ups','50 Air Squats','Rest 3 min']),
-    W('Chelsea','EMOM 30','30',['Every min for 30:','5 Pull-ups','10 Push-ups','15 Air Squats']),
-    W('Cindy','AMRAP 20','20',['AMRAP 20:','5 Pull-ups','10 Push-ups','15 Air Squats']),
-    W('Christine (DB)','For Time (3 rds)','12–25',['3 rounds:','Row 500m',`12 DB Deadlifts — ${DB2}`,`21 Box Jumps — ${BOX}`]),
-    W('Diane (DB)','For Time','10–20',['21-15-9:',`DB Deadlifts — ${DB2}`,'Handstand Push-ups']),
-    W('Elizabeth (DB)','For Time','10–20',['21-15-9:',`DB Squat Cleans — ${DB2}`,'Strict Dips or Deficit Push-ups']),
-    W('Fran (DB)','For Time','10–20',['21-15-9:',`DB Thrusters — ${DB2}`,'Pull-ups']),
-    W('Grace (DB C&J)','For Time','8–20',['For time:',`30 DB Clean & Jerks — ${DB2}`]),
-    W('Helen','For Time (3 rds)','12–20',['3 rounds:','400m Run',`21 KB Swings — ${KB53}`,'12 Pull-ups']),
-    W('Isabel (DB Snatch)','For Time','8–15',['For time:',`30 Alt DB Snatches — ${DB1}`]),
-    W('Jackie (DB Thruster)','For Time','12–20',['For time:','Row 1000m',`50 Thrusters — ${DB1}`,'30 Pull-ups']),
-    W('Karen','For Time','12–20',['For time:','150 Wall Balls']),
-    W('Kelly','For Time (5 rds)','25–40',['5 rounds:','400m Run',`30 Box Jumps — ${BOX}`,'30 Wall Balls']),
-    W('Mary','AMRAP 20','20',['AMRAP 20:','5 Handstand Push-ups','10 Pistols (alt)','15 Pull-ups']),
-    W('Megan','For Time','12–25',['21-15-9:','Burpees',`KB Swings — ${KB53}`,'Double-unders']),
-    W('Nancy (DB/KB OHS)','For Time (5 rds)','20–35',['5 rounds:','400m Run','15 Overhead Squats — Single DB/KB']),
-    W('Nicole','AMRAP 20','20',['AMRAP 20:','400m Run','Max Pull-ups'])
-  ];
-
-  /* HEROES */
-  const HEROES=[
-    W('Murph','For Time','40–60',['For time:','1 mile Run','100 Pull-ups','200 Push-ups','300 Air Squats','1 mile Run'],'Partition as needed.'),
-    W('Glen (Home)','For Time','45–60',['For time:','1 mile Run','100 Pull-ups','200 Push-ups','300 Sit-ups','1 mile Run'],'Partition calisthenics.'),
-    W('Michael (Home)','For Time (3 rds)','20–35',['3 rounds:','800m Run','50 Sit-ups','50 Supermans']),
-    W('JT (BW)','For Time','10–25',['21-15-9:','Handstand Push-ups','Push-ups','Dips or Deficit Push-ups']),
-    W('Daniel (DB)','For Time','20–35',['For time:',`50 DB Thrusters — ${DB2}`,'400m Run','21 Pull-ups','800m Run','21 Pull-ups','400m Run',`50 DB Thrusters — ${DB2}`]),
-    W('Josh (DB OHS)','For Time','20–35',['For time:',`21 Overhead Squats — ${DB1}`,'42 Pull-ups',`15 Overhead Squats — ${DB1}`,'30 Pull-ups',`9 Overhead Squats — ${DB1}`,'18 Pull-ups']),
-    W('Jason (Bar MU)','For Time','20–40',['For time:','100 Squats','5 Bar Muscle-ups','75 Squats','10 Bar Muscle-ups','50 Squats','15 Bar Muscle-ups','25 Squats','20 Bar Muscle-ups']),
-    W('Badger (DB Squat Clean)','For Time (3 rds)','30–50',['3 rounds:',`30 DB Squat Cleans — ${DB2}`,'30 Pull-ups','800m Run']),
-    W('Joshie (KB alt)','For Time (3 rds)','25–45',['3 rounds:',`21 KB Snatches (L) — ${KB53}`,`21 KB Snatches (R) — ${KB53}`,'42 Pull-ups']),
-    W('Nate (Bar MU)','AMRAP 20','20',['AMRAP 20:','2 Bar Muscle-ups','4 Handstand Push-ups',`8 KB Swings — ${KB53}`]),
-    W('Randy (DB)','For Time','5–12',['For time:',`75 Alt DB Snatches — ${DB1}`]),
-    W('Griff','For Time','10–20',['For time:','800m Run','400m Run (backward)','800m Run','400m Run (backward)']),
-    W('Ryan (BMU+Burpee)','5 RFT','20–35',['5 rounds:','7 Bar Muscle-ups','21 Burpees']),
-    W('Erin (DB)','For Time (5 rds)','30–45',['5 rounds:',`15 DB Split Cleans — ${DB1}`,'21 Pull-ups']),
-    W('Danny (DB PP)','AMRAP 20','20',['AMRAP 20:',`30 Box Jumps — ${BOX}`,`20 DB Push Press — ${DB2}`,'30 Pull-ups']),
-    W('Hansen (Sub GHD)','For Time (5 rds)','25–45',['5 rounds:',`30 KB Swings — ${KB53}`,'30 Burpees','30 Sit-ups']),
-    W('Loredo','For Time (6 rds)','25–45',['6 rounds:','24 Air Squats','24 Push-ups','24 Walking Lunges','400m Run']),
-    W('Gallant (WB/Run)','For Time','25–45',['For time:','1 km Run','60 Burpees','800m Run','30 Wall Balls','400m Run']),
-    W('Weston (DB Carry)','For Time (5 rds)','30–50',['5 rounds:',`100m DB Farmers Carry — ${DB2}`,`100m DB Front Rack Carry — ${DB2}`,`100m DB Overhead Carry — ${DB1}`]),
-    W('Hamilton','For Time (3 rds)','35–55',['3 rounds:','Row 1000m','50 Push-ups','Run 1000m','50 Pull-ups']),
-    W('Schmalls','For Time','30–50',['For time:','800m Run','50 Burpees','50 Pull-ups',`50 KB Swings — ${KB53}`,'50 Sit-ups','800m Run']),
-    W('Bradley','For Time (10 rds)','30–50',['10 rounds:','Sprint 100m','10 Pull-ups','100m Jog','Rest 30s']),
-    W('Riley','For Time','40–60',['For time:','Run 1.5 miles','150 Burpees','Run 1.5 miles']),
-    W('Severin','For Time','30–50',['For time:','50 Strict Pull-ups','100 Hand-Release Push-ups','5 km Run']),
-    W('Helton (DB)','For Time (3 rds)','25–45',['3 rounds:','800m Run',`30 DB Squat Cleans — ${DB2}`,'30 Burpees']),
-    W('Jack (DB PP)','AMRAP 20','20',['AMRAP 20:',`10 DB Push Press — ${DB2}`,`10 KB Swings — ${KB53}`,`10 Box Jumps — ${BOX}`]),
-    W('Forrest','For Time (3 rds)','30–45',['3 rounds:','20 L-Pull-ups','30 Toes-to-Bar','40 Burpees','800m Run']),
-    W('Omar (DB Thruster)','For Time','20–35',['For time:',`10 DB Thrusters — ${DB2}`,'15 Burpees',`20 DB Thrusters — ${DB2}`,'25 Burpees',`30 DB Thrusters — ${DB2}`,'35 Burpees']),
-    W('Arnie (KB)','For Time','25–45',['For time:',`21 Turkish Get-Ups (R) — ${KB53}`,`50 KB Swings — ${KB53}`,`21 Overhead Squats (L) — ${KB53}`]),
-    W('Jerry','For Time','20–40',['For time:','Run 1 mile','Row 2 km','Run 1 mile']),
-    W('Ship (DB/Row)','For Time (9 rds)','35–55',['9 rounds:',`7 DB Hang Power Cleans — ${DB2}`,'8 Burpees','9 Push-ups','Row 200m']),
-    W('DT (DB)','For Time (5 rds)','15–25',['5 rounds:',`12 DB Deadlifts — ${DB2}`,`9 DB Hang Power Cleans — ${DB2}`,`6 DB Push Jerks — ${DB2}`]),
-    W('Manion (DB Front Squat)','For Time (7 rds)','30–50',['7 rounds:','400m Run',`29 DB Front Squats — ${DB2}`]),
-    W('Sisson (PU sub)','AMRAP 20','20',['AMRAP 20:','10 Pull-ups','5 Burpees','Run 200m']),
-    W('Blake (DB OH Lunge)','For Time (4 rds)','30–50',['4 rounds:',`100-ft DB Overhead Walking Lunge — ${DB1}`,`30 Box Jumps — ${BOX}`,'20 Wall Balls','10 Handstand Push-ups']),
-    W('White (PU sub)','For Time (5 rds)','30–50',['5 rounds:','15 Pull-ups','10 Toes-to-Bar','400m Run']),
-    W('Roy (DB DL)','For Time (5 rds)','25–45',['5 rounds:',`15 DB Deadlifts — ${DB2}`,`20 Box Jumps — ${BOX}`,'25 Pull-ups']),
-    W('Holleyman (DB Clean)','For Time (30 rds)','30–50',['30 rounds:','5 Wall Balls','3 Handstand Push-ups',`1 DB Clean — ${DB2}`]),
-    W('McGhee (DB DL)','AMRAP 30','30',['AMRAP 30:',`5 DB Deadlifts — ${DB2}`,'13 Push-ups',`9 Box Jumps — ${BOX}`]),
-    W('Kalsu (DB Thruster)','For Time','30–60',['For time:',`100 DB Thrusters — ${DB2}`,'At the top of every minute: 5 Burpees']),
-    W('Chad 1000X (24")','For Time','30–60',['For time:',`1,000 Box Step-ups — ${BOX}`]),
-    W('Luce','For Time (3 rds)','25–45',['3 rounds:','1000m Run','10 Bar Muscle-ups','100 Air Squats']),
-    W('Jared (BW)','For Time (4 rds)','25–45',['4 rounds:','800m Run','40 Pull-ups','70 Push-ups'])
-  ];
-
-  /* OPEN + OTHER */
-  const OPEN=[
-    W('Open 11.1 / 14.1 (DB)','AMRAP 10','20 (cap)',['AMRAP 10:','30 Double-unders',`15 Alt DB Snatches — ${DB1}`]),
-    W('Open 12.1','AMRAP 7','20 (cap)',['AMRAP 7:','Burpees']),
-    W('Open 13.2 (DB)','AMRAP 10','20 (cap)',['AMRAP 10:',`5 DB Shoulder-to-Overhead — ${DB2}`,`10 DB Deadlifts — ${DB2}`,`15 Box Jumps — ${BOX}`]),
-    W('Open 13.4 (DB C&J)','AMRAP 7','20 (cap)',['AMRAP ladder 3-6-9…:',`DB Clean & Jerks — ${DB2}`,'Toes-to-Bar']),
-    W('Open 14.4 (DB) / 23.1','AMRAP 14','20 (cap)',['AMRAP 14:','Row 60 Cal','50 Toes-to-Bar','40 Wall Balls',`30 DB Cleans — ${DB2}`,'20 Bar Muscle-ups']),
-    W('Open 14.5 / 16.5 (DB)','For Time','20–30',['21-18-15-12-9-6-3:',`DB Thrusters — ${DB2}`,'Burpees']),
-    W('Open 15.1 (DB)','AMRAP 9','20 (cap)',['AMRAP 9:','Toes-to-Bar',`DB Deadlifts — ${DB2}`,`Alt DB Snatches — ${DB1}`]),
-    W('Open 15.3','AMRAP 14','20 (cap)',['AMRAP 14:','7 Bar Muscle-ups (or PU)','50 Wall Balls','100 Double-unders']),
-    W('Open 15.5 (DB)','For Time','15–25',['For time:','Row 27-21-15-9 Cal',`DB Thrusters — ${DB2}`]),
-    W('Open 16.1 (DB OH Lunge)','AMRAP 20','20',['25-ft OH Lunge — '+DB1,'8 Burpees','25-ft OH Lunge','8 Chest-to-Bar']),
-    W('Open 16.2 (DB)','Every 4:00','20–28',['Toes-to-Bar / Double-unders / DB Squat Cleans — '+DB2+' (ascending)']),
-    W('Open 16.3 (DB + BMU)','AMRAP 7','20 (cap)',['AMRAP 7:',`10 Alt DB Snatches — ${DB1}`,'3 Bar Muscle-ups']),
-    W('Open 16.4 / 17.4 (DB)','AMRAP 13','20 (cap)',['AMRAP 13:',`55 DB Deadlifts — ${DB2}`,'55 Wall Balls','55 Cal Row','55 Handstand Push-ups']),
-    W('Open 17.1 / 21.2 (DB)','For Time','20–30',['10-20-30-40-50:',`Alt DB Snatches — ${DB1}`,`After each set: 15 Burpee Box Jump-Overs — ${BOX}`]),
-    W('Open 17.2 (DB)','AMRAP 12','20 (cap)',['AMRAP 12:',`50-ft DB Front Rack Lunge — ${DB2}`,'16 Toes-to-Bar',`8 DB Power Cleans — ${DB2}`]),
-    W('Open 17.5 (DB)','10 RFT','20–30',['10 rounds:',`9 DB Thrusters — ${DB2}`,'35 Double-unders']),
-    W('Open 18.1','AMRAP 20','20',['AMRAP 20:','8 Toes-to-Bar',`10 DB Hang Clean & Jerks — ${DB1}`,'14/12 Cal Row']),
-    W('Open 18.2 (DB)','For Time + Heavy','10–20',['1-2-3-…-10:',`DB Squats — ${DB2}`,'Burpees']),
-    W('Open 18.3 (DB + BMU)','AMRAP 14','20 (cap)',['AMRAP 14:','100 Double-unders',`20 Alt DB Snatches — ${DB1}`,'100 Double-unders','12 Bar Muscle-ups']),
-    W('Open 18.4 (DB)','For Time','10–25',['21-15-9:',`DB Deadlifts — ${DB2}`,'Handstand Push-ups','Then 21-15-9:',`DB Deadlifts — ${DB2}`,'Handstand Walks (or Bear Crawl)']),
-    W('Open 18.5 (DB)','AMRAP 7','10–20',['AMRAP 7:','Thrusters — '+DB2,'Chest-to-Bar Pull-ups']),
-    W('Open 19.1','AMRAP 15','20 (cap)',['AMRAP 15:','19 Wall Balls','19 Cal Row']),
-    W('Open 19.2 (DB)','Every 4:00','20–28',['T2B / DUs / DB Squat Cleans — '+DB2+' (ascending)']),
-    W('Open 19.3 (DB/Box)','For Time','12–25',['For time:',`200-ft DB OH Lunges — ${DB1}`,`50 DB Box Step-ups — ${BOX}`,'50 Strict HSPU']),
-    W('Open 19.4 (DB + BMU)','For Time (2 parts)','16–20',['Part A 12 min: 3 rds of 10 DB Snatches — '+DB1+' / 12 Bar MU','Rest 3 min','Part B 4 min: 30 Burpees']),
-    W('Open 19.5 (DB)','For Time','15–30',['33-27-21-15-9:',`DB Thrusters — ${DB2}`,'Chest-to-Bar Pull-ups']),
-    W('Open 20.1 (DB GTOH)','10 RFT','15–25',['10 rounds:',`8 Ground-to-Overhead — ${DB1}`,'10 Burpees']),
-    W('Open 20.2','AMRAP 20','20',['AMRAP 20:',`4 DB Thrusters — ${DB2}`,'6 Toes-to-Bar','24 Double-unders']),
-    W('Open 20.3 (DB)','For Time','10–25',['21-15-9:',`DB Deadlifts — ${DB2}`,'Handstand Push-ups','Then 21-15-9:',`DB Deadlifts — ${DB2}`,'HSPU/Walk']),
-    W('Open 20.4 (DB C&J)','For Time','15–25',['For time:',`Box Jumps — ${BOX}`,`30 DB Clean & Jerks — ${DB2}`,`Box Jumps — ${BOX}`]),
-    W('Open 20.5 (Home)','For Time','20–30',['Partition any order:','40 Pull-ups (MU sub)','80 Cal Row','120 Wall Balls']),
-    W('Open 21.1','For Time','10–20',['For time:','Wall Walks / Double-unders ladder']),
-    W('Open 21.2','For Time','20–30',['Repeat 17.1:',`Alt DB Snatches — ${DB1}`,`Burpee Box Jump-Overs — ${BOX}`]),
-    W('Open 21.3 (DB)','For Time (3 parts)','20–30',['Parted couplets w/ rest:',`DB Front Squats — ${DB2}`,'Toes-to-Bar / DB Thrusters — '+DB2]),
-    W('Open 22.1','AMRAP 15','20 (cap)',['AMRAP 15:','3 Wall Walks',`12 DB Snatches — ${DB1}`,`15 Box Jumps — ${BOX}`]),
-    W('Open 22.2 (DB)','For Time','20–30',['1-2-…-10-…-2-1:',`DB Deadlifts — ${DB2}`,'Burpees']),
-    W('Open 22.3 (DB Thruster)','For Time','15–30',['For time:','21 Pull-ups / 42 DUs / 21 DB Thrusters — '+DB2,'18 C2B / 36 DUs / 18 DB Thrusters — '+DB2,'15 Bar MU / 30 DUs / 15 DB Thrusters — '+DB2]),
-    W('Open 23.2 (A)','For Time','10–20',['For time:','Shuttle Runs','Burpee Pull-ups']),
-    W('Open 23.3 (DB)','For Time (3 parts)','12–25',['Wall Walks / DU / DB Snatch','Then Strict HSPU','Then Bar MU'])
-  ];
-
-  const OTHER=[
-    W('Fight Gone Bad (3 rnd)','AMRAP (Reps)','17',['3 rounds, 1 min stations:','Wall Balls',`Sumo DL High Pull — ${DB1}`,`Box Jumps — ${BOX}`,`Push Press — ${DB1}`,'Row (Calories)','Rest 1 min'],'Score = total reps.'),
-    W('Filthy Fifty (Home)','Chipper','30–45',['50 each:',`Box Jumps — ${BOX}`,'Jumping Pull-ups',`KB Swings — ${KB35}`,'Walking Lunges (50 steps)','Knees-to-Elbows (or V-ups)',`Push Press — ${DB1}`,'Supermans','Wall Balls','Burpees','50 Double-unders']),
-    W('The Chief (DB Clean)','Intervals 5×3:00','25–35',['5 cycles of 3-min AMRAP + 1-min rest:',`3 DB Power Cleans — ${DB2}`,'6 Push-ups','9 Air Squats']),
-    W('Baseline','For Time','8–15',['For time:','Row 500m','40 Air Squats','30 Sit-ups','20 Push-ups','10 Pull-ups']),
-    W('Seven (DB)','For Time (7 rds)','30–50',['7 rounds:','7 Pike Push-ups',`7 DB Thrusters — ${DB2}`,'7 V-ups',`7 DB Deadlifts — ${DB2}`,'7 Burpees',`7 KB Swings — ${KB53}`,'7 Pull-ups']),
-    W('Kelly+','For Time (5 rds)','30–45',['5 rounds:','600m Run',`30 Box Jumps — ${BOX}`,'30 Wall Balls']),
-    W('Jackie+','For Time','20–30',['For time:','Row 2000m',`50 Thrusters — ${DB1}`,'30 Pull-ups']),
-    W('5K Run','For Time','20–35',['For time:','5 km Run']),
-    W('5K Row','For Time','20–25',['For time:','5 km Row']),
-    W('Kelly (Row alt)','For Time (5 rds)','25–40',['5 rounds:','Row 500m',`30 Box Jumps — ${BOX}`,'30 Wall Balls']),
-    W('Death By Burpees','EMOM Ladder','20–30',['Min 1: 1 Burpee','Min 2: 2 Burpees','… continue until failure']),
-    W('Death By 10m (Run)','EMOM Ladder','20–30',['Every min add 10m shuttle (start 10m)'])
-  ];
-
-  window.WOD_BANK = [...GIRLS, ...HEROES, ...OPEN, ...OTHER];
-
-  window.WOD_TRIBUTES = {
-    'Murph':'Honors U.S. Navy Lt. Michael P. Murphy (Medal of Honor), 2005.',
-    'Glen (Home)':'Honors U.S. Navy SEAL Glen Doherty, Sept 11, 2012.',
-    'Michael (Home)':'Honors Navy LT Michael McGreevy Jr., 2005.',
-    'JT (BW)':'Honors PO1 Jeff Taylor, 2005.',
-    'Daniel (DB)':'Honors SFC Daniel Crabtree, 2006.',
-    'Josh (DB OHS)':'Honors SSG Joshua Whitaker, 2007.',
-    'Jason (Bar MU)':'Honors SO1 Jason D. Lewis, 2007.',
-    'Badger (DB Squat Clean)':'Honors CPO Mark Carter, 2007.',
-    'Joshie (KB alt)':'Honors PO1 Joshua Harris, 2008.',
-    'Nate (Bar MU)':'Honors PO2 Nate Hardy, 2008.',
-    'Randy (DB)':'Honors Officer Randy Simmons (LAPD), 2008.',
-    'Griff':'Honors SSgt Travis Griffith, 2003.',
-    'Ryan (BMU+Burpee)':'Honors Firefighter Ryan Hummert, 2008.',
-    'Erin (DB)':'Memorial WOD for Trooper Mark Coates.',
-    'Danny (DB PP)':'Honors Sgt. Daniel Sakai, 2009.',
-    'Hansen (Sub GHD)':'Honors SSgt Daniel Hansen, 2009.',
-    'Loredo':'Honors Staff Sgt. Edwardo Loredo, 2010.',
-    'Gallant (WB/Run)':'Honors PO Marc A. Gallant, 2011.',
-    'Weston (DB Carry)':'Honors Officer Bryon S. Weston, 2009.',
-    'Hamilton':'Honors SFC Derek Hamilton, 2003.',
-    'Schmalls':'Honors Sgt. Justin E. Schmalls, 2008.',
-    'Bradley':'Honors 1LT Bradley A. Smith, 2010.',
-    'Riley':'Honors SFC Riley Stephens, 2012.',
-    'Severin':'Honors Sgt. Severin Summers, 2009.',
-    'Helton (DB)':'Honors 1LT Joseph Helton, 2009.',
-    'Jack (DB PP)':'Honors SSG Jack M. Martin III, 2009.',
-    'Forrest':'Honors SSgt Forrest Sibley, 2015.',
-    'Omar (DB Thruster)':'Honors 1LT Omar Vazquez, 2011.',
-    'Arnie (KB)':'Honors Firefighter Arnaldo “Arnie” Quinones, 2009.',
-    'Jerry':'Honors Sgt. Maj. Jerry D. Patton, 2008.',
-    'Ship (DB/Row)':'Honors Lt. Jon “Ship” Shipman, 2009.',
-    'DT (DB)':'Honors SSgt Timothy P. Davis, 2009.',
-    'Manion (DB Front Squat)':'Honors 1LT Travis Manion, 2007.',
-    'Sisson (PU sub)':'Honors 1LT Donnie W. Sisson, 2011.',
-    'Blake (DB OH Lunge)':'Honors Lt. Brendan Looney, 2010.',
-    'White (PU sub)':'Honors 1LT Ashley White-Stumpf, 2011.',
-    'Roy (DB DL)':'Honors Cpl. Michael C. Roy, 2009.',
-    'Holleyman (DB Clean)':'Honors SSG Aaron N. Holleyman, 2004.',
-    'McGhee (DB DL)':'Honors Cpl. Ryan C. McGhee, 2009.',
-    'Kalsu (DB Thruster)':'Honors 1LT James Robert Kalsu, 1970.',
-    'Chad 1000X (24")':'Honors Navy SEAL Chad Wilkinson, 2018.',
-    'Luce':'Honors Capt. Ronald A. Luce Jr., 2009.',
-    'Jared (BW)':'Honors Capt. Jared C. Monti (Medal of Honor), 2006.'
-  };
-})();
-</script>
-
-<!-- ================== APP CODE (no service worker; clears old caches) ================== -->
-<script>
+/* ========== UTIL ========== */
 function mulberry32(a){return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}}
 function choice(rng,arr){return arr[Math.floor(rng()*arr.length)]}
 function shuffleInPlace(rng,arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}}
 function clamp(n,min,max){return Math.max(min,Math.min(max,n))}
-function daysInYear(y){return ((y%4===0&&y%100!==0)||(y%400===0))?366:365;}
+function daysInYear(y){return ((y%4===0 && y%100!==0) || (y%400===0))?366:365;}
 function doyFromDate(dt){const start=new Date(dt.getFullYear(),0,1);return Math.floor((dt-start)/86400000)+1;}
 function fmtDate(d){return d.toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
-function localDOY(y,m,d){const dt=new Date(y,m,d);return Math.floor((dt-new Date(y,0,0))/86400000)}
-function lastMondayOfMayLocal(y){const last=new Date(y,4,31);const dow=last.getDay();return 31-((dow+6)%7)}
+function localDOY(year,m,d){const dt=new Date(year,m,d);return Math.floor((dt-new Date(year,0,0))/86400000)}
+function lastMondayOfMay(year){const last=new Date(year,4,31);return 31-((last.getDay()+6)%7)}
+const DB2="2×50 lb", DB1="1×50 lb", KB53="53 lb", KB35="35 lb", BOX='24"';
 
-const DB2='2×50 lb', DB1='1×50 lb', KB53='53 lb', KB35='35 lb', BOX='24"';
+/* ========== FILTERS ========== */
+const FILTER_KEYS=["pull","box","wb","rope","run","row","db","kb","hspu"];
+let excluded=new Set(JSON.parse(localStorage.getItem("bb_excluded")||"[]"));
+function saveFilters(){localStorage.setItem("bb_excluded",JSON.stringify([...excluded]));renderByDate(currentDate);}
+function showActiveFilters(){
+  const map={pull:"Pull-up bar",box:"Box",wb:"Wall ball",rope:"Rope",run:"Run",row:"Row",db:"DB",kb:"KB",hspu:"HSPU"};
+  const el=document.getElementById("activeFilters");
+  if(!excluded.size){el.textContent="";return;}
+  el.innerHTML="Excluded:"+[...excluded].map(k=>`<span class="filter-chip">${map[k]}</span>`).join("");
+}
 
-function modalitiesFrom(w){const t=w.body.join(' ');
-  return {run:/\b(\d+\s?m Run|km Run|mile Run)\b/i.test(t),row:/\b(Row( \d+m|\sfor\sCalories)?|Cal Row|km Row|5k Row)\b/i.test(t),rope:/Double-unders|Single-unders/i.test(t),
-  wb:/Wall Balls?/i.test(t),pull:/Pull-ups|Chest-to-Bar|Bar Muscle-ups|L-Pull-ups/i.test(t),ttb:/Toes-to-Bar|Hanging Knee Raises/i.test(t),
-  hspu:/Handstand Push-ups|Wall Walks/i.test(t),box:/Box Jump/i.test(t),kb:/\bKB\b/i.test(t),db:/\bDB\b/i.test(t),squat:/Squats?|Thrusters|Front Squats|Goblet Squats/i.test(t),hinge:/Deadlifts?|Power Cleans?|Swings|Snatches|Clean & Jerk/i.test(t)}}
+/* ========== TAGGING (for filters & warmups) ========== */
+function tagText(lines){
+  const t=lines.join(" ");
+  return {
+    run:/\b(\d+\s?m Run|km Run|mile Run)\b/i.test(t),
+    row:/\b(Row( \d+m|\sfor\sCalories)?|Cal Row|km Row|5k Row)\b/i.test(t),
+    rope:/Double-unders|Single-unders/i.test(t),
+    wb:/Wall Balls?/i.test(t),
+    pull:/(Pull-ups|Chest-to-Bar|Bar Muscle-ups|L-Pull-ups|Toes-to-Bar|Hanging Knee Raises|Burpee Pull-ups)/i.test(t),
+    hspu:/Handstand Push-ups|Wall Walks/i.test(t),
+    box:/Box Jump|Box Step|Box Step-ups|Box Jump-Overs/i.test(t),
+    kb:/\bKB\b|Kettlebell/i.test(t),
+    db:/\bDB\b|Dumbbell/i.test(t),
+  };
+}
+function violatesFilters(tags){
+  return (excluded.has("run") && tags.run) ||
+         (excluded.has("row") && tags.row) ||
+         (excluded.has("rope") && tags.rope) ||
+         (excluded.has("wb") && tags.wb) ||
+         (excluded.has("pull") && tags.pull) ||
+         (excluded.has("hspu") && tags.hspu) ||
+         (excluded.has("box") && tags.box) ||
+         (excluded.has("kb") && tags.kb) ||
+         (excluded.has("db") && tags.db);
+}
 
-const WU={run:'5–8 min easy jog → 2 rounds: 20s A-skips · 20s high knees · 20s butt kicks · 10 walking lunges/leg.',
-row:'4 min easy row (build). Drill 10 hard strokes, then 2× (20s hard / 40s easy).',
-rope:'2 min singles → 3× (20 DU attempts or 30 singles + 10 penguin taps). 20 calf raises + 10 ankle rocks/side.',
-pull:'2× 20s active hang + 8 scap pulls · 2×10 kip swings · 2–3 easy pull-up/row sets.',
-ttb:'8 hollow rocks + 8 beat swings ×2 · 10 hanging knee raises or small TTB sets.',
-hspu:'Wrist circles 60s · 2×8 pike HSPU to abmat · 2 wall walks to 20s hold.',
-squat:'2 rounds: 10 air squats · 8 Cossack (4/side) · 10 light wall balls · 10 ankle rocks/side.',
-hinge:'2 rounds: 10 glute bridges · 10 light DB RDL · 10 easy KB swings.',
-kb:'10 halos each way · 10 front rack shrugs · 10 squat-to-stand.',
-db:'Front-rack flow: 10s rack hold + 8 strict press light + 8 front squats light.',
-box:'10 step-ups/leg · 10 pogo jumps · 10 small box jumps.',
-wb:'10 wall slides · 10–15 easy wall balls + ankle rocks.',
-general:'5–7 min easy cardio → 2 rounds: 8 push-ups · 10 air squats · 10 sit-ups.'};
+/* ========== WARM-UP / COOLDOWN (auto, trimmed to match movements) ========== */
+const WU={ run:`5–8 min easy jog → 2 rounds: 20s A-skips · 20s high knees · 20s butt kicks · 10 walking lunges/leg.`,
+           row:`4 min easy row, then 2× (:20 hard / :40 easy).`,
+           rope:`2 min singles → 3× (20 DU attempts or 30 singles) · 20 calf raises + 10 ankle rocks/side.`,
+           pull:`2× :20 active hang + 8 scap pulls · 2×10 kip swings · 2–3 easy sets.`,
+           hspu:`Wrist circles 60s · 2×8 pike HSPU to abmat · 2 wall walks to :20 hold.`,
+           squat:`2 rounds: 10 air squats · 10 wall balls (light) · 10 ankle rocks/side.`,
+           hinge:`2 rounds: 10 glute bridges · 10 DB RDL light · 10 easy KB swings.`,
+           kb:`10 halos each way · 10 rack shrugs · 10 squat-to-stand.`,
+           db:`10s rack hold + 8 strict press light + 8 front squats light.`,
+           box:`10 step-ups/leg · 10 pogo jumps · 10 small box jumps.`,
+           general:`5–7 min easy cardio → 2 rounds: 8 push-ups · 10 air squats · 10 sit-ups.` };
+const CD={ run:`3–5 min walk, :45 calf + :45 hamstring/side.`,
+           row:`2–3 min easy row, :45 thoracic child's pose + :45 pec doorway/side.`,
+           rope:`:45 calf/side + foot/plantar massage.`,
+           pull:`:60 passive hang or banded lats + :30 thread-the-needle/side.`,
+           hspu:`:45 triceps/side + :45 pec doorway/side.`,
+           squat:`2× :45 couch stretch/side + :45 adductor hold.`,
+           hinge:`:45 hamstrings/side + 5× gentle McKenzie press-ups.`,
+           kb:`:45 rack/forearm stretch/side + :45 lats.`,
+           db:`:45 front-rack/pec/side + :45 triceps/side.`,
+           box:`:45 hip flexor/side + :45 calves.`,
+           general:`3–5 min easy spin/walk, breathe down.` };
+function buildWarmup(w){const m=tagText(w.body),p=[];
+  if(m.run)p.push(WU.run); if(m.row)p.push(WU.row); if(m.rope)p.push(WU.rope);
+  if(m.pull)p.push(WU.pull); if(m.hspu)p.push(WU.hspu); if(m.wb||/squat|thruster|goblet/i.test(w.body.join(" ")))p.push(WU.squat);
+  if(/deadlift|clean|swing|snatch|hinge/i.test(w.body.join(" ")))p.push(WU.hinge);
+  if(m.kb)p.push(WU.kb); if(m.db)p.push(WU.db); if(m.box)p.push(WU.box); if(!p.length)p.push(WU.general);
+  return p.slice(0,3).join('<br><br>'); }
+function buildCooldown(w){const m=tagText(w.body),p=[];
+  if(m.run)p.push(CD.run); if(m.row)p.push(CD.row); if(m.rope)p.push(CD.rope); if(m.pull)p.push(CD.pull);
+  if(m.hspu)p.push(CD.hspu); if(m.wb||/squat|thruster|goblet/i.test(w.body.join(" ")))p.push(CD.squat);
+  if(/deadlift|clean|swing|snatch|hinge/i.test(w.body.join(" ")))p.push(CD.hinge);
+  if(m.kb)p.push(CD.kb); if(m.db)p.push(CD.db); if(m.box)p.push(CD.box); if(!p.length)p.push(CD.general);
+  return p.slice(0,2).join('<br><br>'); }
 
-const CD={run:'3–5 min walk, then 45s calf + 45s hamstring/side.',
-row:'2–3 min easy row, then 45s thoracic child’s pose + 45s pec doorway/side.',
-rope:'45s calf/side + foot/plantar massage.',
-pull:'60s passive hang or banded lat/side · thread-the-needle 30s/side.',
-ttb:'Banded lats + 45s hip flexor/side.',
-hspu:'45s triceps/side + 45s pec doorway/side.',
-squat:'2× 45s couch stretch/side + 45s adductor hold.',
-hinge:'45s hamstring/side + 5 gentle McKenzie press-ups.',
-kb:'45s rack/forearm stretch/side + 45s lat stretch/side.',
-db:'45s front-rack/pec/side + 45s triceps/side.',
-box:'45s hip flexor/side + 45s calves.',
-wb:'45s thoracic open + 45s ankle (knee-to-wall)/side.',
-general:'3–5 min easy spin/walk, breathe down.'};
+/* ========== NAMED WODS (ALL INSIDE THIS FILE) ========== */
+/* NOTE: DB = 2×50 lb unless DB1 noted; KB53/KB35 available; BOX default 24". */
+const BENCH=(()=>{
+  const W=(title,type,time,body,notes="")=>({title,type,time,body,notes});
+  const list=[];
+  /* — GIRLS / BENCHMARKS — */
+  list.push(
+    W("Angie","For Time","20–40",["For time:","• 100 Pull-ups","• 100 Push-ups","• 100 Sit-ups","• 100 Air Squats"],"Partition as needed."),
+    W("Annie","For Time","10–20",["For time:","• 50-40-30-20-10 Double-unders","• 50-40-30-20-10 Sit-ups"],"Add easy jog if <20."),
+    W("Barbara","For Time (5 rds)","40–50",["5 rounds:","• 20 Pull-ups","• 30 Push-ups","• 40 Sit-ups","• 50 Air Squats","Rest 3 min"],"Even splits."),
+    W("Chelsea","EMOM 30","30",["Every min for 30:","• 5 Pull-ups, 10 Push-ups, 15 Air Squats"],"Keep work ≤45s."),
+    W("Cindy","AMRAP 20","20",["AMRAP 20:","• 5 Pull-ups","• 10 Push-ups","• 15 Air Squats"],"No redline."),
+    W("Christine (DB)","For Time (3 rds)","12–25",["3 rounds:","• Row 500m","• 12 DB Deadlifts — "+DB2,"• 21 Box Jumps — "+BOX],"DB for 135/95."),
+    W("Diane (DB)","For Time","10–20",["21-15-9:","• DB Deadlifts — "+DB2,"• Handstand Push-ups"],"DB swap."),
+    W("Elizabeth (DB)","For Time","10–20",["21-15-9:","• DB Squat Cleans — "+DB2,"• Strict Dips or Deficit Push-ups"],"No rings → push-ups."),
+    W("Eva (Scaled)","For Time (5 rds)","35–55",["5 rounds:","• 800m Run","• 30 KB Swings — "+KB53,"• 30 Pull-ups"],"Grip mgt."),
+    W("Fran (DB)","For Time","10–20",["21-15-9:","• DB Thrusters — "+DB2,"• Pull-ups"],"DB swap."),
+    W("Grace (DB C&J)","For Time","8–20",["For time:","• 30 DB Clean & Jerks — "+DB2], "DBs for 135/95."),
+    W("Helen","For Time (3 rds)","12–20",["3 rounds:","• 400m Run","• 21 KB Swings — "+KB53,"• 12 Pull-ups"],"Breathe on run."),
+    W("Isabel (DB Snatch)","For Time","8–15",["For time:","• 30 Alt DB Snatches — "+DB1]),
+    W("Jackie (DB Thruster)","For Time","12–20",["For time:","• Row 1000m","• 50 Thrusters — "+DB1,"• 30 Pull-ups"]),
+    W("Karen","For Time","12–20",["For time:","• 150 Wall Balls"],"Break early."),
+    W("Kelly","For Time (5 rds)","25–40",["5 rounds:","• 400m Run","• 30 Box Jumps — "+BOX,"• 30 Wall Balls"]),
+    W("Mary","AMRAP 20","20",["AMRAP 20:","• 5 Handstand Push-ups","• 10 Pistols (alt)","• 15 Pull-ups"]),
+    W("Megan","For Time","12–25",["21-15-9:","• Burpees","• KB Swings — "+KB53,"• Double-unders"]),
+    W("Nancy (DB/KB OHS)","For Time (5 rds)","20–35",["5 rounds:","• 400m Run","• 15 Overhead Squats — Single DB/KB"]),
+    W("Nicole","AMRAP 20","20",["AMRAP 20:","• 400m Run","• Max Pull-ups"])
+  );
 
-let BENCH = Array.isArray(window.WOD_BANK)? window.WOD_BANK : [];
-let TRIBUTES = Object.assign({}, window.WOD_TRIBUTES||{});
-let DATE_MAP = (window.WOD_DATE_MAP && typeof window.WOD_DATE_MAP==='object') ? window.WOD_DATE_MAP : {};
+  /* — HERO / COMMEMORATIVE — */
+  list.push(
+    W("Murph","For Time","40–60",["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Air Squats","• 1 mile Run"],"Partition as needed."),
+    W("Glen (Home)","For Time","45–60",["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Sit-ups","• 1 mile Run"],"Partition."),
+    W("Michael (Home)","For Time (3 rds)","20–35",["3 rounds:","• 800m Run","• 50 Sit-ups","• 50 Supermans"]),
+    W("JT (BW)","For Time","10–25",["21-15-9:","• Handstand Push-ups","• Push-ups","• Dips or Deficit Push-ups"]),
+    W("Daniel (DB)","For Time","20–35",["For time:","• 50 DB Thrusters — "+DB2,"• 400m Run","• 21 Pull-ups","• 800m Run","• 21 Pull-ups","• 400m Run","• 50 DB Thrusters — "+DB2]),
+    W("Josh (DB OHS)","For Time","20–35",["For time:","• 21 Overhead Squats — "+DB1,"• 42 Pull-ups","• 15 Overhead Squats — "+DB1,"• 30 Pull-ups","• 9 Overhead Squats — "+DB1,"• 18 Pull-ups"]),
+    W("Jason (Bar MU)","For Time","20–40",["For time:","• 100 Squats","• 5 Bar Muscle-ups","• 75 Squats","• 10 Bar Muscle-ups","• 50 Squats","• 15 Bar Muscle-ups","• 25 Squats","• 20 Bar Muscle-ups"]),
+    W("Badger (DB)","For Time (3 rds)","30–50",["3 rounds:","• 30 DB Squat Cleans — "+DB2,"• 30 Pull-ups","• 800m Run"]),
+    W("Nate (Bar MU)","AMRAP 20","20",["AMRAP 20:","• 2 Bar Muscle-ups","• 4 Handstand Push-ups","• 8 KB Swings — "+KB53]),
+    W("Randy (DB)","For Time","5–12",["For time:","• 75 Alt DB Snatches — "+DB1]),
+    W("Griff","For Time","10–20",["For time:","• 800m Run","• 400m Run (backward)","• 800m Run","• 400m Run (backward)"]),
+    W("Ryan (BMU+Burpee)","For Time (5 rds)","20–35",["5 rounds:","• 7 Bar Muscle-ups","• 21 Burpees"]),
+    W("Danny (DB PP)","AMRAP 20","20",["AMRAP 20:","• 30 Box Jumps — "+BOX,"• 20 DB Push Press — "+DB2,"• 30 Pull-ups"]),
+    W("Hansen (Sit-up sub)","For Time (5 rds)","25–45",["5 rounds:","• 30 KB Swings — "+KB53,"• 30 Burpees","• 30 Sit-ups"]),
+    W("Loredo","For Time (6 rds)","25–45",["6 rounds:","• 24 Air Squats","• 24 Push-ups","• 24 Walking Lunges","• 400m Run"]),
+    W("Hamilton","For Time (3 rds)","35–55",["3 rounds:","• Row 1000m","• 50 Push-ups","• Run 1000m","• 50 Pull-ups"]),
+    W("Schmalls","For Time","30–50",["For time:","• 800m Run","• 50 Burpees","• 50 Pull-ups","• 50 KB Swings — "+KB53,"• 50 Sit-ups","• 800m Run"]),
+    W("Riley","For Time","40–60",["For time:","• Run 1.5 miles","• 150 Burpees","• Run 1.5 miles"]),
+    W("Helton (DB)","For Time (3 rds)","25–45",["3 rounds:","• 800m Run","• 30 DB Squat Cleans — "+DB2,"• 30 Burpees"]),
+    W("Forrest","For Time (3 rds)","30–45",["3 rounds:","• 20 L-Pull-ups","• 30 Toes-to-Bar","• 40 Burpees","• 800m Run"]),
+    W("Omar (DB Thruster)","For Time","20–35",["For time:","• 10 DB Thrusters — "+DB2,"• 15 Burpees","• 20 DB Thrusters — "+DB2,"• 25 Burpees","• 30 DB Thrusters — "+DB2,"• 35 Burpees"]),
+    W("Arnie (KB)","For Time","25–45",["For time:","• 21 Turkish Get-Ups (R) — "+KB53,"• 50 KB Swings — "+KB53,"• 21 Overhead Squats (L) — "+KB53]),
+    W("Jerry","For Time","20–40",["For time:","• Run 1 mile","• Row 2 km","• Run 1 mile"]),
+    W("DT (DB)","For Time (5 rds)","15–25",["5 rounds:","• 12 DB Deadlifts — "+DB2,"• 9 DB Hang Power Cleans — "+DB2,"• 6 DB Push Jerks — "+DB2]),
+    W("Manion (DB Front Squat)","For Time (7 rds)","30–50",["7 rounds:","• 400m Run","• 29 DB Front Squats — "+DB2]),
+    W("Blake (DB OH Lunge)","For Time (4 rds)","30–50",["4 rounds:","• 100-ft DB Overhead Walking Lunge — "+DB1,"• 30 Box Jumps — "+BOX,"• 20 Wall Balls","• 10 Handstand Push-ups"]),
+    W("Roy (DB DL)","For Time (5 rds)","25–45",["5 rounds:","• 15 DB Deadlifts — "+DB2,"• 20 Box Jumps — "+BOX,"• 25 Pull-ups"]),
+    W("Holleyman (DB Clean)","For Time (30 rds)","30–50",["30 rounds:","• 5 Wall Balls","• 3 Handstand Push-ups","• 1 DB Clean — "+DB2]),
+    W("McGhee (DB DL)","AMRAP 30","30",["AMRAP 30:","• 5 DB Deadlifts — "+DB2,"• 13 Push-ups","• 9 Box Jumps — "+BOX]),
+    W('Chad 1000X (24")',"For Time","35–60",["For time:","• 1,000 Box Step-ups — "+BOX]),
+    W("Kalsu (DB Thruster)","For Time","30–60",["For time:","• 100 DB Thrusters — "+DB2,"At the top of every minute: 5 Burpees (start with burpees)"])
+  );
 
-const MONO=['Run 400m','Run 600m','Run 800m','Run 1000m','Row 500m','Row 750m','Row 1000m','Row 1500m','150 Single-unders','100 Double-unders','Shuttle Run 200m'];
-const GYM=['Pull-ups','Chest-to-Bar Pull-ups','Bar Muscle-ups','Toes-to-Bar','Push-ups','Sit-ups','Air Squats','Pistols (alt)','Handstand Push-ups','Burpees','Pike Push-ups','V-ups','Wall Walks','Hanging Knee Raises','Wall Balls'];
-const DBB=[{name:'DB Thrusters',load:DB2},{name:'DB Push Press',load:DB2},{name:'DB Front Squats',load:DB2},{name:'DB Power Cleans',load:DB2},{name:'DB Deadlifts',load:DB2},{name:'Alt DB Snatches',load:DB1},{name:'DB Hang Clean & Jerks',load:DB1}];
-const KBB=[{name:'KB Swings',load:KB53},{name:'KB Goblet Squats',load:KB53},{name:'KB Clean & Press (alt)',load:KB53},{name:'KB Swings',load:KB35}];
-const BOXM=['Box Jumps','Burpee Box Jump-Overs'];
-const REP_RULES={'Pull-ups':[10,12,15,20],'Chest-to-Bar Pull-ups':[10,12,15],'Bar Muscle-ups':[5,6,8],'Toes-to-Bar':[10,12,15],'Push-ups':[10,15,20,25],'Sit-ups':[20,30,40],
-'Air Squats':[20,30,40,50],'Pistols (alt)':[5,10,16,20],'Handstand Push-ups':[6,9,12],'Burpees':[12,15,20],'Pike Push-ups':[12,15,20],'V-ups':[15,20,25],'Wall Walks':[3,4,5],
-'Hanging Knee Raises':[15,20,25],'Wall Balls':[20,25,30,40],'DB Thrusters':[9,12,15],'DB Push Press':[10,12,15],'DB Front Squats':[12,15,20],'DB Power Cleans':[10,12,14],
-'DB Deadlifts':[16,20,24],'Alt DB Snatches':[12,16,20],'DB Hang Clean & Jerks':[10,12,16],'KB Swings':[20,25,30],'KB Goblet Squats':[16,20,24],'KB Clean & Press (alt)':[10,12,14],
-'Box Jumps':[15,20,24],'Burpee Box Jump-Overs':[10,12,14]};
-const AMRAP_SCHEMES={3:[{label:'Triplet',pattern:null},{label:'15/10/5',pattern:[15,10,5]},{label:'21/15/9',pattern:[21,15,9]}],
-4:[{label:'Quad',pattern:null},{label:'12/9/6/3',pattern:[12,9,6,3]},{label:'10s',pattern:[10,10,10,10]}],
-5:[{label:'Quint',pattern:null},{label:'Desc 10→2',pattern:[10,8,6,4,2]}],
-6:[{label:'Sextet',pattern:null},{label:'All 12s',pattern:[12,12,12,12,12,12]}]};
+  /* — OPEN (DB/KB/Bodyweight variants) — */
+  list.push(
+    W("Open 11.1 / 14.1 (DB)","AMRAP 10","20 (cap)",["AMRAP 10:","• 30 Double-unders","• 15 Alt DB Snatches — "+DB1]),
+    W("Open 13.2 (DB)","AMRAP 10","20 (cap)",["AMRAP 10:","• 5 DB Shoulder-to-Overhead — "+DB2,"• 10 DB Deadlifts — "+DB2,"• 15 Box Jumps — "+BOX]),
+    W("Open 14.2 (DB OHS)","Every 3:00","20–30",["Every 3 min add 2 reps, start 10:","• DB Overhead Squats — "+DB1,"• Chest-to-Bar Pull-ups"]),
+    W("Open 14.4 / 23.1 (DB)","AMRAP 14","20 (cap)",["AMRAP 14:","• Row 60 Cal","• 50 Toes-to-Bar","• 40 Wall Balls","• 30 DB Cleans — "+DB2,"• 20 Bar Muscle-ups"]),
+    W("Open 14.5 / 16.5 (DB)","For Time","20–30",["21-18-15-12-9-6-3:","• DB Thrusters — "+DB2,"• Burpees"]),
+    W("Open 15.1 (DB)","AMRAP 9","20 (cap)",["AMRAP 9:","• Toes-to-Bar","• DB Deadlifts — "+DB2,"• Alt DB Snatches — "+DB1]),
+    W("Open 16.1 (DB OH Lunge)","AMRAP 20","20",["25-ft OH Lunge — "+DB1+" / 8 Burpees / 25-ft OH Lunge / 8 C2B"]),
+    W("Open 16.4 / 17.4 (DB)","AMRAP 13","20 (cap)",["AMRAP 13:","• 55 DB Deadlifts — "+DB2,"• 55 Wall Balls","• 55 Cal Row","• 55 Handstand Push-ups"]),
+    W("Open 17.1 / 21.2 (DB)","For Time","20–30",["10-20-30-40-50:","• Alt DB Snatches — "+DB1,"After each set: 15 Burpee Box Jump-Overs — "+BOX]),
+    W("Open 17.2 (DB)","AMRAP 12","20 (cap)",["AMRAP 12:","• 50-ft DB Front Rack Lunge — "+DB2,"• 16 Toes-to-Bar","• 8 DB Power Cleans — "+DB2]),
+    W("Open 17.5 (DB)","10 RFT","20–30",["10 rounds:","• 9 DB Thrusters — "+DB2,"• 35 Double-unders"]),
+    W("Open 18.1","AMRAP 20","20",["AMRAP 20:","• 8 Toes-to-Bar","• 10 DB Hang Clean & Jerks — "+DB1,"• 14/12 Cal Row"]),
+    W("Open 18.2 (DB)","For Time","10–20",["1-2-3-…-10:","• DB Squats — "+DB2,"• Burpees"]),
+    W("Open 18.5 (DB)","AMRAP 7","10–20",["AMRAP 7:","• DB Thrusters — "+DB2,"• Chest-to-Bar Pull-ups"]),
+    W("Open 19.1","AMRAP 15","20 (cap)",["AMRAP 15:","• 19 Wall Balls","• 19 Cal Row"]),
+    W("Open 19.5 (DB)","For Time","15–30",["33-27-21-15-9:","• DB Thrusters — "+DB2,"• Chest-to-Bar Pull-ups"]),
+    W("Open 20.2","AMRAP 20","20",["AMRAP 20:","• 4 DB Thrusters — "+DB2,"• 6 Toes-to-Bar","• 24 Double-unders"]),
+    W("Open 22.1","AMRAP 15","20 (cap)",["AMRAP 15:","• 3 Wall Walks","• 12 DB Snatches — "+DB1,"• 15 Box Jumps — "+BOX]),
+    W("Open 22.2 (DB)","For Time","20–30",["1-2-…-10-…-2-1:","• DB Deadlifts — "+DB2,"• Burpees"]),
+    W("Open 22.3 (DB Thruster)","For Time","15–30",["For time:","• 21 PU / 42 DUs / 21 DB Thrusters — "+DB2,"• 18 C2B / 36 DUs / 18 DB Thrusters — "+DB2,"• 15 BMU / 30 DUs / 15 DB Thrusters — "+DB2])
+  );
+
+  /* — OTHER CLASSICS — */
+  list.push(
+    W("Fight Gone Bad (3 rnd)","AMRAP (Reps)","17",["3 rounds, 1-min stations:","• Wall Balls","• Sumo DL High Pull — "+DB1,"• Box Jumps — "+BOX,"• Push Press — "+DB1,"• Row (Calories)","Rest 1 min"]),
+    W("Filthy Fifty (Home)","Chipper","30–45",["50 each:","• Box Jumps — "+BOX,"• Jumping Pull-ups","• KB Swings — "+KB35,"• Walking Lunges (50 steps)","• Knees-to-Elbows (or V-ups)","• Push Press — "+DB1,"• Supermans","• Wall Balls","• Burpees","• 50 Double-unders"]),
+    W("The Chief (DB Clean)","Intervals 5×3:00","25–35",["5 cycles of 3-min AMRAP + 1-min rest:","• 3 DB Power Cleans — "+DB2,"• 6 Push-ups","• 9 Air Squats"]),
+    W("Baseline","For Time","8–15",["For time:","• Row 500m","• 40 Air Squats","• 30 Sit-ups","• 20 Push-ups","• 10 Pull-ups"]),
+    W("5K Run","For Time","20–35",["For time:","• 5 km Run"]),
+    W("5K Row","For Time","20–25",["For time:","• 5 km Row"]),
+    W("12 Days of Christmas (Home)","For Time","30–50",["Perform like the song (1→12 then 12→1):","1 Burpee","2 KB Swings — "+KB53,"3 Wall Balls","4 Pull-ups","5 Box Jumps — "+BOX,"6 Sit-ups","7 Push-ups","8 Alt DB Snatches — "+DB1,"9 Lunges/leg","10 Double-unders","11 KB Goblet Squats — "+KB53,"12 Cal Row"])
+  );
+  return list;
+})();
+
+/* Short tributes text */
+const TRIBUTES={
+  "Murph":"Honors U.S. Navy Lt. Michael P. Murphy (MOH), KIA Afghanistan 2005.",
+  "Glen (Home)":"Honors former U.S. Navy SEAL Glen Doherty, killed Sept 11, 2012 (Benghazi).",
+  'Chad 1000X (24")':"Honors Navy SEAL Chad Wilkinson (2018). 1,000 step-ups raises awareness for veteran mental health.",
+  "Kalsu (DB Thruster)":"Honors 1LT James Robert Kalsu (KIA 1970).",
+  "12 Days of Christmas (Home)":"Seasonal suffer-fest performed like the song."
+};
+
+/* ========== GENERATORS (respect filters) ========== */
+const MONO=["Run 400m","Run 600m","Run 800m","Run 1000m","Row 500m","Row 750m","Row 1000m","Row 1500m","150 Single-unders","100 Double-unders","Shuttle Run 200m"];
+const GYM=["Pull-ups","Chest-to-Bar Pull-ups","Bar Muscle-ups","Toes-to-Bar","Push-ups","Sit-ups","Air Squats","Pistols (alt)","Handstand Push-ups","Burpees","Pike Push-ups","V-ups","Wall Walks","Hanging Knee Raises","Wall Balls"];
+const DBB=[{name:"DB Thrusters",load:DB2},{name:"DB Push Press",load:DB2},{name:"DB Front Squats",load:DB2},{name:"DB Power Cleans",load:DB2},{name:"DB Deadlifts",load:DB2},{name:"Alt DB Snatches",load:DB1},{name:"DB Hang Clean & Jerks",load:DB1}];
+const KBB=[{name:"KB Swings",load:KB53},{name:"KB Goblet Squats",load:KB53},{name:"KB Clean & Press (alt)",load:KB53},{name:"KB Swings",load:KB35}];
+const BOXM=["Box Jumps","Burpee Box Jump-Overs"];
+const REP_RULES={
+  "Pull-ups":[10,12,15,20],"Chest-to-Bar Pull-ups":[10,12,15],"Bar Muscle-ups":[4,6,8],"Toes-to-Bar":[10,12,15],"Push-ups":[10,15,20,25],
+  "Sit-ups":[20,30,40],"Air Squats":[20,30,40,50],"Pistols (alt)":[6,10,16,20],"Handstand Push-ups":[6,9,12],"Burpees":[12,15,20],
+  "Pike Push-ups":[12,15,20],"V-ups":[15,20,25],"Wall Walks":[3,4,5],"Hanging Knee Raises":[15,20,25],"Wall Balls":[20,25,30,40],
+  "DB Thrusters":[9,12,15],"DB Push Press":[10,12,15],"DB Front Squats":[12,15,20],"DB Power Cleans":[10,12,14],"DB Deadlifts":[16,20,24],
+  "Alt DB Snatches":[12,16,20],"DB Hang Clean & Jerks":[10,12,16],"KB Swings":[20,25,30],"KB Goblet Squats":[16,20,24],"KB Clean & Press (alt)":[10,12,14],
+  "Box Jumps":[15,20,24],"Burpee Box Jump-Overs":[10,12,14]
+};
+function allowedMonoPool(){
+  return MONO.filter(s=>{
+    const t=tagText([s]);
+    return !violatesFilters(t);
+  });
+}
+function allowedGymPool(){
+  return GYM.filter(n=>!violatesFilters(tagText([n])));
+}
+function allowedDB(){ return DBB.filter(m=>!violatesFilters(tagText([m.name]))); }
+function allowedKB(){ return KBB.filter(m=>!violatesFilters(tagText([m.name]))); }
+function allowedBOX(){ return BOXM.filter(n=>!violatesFilters(tagText([n]))); }
 function repFor(name,rng){const a=REP_RULES[name]||[12,15,20];return a[Math.floor(rng()*a.length)]}
-function fmtRep(rep,mv){return (typeof mv==='string')? (rep+' '+mv) : (rep+' '+mv.name+' — '+mv.load)}
-function pickGym(rng){return choice(rng,GYM)} function pickDB(rng){return choice(rng,DBB)} function pickKB(rng){return choice(rng,KBB)} function pickBOX(rng){return choice(rng,BOXM)}
-function pickAny(rng){const b=choice(rng,['GYM','DB','KB','BOX']);return b==='GYM'?pickGym(rng):b==='DB'?pickDB(rng):b==='KB'?pickKB(rng):pickBOX(rng)}
-function amrapLong(rng){const mins=choice(rng,[20,24,30,40]);const depth=choice(rng,[3,3,4,4,5,6]);const scheme=choice(rng,AMRAP_SCHEMES[depth]);
-  const label=scheme.pattern?scheme.label:(depth===3?'Triplet':depth===4?'Quad':depth===5?'Quint':'Sextet');const items=[];let monoUsed=false;
-  while(items.length<depth){const useMono=!monoUsed && rng()<0.35;if(useMono){items.push(choice(rng,MONO));monoUsed=true;}else{const mv=pickAny(rng);const id=(typeof mv==='string')?mv:mv.name;if(items.some(x=>((typeof x==='string')?x:(x.name||x))===id))continue;items.push(mv);}}
-  const lines=[];let p=0;for(const mv of items){if(typeof mv==='string'&&MONO.includes(mv)){lines.push(mv);continue;}const name=(typeof mv==='string')?mv:mv.name;const rep=scheme.pattern?scheme.pattern[clamp(p,0,scheme.pattern.length-1)]:repFor(name,rng);if(scheme.pattern)p++;lines.push(fmtRep(rep,mv));}
-  return {title:'AMRAP '+mins+' — '+label,type:'AMRAP',time:String(mins),body:['As many rounds as possible in '+mins+' minutes:'].concat(lines),notes:'Tight transitions. Keep round times consistent.'};}
-function emomLong(rng){const mins=choice(rng,[24,30,36,40]);const a=pickAny(rng),b=pickGym(rng),c=choice(rng,MONO);
-  return {title:'EMOM '+mins+' — Rotate 3',type:'EMOM',time:String(mins),body:['Every minute for '+mins+' min, rotate:','1) '+fmtRep(repFor((a.name||a),rng),a),'2) '+fmtRep(repFor(b,rng),b),'3) '+c,'Finish each minute in ~40–45s.'],notes:'Hold windows; quality first.'};}
-function chipperLong(rng){const count=choice(rng,[8,9,10,11,12]);const tasks=[];tasks.push(choice(rng,['25 Wall Balls','30 Wall Balls','40 Wall Balls']));tasks.push(choice(rng,MONO));
-  const x=pickAny(rng);tasks.push(fmtRep(repFor((x.name||x),rng),x));const y=pickGym(rng);tasks.push(fmtRep(repFor(y,rng),y));const z=pickBOX(rng);tasks.push(fmtRep(repFor(z,rng),z));
-  while(tasks.length<count){const add=(rng()<0.3)?choice(rng,MONO):(function(){const m=pickAny(rng);return fmtRep(repFor((m.name||m),rng),m);}());if(!tasks.includes(add))tasks.push(add);}
-  return {title:'Chipper — For Time (Long)',type:'For Time',time:'30–60',body:['Complete for time:'].concat(tasks),notes:'Break small and keep moving. Target 30–60 min.'};}
-
-const PIN_TITLES={MURPH:'Murph',GLEN:'Glen (Home)',CHAD:'Chad 1000X (24")',KALSU:'Kalsu (DB Thruster)',XMAS:'12 Days of Christmas (Home)'};
-function resolveTitleToIndex(title){return BENCH.findIndex(b=>b.title===title)}
-function fallback(title){
-  const f={};
-  f[PIN_TITLES.MURPH]={title:'Murph',type:'For Time',time:'40–60',body:['For time:','1 mile Run','100 Pull-ups','200 Push-ups','300 Air Squats','1 mile Run'],notes:'Partition as needed.',named:true};
-  f[PIN_TITLES.GLEN]={title:'Glen (Home)',type:'For Time',time:'45–60',body:['For time:','1 mile Run','100 Pull-ups','200 Push-ups','300 Sit-ups','1 mile Run'],notes:'Partition calisthenics.',named:true};
-  f[PIN_TITLES.CHAD]={title:'Chad 1000X (24")',type:'For Time',time:'35–60',body:['For time:',`1,000 Box Step-ups — ${BOX}`],notes:'Steady pace.',named:true};
-  f[PIN_TITLES.KALSU]={title:'Kalsu (DB Thruster)',type:'For Time',time:'20–40',body:['For time:',`100 DB Thrusters — ${DB2}`,'Every minute: 5 Burpees (start with burpees)'],notes:'Grip & lungs.',named:true};
-  f[PIN_TITLES.XMAS]={title:'12 Days of Christmas (Home)',type:'For Time',time:'30–50',body:[
-    'Perform like the song (1→12 then 12→1):',
-    '1 Burpee',
-    `2 KB Swings — ${KB53}`,
-    '3 Wall Balls',
-    '4 Pull-ups',
-    `5 Box Jumps — ${BOX}`,
-    '6 Sit-ups',
-    '7 Push-ups',
-    `8 Alt DB Snatches — ${DB1}`,
-    '9 Lunges/leg',
-    '10 Double-unders',
-    `11 KB Goblet Squats — ${KB53}`,
-    '12 Cal Row'
-  ],notes:'Don’t sprint early.',named:true};
-  return f[title]||null;
+function fmtRep(rep,mv){return (typeof mv==="string")?`${rep} ${mv}`:`${rep} ${mv.name} — ${mv.load}`}
+function pickAnyAllowed(rng){
+  const buckets=[];
+  if(allowedGymPool().length) buckets.push("GYM");
+  if(allowedDB().length) buckets.push("DB");
+  if(allowedKB().length) buckets.push("KB");
+  if(allowedBOX().length) buckets.push("BOX");
+  if(!buckets.length) return null;
+  const b=choice(rng,buckets);
+  if(b==="GYM") return choice(rng,allowedGymPool());
+  if(b==="DB")  return choice(rng,allowedDB());
+  if(b==="KB")  return choice(rng,allowedKB());
+  return choice(rng,allowedBOX());
 }
-function buildPins(year){const pins=new Map();const add=(m,d,title)=>{const doy=localDOY(year,m,d);const i=resolveTitleToIndex(title);if(i>=0)pins.set(doy,{kind:'index',idx:i});else pins.set(doy,{kind:'inline',wod:fallback(title)});};
-add(4,lastMondayOfMayLocal(year),PIN_TITLES.MURPH);add(8,11,PIN_TITLES.GLEN);add(10,11,PIN_TITLES.CHAD);add(6,4,PIN_TITLES.KALSU);add(11,25,PIN_TITLES.XMAS);
-if(DATE_MAP&&typeof DATE_MAP==='object'){for(const k in DATE_MAP){const m=parseInt(k.slice(0,2),10)-1;const d=parseInt(k.slice(3,5),10);if(isNaN(m)||isNaN(d))continue;const val=DATE_MAP[k];let entry=null;
-if(typeof val==='number'&&BENCH[val])entry={kind:'index',idx:val};else if(typeof val==='string'){const idx=resolveTitleToIndex(val);entry=idx>=0?{kind:'index',idx}:null;}
-if(entry){const doy=localDOY(year,m,d);pins.set(doy,entry);}}}return pins;}
+const AMRAP_SCHEMES={
+  3:[{label:"Triplet",pattern:null},{label:"15/10/5",pattern:[15,10,5]},{label:"21/15/9",pattern:[21,15,9]}],
+  4:[{label:"Quad",pattern:null},{label:"12/9/6/3",pattern:[12,9,6,3]},{label:"10s",pattern:[10,10,10,10]}],
+  5:[{label:"Quint",pattern:null},{label:"Desc 10→2",pattern:[10,8,6,4,2]}],
+  6:[{label:"Sextet",pattern:null},{label:"All 12s",pattern:[12,12,12,12,12,12]}]
+};
+function amrapLong(rng){
+  const monoPool=allowedMonoPool(); const mins=choice(rng,[20,24,30,40]);
+  const depth=choice(rng,[3,3,4,4,5,6]); const scheme=choice(rng,AMRAP_SCHEMES[depth]);
+  const label=scheme.pattern?scheme.label:(depth===3?"Triplet":depth===4?"Quad":depth===5?"Quint":"Sextet");
+  const items=[]; let monoUsed=false;
+  for(let guard=0; guard<20 && items.length<depth; guard++){
+    const tryMono=!monoUsed && monoPool.length && rng()<0.35;
+    if(tryMono){ items.push(choice(rng,monoPool)); monoUsed=true; continue; }
+    const mv=pickAnyAllowed(rng); if(!mv) break;
+    const id=(typeof mv==='string')?mv:mv.name;
+    if(items.some(x=>((typeof x==='string')?x:(x.name||x))===id)) continue;
+    items.push(mv);
+  }
+  if(!items.length) return {title:"No movements available with current filters",type:"—",time:"—",body:["Clear some filters to generate a workout."],notes:""};
+  const lines=[]; let p=0;
+  for(const mv of items){
+    if(typeof mv==="string" && MONO.includes(mv)){ lines.push("• "+mv); continue; }
+    const name=(typeof mv==="string")?mv:mv.name;
+    const rep=scheme.pattern?scheme.pattern[clamp(p,0,scheme.pattern.length-1)]:repFor(name,rng);
+    if(scheme.pattern) p++; lines.push("• "+fmtRep(rep,mv));
+  }
+  return {title:`AMRAP ${mins} — ${label}`, type:"AMRAP", time:String(mins),
+          body:[`As many rounds as possible in ${mins} minutes:`].concat(lines),
+          notes:"Tight transitions. Keep round times consistent."};
+}
+function emomLong(rng){
+  const monoPool=allowedMonoPool(); const mins=choice(rng,[24,30,36,40]);
+  const a=pickAnyAllowed(rng), b=choice(rng,allowedGymPool()), c=monoPool.length?choice(rng,monoPool):"Air Squats 20";
+  if(!a||!b) return amrapLong(rng);
+  return {title:`EMOM ${mins} — Rotate 3`, type:"EMOM", time:String(mins),
+    body:[`Every minute for ${mins} min, rotate:`,
+          `1) ${fmtRep(repFor((a.name||a),rng),a)}`,
+          `2) ${fmtRep(repFor(b,rng),b)}`,
+          `3) ${c}`,
+          "Finish each minute in ~40–45s."],
+    notes:"Hold windows; quality first."};
+}
+function chipperLong(rng){
+  const monoPool=allowedMonoPool(); const count=choice(rng,[8,9,10,11,12]); const tasks=[];
+  if(!excluded.has("wb")) tasks.push(choice(rng,["25 Wall Balls","30 Wall Balls","40 Wall Balls"]));
+  if(monoPool.length) tasks.push(choice(rng,monoPool));
+  const x=pickAnyAllowed(rng); if(x) tasks.push(fmtRep(repFor((x.name||x),rng),x));
+  const y=choice(rng,allowedGymPool()); if(y) tasks.push(fmtRep(repFor(y,rng),y));
+  const z=choice(rng,allowedBOX()); if(z) tasks.push(fmtRep(repFor(z,rng),z));
+  while(tasks.length<count){
+    const add = (rng()<0.35 && monoPool.length)? choice(rng,monoPool)
+               : ( ()=>{const m=pickAnyAllowed(rng); return m?fmtRep(repFor((m.name||m),rng),m):null;} )();
+    if(add && !tasks.includes(add)) tasks.push(add); else break;
+  }
+  if(!tasks.length) return amrapLong(rng);
+  return {title:"Chipper — For Time (Long)", type:"For Time", time:"30–60",
+    body:["Complete for time:"].concat(tasks.map(t=>"• "+t)),
+    notes:"Break small and keep moving. Target 30–60 min."};
+}
 
-function distributeKnown(openDays){const excluded=new Set(Object.values(PIN_TITLES));const mapTitles=new Set();if(DATE_MAP&&typeof DATE_MAP==='object'){for(const v of Object.values(DATE_MAP)){if(typeof v==='string')mapTitles.add(v);if(typeof v==='number'&&BENCH[v])mapTitles.add(BENCH[v].title);}}
-const useIdx=BENCH.map((w,i)=>({i,t:w.title})).filter(x=>!excluded.has(x.t)&&!mapTitles.has(x.t)).map(x=>x.i);const rng=mulberry32(1337);shuffleInPlace(rng,useIdx);const N=Math.min(useIdx.length,openDays.length);const res=new Map();
-for(let i=0;i<N;i++){const pos=Math.floor((i+0.5)*openDays.length/N);res.set(openDays[pos],{kind:'index',idx:useIdx[i]});}return res;}
-function tagBody(lines){const t=lines.join(' ');return {wb:/Wall Balls?/.test(t),pull:/(Pull-ups|Chest-to-Bar|Bar Muscle-ups|L-Pull-ups|Toes-to-Bar|Hanging Knee Raises)/i.test(t),hspu:/(Handstand Push-ups|Wall Walks)/i.test(t),db:/DB /.test(t)||/DB/.test(t),kb:/KB /.test(t)||/KB/.test(t),mono:/(Run \d+|Row \d+|Shuttle Run|km Run|km Row|Double-unders|Single-unders|5 km (Run|Row))/i.test(t),box:/Box Jumps?/.test(t)}}
-function violates(tags,p1,p2){if(!p1&&!p2)return false;if(p1){if(tags.wb&&p1.wb)return true;if(tags.pull&&p1.pull)return true;if(tags.hspu&&p1.hspu)return true;if(tags.db&&p1.db)return true;if(tags.kb&&p1.kb)return true;}if(tags.mono&&p1&&p2&&p1.mono&&p2.mono)return true;return false;}
-function buildSchedule(year,days){const pins=buildPins(year);const open=[];for(let d=1;d<=days;d++){if(!pins.has(d))open.push(d);}const spread=distributeKnown(open);const out=new Map(pins);spread.forEach((v,k)=>out.set(k,v));return out;}
-function buildYear(year){const days=daysInYear(year);const out=new Array(days),tags=new Array(days);const rng=mulberry32(1337);const slots=buildSchedule(year,days);
-for(let d=1;d<=days;d++){let w=null;if(slots.has(d)){const val=slots.get(d);if(val.kind==='index'){const b=BENCH[val.idx];w={title:b.title,type:b.type,time:b.time,body:b.body.slice(),notes:b.notes,named:true};}else{w=Object.assign({},val.wod);}tags[d-1]=tagBody(w.body);}
-else{const dow=(d-1)%7;const gen=(dow===6)?chipperLong:(dow%2===0?amrapLong:emomLong);for(let tries=0;tries<6;tries++){const cand=gen(rng);const tg=tagBody(cand.body);const p1=d>1?tags[d-2]:null,p2=d>2?tags[d-3]:null;
-if(!violates(tg,p1,p2)){w=cand;tags[d-1]=tg;break;}if(tries===5){w=cand;tags[d-1]=tg;}}}out[d-1]=w;}return out;}
+/* ========== PINNED DAYS ==========
+   Memorial Day (last Mon of May): Murph
+   9/11: Glen
+   11/11: Chad 1000X
+   7/4: Kalsu
+   12/25: 12 Days of Christmas
+=================================== */
+const PINS={ MURPH:"Murph", GLEN:"Glen (Home)", CHAD:'Chad 1000X (24")', KALSU:"Kalsu (DB Thruster)", XMAS:"12 Days of Christmas (Home)" };
+function resolveByTitle(title){ return BENCH.findIndex(b=>b.title===title); }
+function buildPins(year){
+  const pins=new Map();
+  const add=(m,d,title)=>{
+    const doy=localDOY(year,m,d); const idx=resolveByTitle(title);
+    pins.set(doy, idx>=0?{kind:"index",idx}:{kind:"inline",wod:{title,type:"For Time",time:"",body:[""],notes:""}});
+  };
+  add(4,lastMondayOfMay(year),PINS.MURPH);
+  add(8,11,PINS.GLEN);
+  add(10,11,PINS.CHAD);
+  add(6,4,PINS.KALSU);
+  add(11,25,PINS.XMAS);
+  return pins;
+}
 
-const elTitle=document.getElementById('wodTitle'), elBody=document.getElementById('wodBody'), elNotes=document.getElementById('wodNotes'), elType=document.getElementById('typePill'), elTime=document.getElementById('timePill'), elTarget=document.getElementById('targetPill'), elTribute=document.getElementById('wodTribute'), dateChip=document.getElementById('todayStr'), cal=document.getElementById('cal'), warn=document.getElementById('warn');
-let currentDate=new Date(); let currentYear=currentDate.getFullYear(); let YEAR=[];
+/* Spread remaining named WODs (once each) */
+function distributeKnown(open){
+  const excludeTitles=new Set(Object.values(PINS));
+  const useIdx=BENCH.map((w,i)=>({i,t:w.title})).filter(x=>!excludeTitles.has(x.t)).map(x=>x.i);
+  const rng=mulberry32(1337); shuffleInPlace(rng,useIdx);
+  const N=Math.min(useIdx.length,open.length), out=new Map();
+  for(let i=0;i<N;i++){ const pos=Math.floor((i+0.5)*open.length/N); out.set(open[pos],{kind:"index",idx:useIdx[i]}); }
+  return out;
+}
 
-function isCommemorative(title){return !!(TRIBUTES&&TRIBUTES[title])}
-function paceHint(w){return (w.type==='For Time')?'Target: 30–60 min':'Target: '+w.time+' min'}
-function renderByDate(dt){if(dt.getFullYear()!==currentYear){currentYear=dt.getFullYear();YEAR=buildYear(currentYear);}const doy=doyFromDate(dt);const w=YEAR[clamp(doy,1,daysInYear(currentYear))-1];
-dateChip.textContent=fmtDate(dt);elTitle.textContent=w.named? (w.title+' (Benchmark)') : w.title;elType.textContent=w.type;elTime.textContent=w.time;elTarget.textContent=paceHint(w);
-elBody.innerHTML='<ul>'+w.body.map(l=>'<li>'+l+'</li>').join('')+'</ul>';elNotes.textContent=w.notes||'';if(isCommemorative(w.title)){elTribute.style.display='block';elTribute.textContent=(TRIBUTES[w.title]||'');}else{elTribute.style.display='none';elTribute.textContent='';}
-document.getElementById('warmup').innerHTML=(function(){const m=modalitiesFrom(w),p=[];if(m.run)p.push(WU.run);if(m.row)p.push(WU.row);if(m.rope)p.push(WU.rope);if(m.pull)p.push(WU.pull);if(m.ttb)p.push(WU.ttb);if(m.hspu)p.push(WU.hspu);if(m.wb||m.squat)p.push(WU.squat);if(m.hinge)p.push(WU.hinge);if(m.kb)p.push(WU.kb);if(m.db)p.push(WU.db);if(m.box)p.push(WU.box);if(!p.length)p.push(WU.general);return p.slice(0,3).join('<br><br>');})();
-document.getElementById('cooldown').innerHTML=(function(){const m=modalitiesFrom(w),p=[];if(m.run)p.push(CD.run);if(m.row)p.push(CD.row);if(m.rope)p.push(CD.rope);if(m.pull)p.push(CD.pull);if(m.ttb)p.push(CD.ttb);if(m.hspu)p.push(CD.hspu);if(m.wb||m.squat)p.push(CD.squat);if(m.hinge)p.push(CD.hinge);if(m.kb)p.push(CD.kb);if(m.db)p.push(CD.db);if(m.box)p.push(CD.box);if(!p.length)p.push(CD.general);return p.slice(0,2).join('<br><br>');})();
-currentDate=dt;if(cal.classList.contains('show'))buildCalendar(calYear,calMonth);}
+/* Build plan for a year */
+function buildSchedule(year,days){
+  const pins=buildPins(year);
+  const open=[]; for(let d=1; d<=days; d++){ if(!pins.has(d)) open.push(d); }
+  const spread=distributeKnown(open);
+  const map=new Map(pins); spread.forEach((v,k)=>map.set(k,v));
+  return map;
+}
+function buildYear(year){
+  const days=daysInYear(year);
+  const out=new Array(days), rng=mulberry32(1337), slots=buildSchedule(year,days);
+  const tags=new Array(days);
+  for(let d=1; d<=days; d++){
+    let w;
+    if(slots.has(d)){
+      const val=slots.get(d); const b=(val.kind==="index")?BENCH[val.idx]:val.wod;
+      w={title:b.title,type:b.type,time:b.time,body:b.body.slice(),notes:b.notes,named:true};
+    }else{
+      const dow=(d-1)%7; const gen=(dow===6)?chipperLong:(dow%2===0?amrapLong:emomLong);
+      w=gen(rng);
+    }
+    // Filter-time: if violates, replace with generator that respects filters
+    if(violatesFilters(tagText(w.body))){ w=amrapLong(rng); if(violatesFilters(tagText(w.body))) w=chipperLong(rng); }
+    out[d-1]=w; tags[d-1]=tagText(w.body);
+  }
+  return out;
+}
 
-const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'], DOW=['S','M','T','W','T','F','S'];let calYear=currentDate.getFullYear(), calMonth=currentDate.getMonth();
-function buildCalendar(year,month){calYear=year;calMonth=month;const first=new Date(year,month,1),firstDow=first.getDay();const daysThis=new Date(year,month+1,0).getDate(),daysPrev=new Date(year,month,0).getDate();
-let html='<header><button class="hdr-btn" id="calPrev">&larr;</button><div class="label">'+MONTHS[month]+' '+year+'</div><button class="hdr-btn" id="calNext">&rarr;</button></header><div class="grid">';
-for(const d of DOW)html+='<div class="dow">'+d+'</div>';for(let i=0;i<firstDow;i++){const day=daysPrev-firstDow+1+i;html+='<div class="day muted">'+day+'</div>';}
-const today=new Date();const isThisMonth=(today.getFullYear()===year&&today.getMonth()===month);const sel=isThisMonth?today.getDate():null;
-for(let d=1;d<=daysThis;d++){const isSelected=(currentDate.getFullYear()===year&&currentDate.getMonth()===month&&currentDate.getDate()===d);const cls='day'+(isThisMonth&&d===sel?' today':'')+(isSelected?' selected':'');html+='<div class="'+cls+'" data-day="'+d+'">'+d+'</div>';}
-const used=firstDow+daysThis;const need=(7-(used%7))%7;for(let i=1;i<=need;i++)html+='<div class="day muted">'+i+'</div>';html+='</div>';cal.innerHTML=html;
-document.getElementById('calPrev').onclick=e=>{e.stopPropagation();const m=calMonth-1;const y=m<0?calYear-1:calYear;const nm=m<0?11:m;buildCalendar(y,nm);};
-document.getElementById('calNext').onclick=e=>{e.stopPropagation();const m=calMonth+1;const y=m>11?calYear+1:calYear;const nm=m>11?0:m;buildCalendar(y,nm);};
-cal.querySelectorAll('.day[data-day]').forEach(el=>{el.onclick=e=>{e.stopPropagation();const day=+el.getAttribute('data-day');renderByDate(new Date(calYear,calMonth,day));closeCalendar();};});}
-function openCalendar(){buildCalendar(currentDate.getFullYear(),currentDate.getMonth());cal.classList.add('show');cal.setAttribute('aria-hidden','false');setTimeout(()=>document.addEventListener('click',outsideClose),0);}
-function closeCalendar(){cal.classList.remove('show');cal.setAttribute('aria-hidden','true');document.removeEventListener('click',outsideClose);}
-function outsideClose(e){const inside=(e.composedPath&&e.composedPath().includes(cal))||cal.contains(e.target);if(!inside&&e.target!==dateChip){closeCalendar();}}
+/* ========== UI STATE / RENDER ========== */
+const elTitle=document.getElementById("wodTitle");
+const elBody=document.getElementById("wodBody");
+const elNotes=document.getElementById("wodNotes");
+const elType=document.getElementById("typePill");
+const elTime=document.getElementById("timePill");
+const elTarget=document.getElementById("targetPill");
+const elTribute=document.getElementById("wodTribute");
+const dateChip=document.getElementById("todayStr");
+const cal=document.getElementById("cal");
+const warn=document.getElementById("warn");
 
-/* INIT — nuke old SW/caches so fresh code loads */
+let currentDate=new Date();
+let currentYear=currentDate.getFullYear();
+let YEAR=buildYear(currentYear);
+
+function paceHint(w){return (w.type==="For Time")?"Target: 30–60 min":`Target: ${w.time} min`;}
+function renderByDate(dt){
+  if(dt.getFullYear()!==currentYear){ currentYear=dt.getFullYear(); YEAR=buildYear(currentYear); }
+  const doy=doyFromDate(dt); const w=YEAR[clamp(doy,1,daysInYear(currentYear))-1];
+
+  dateChip.textContent=fmtDate(dt);
+  elTitle.textContent=w.named?`${w.title} (Benchmark)` : w.title;
+  elType.textContent=w.type; elTime.textContent=w.time; elTarget.textContent=paceHint(w);
+  elBody.innerHTML="<ul>"+w.body.map(l=>`<li>${l}</li>`).join("")+"</ul>";
+  elNotes.textContent=w.notes||"";
+  if(TRIBUTES[w.title]){ elTribute.style.display="block"; elTribute.textContent=TRIBUTES[w.title]; }
+  else { elTribute.style.display="none"; elTribute.textContent=""; }
+
+  document.getElementById("warmup").innerHTML=buildWarmup(w);
+  document.getElementById("cooldown").innerHTML=buildCooldown(w);
+
+  currentDate=dt;
+  if(cal.classList.contains('show')) buildCalendar(calYear,calMonth);
+}
+
+/* Calendar */
+const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DOW=["S","M","T","W","T","F","S"];
+let calYear=currentDate.getFullYear(), calMonth=currentDate.getMonth();
+function buildCalendar(year,month){
+  calYear=year; calMonth=month;
+  const first=new Date(year,month,1), firstDow=first.getDay();
+  const daysThis=new Date(year,month+1,0).getDate(), daysPrev=new Date(year,month,0).getDate();
+  let html=`<header>
+      <button class="hdr-btn" id="calPrev">&larr;</button>
+      <div class="label">${MONTHS[month]} ${year}</div>
+      <button class="hdr-btn" id="calNext">&rarr;</button>
+    </header><div class="grid">`;
+  for(const d of DOW) html+=`<div class="dow">${d}</div>`;
+  for(let i=0;i<firstDow;i++){ const day=daysPrev-firstDow+1+i; html+=`<div class="day muted">${day}</div>`; }
+  const today=new Date(); const isThisMonth=(today.getFullYear()===year&&today.getMonth()===month); const sel=isThisMonth?today.getDate():null;
+  for(let d=1; d<=daysThis; d++){
+    const isSelected=(currentDate.getFullYear()===year&&currentDate.getMonth()===month&&currentDate.getDate()===d);
+    const cls="day"+(isThisMonth&&d===sel?" today":"")+(isSelected?" selected":"");
+    html+=`<div class="${cls}" data-day="${d}">${d}</div>`;
+  }
+  const used=firstDow+daysThis; const need=(7-(used%7))%7; for(let i=1;i<=need;i++) html+=`<div class="day muted">${i}</div>`;
+  html+=`</div>`; cal.innerHTML=html;
+  document.getElementById('calPrev').onclick=e=>{e.stopPropagation(); const m=calMonth-1; buildCalendar(m<0?calYear-1:calYear,m<0?11:m);};
+  document.getElementById('calNext').onclick=e=>{e.stopPropagation(); const m=calMonth+1; buildCalendar(m>11?calYear+1:calYear,m>11?0:m);};
+  cal.querySelectorAll('.day[data-day]').forEach(el=>{
+    el.onclick=(ev)=>{ev.stopPropagation(); const day=+el.getAttribute('data-day'); renderByDate(new Date(calYear,calMonth,day)); closeCalendar();};
+  });
+}
+function openCalendar(){ buildCalendar(currentDate.getFullYear(),currentDate.getMonth()); cal.classList.add('show'); cal.setAttribute('aria-hidden','false'); setTimeout(()=>document.addEventListener('click', outsideClose),0); }
+function closeCalendar(){ cal.classList.remove('show'); cal.setAttribute('aria-hidden','true'); document.removeEventListener('click', outsideClose); }
+function outsideClose(e){ if(!cal.contains(e.target) && e.target!==dateChip){ closeCalendar(); } }
+
+/* ========== INIT / EVENTS ========== */
 function init(){
-  if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister()));}
-  if('caches' in window && caches.keys){caches.keys().then(keys=>keys.forEach(k=>caches.delete(k)));}
+  // Filters UI
+  const panel=document.getElementById('filterPanel'); const btn=document.getElementById('filterBtn');
+  btn.onclick=(e)=>{e.stopPropagation(); panel.classList.toggle('show'); panel.setAttribute('aria-hidden',!panel.classList.contains('show'));};
+  document.addEventListener('click',(e)=>{ if(panel.classList.contains('show') && !panel.contains(e.target) && e.target!==btn){ panel.classList.remove('show'); }});
+  panel.querySelectorAll('input[type="checkbox"]').forEach(cb=>{
+    const k=cb.getAttribute('data-key'); cb.checked=excluded.has(k);
+    cb.onchange=()=>{ cb.checked?excluded.add(k):excluded.delete(k); saveFilters(); showActiveFilters(); };
+  });
+  showActiveFilters();
 
-  if(!BENCH.length){const warn=document.getElementById('warn');warn.style.display='block';warn.textContent='Heads up: embedded WOD bank failed to load.';}
+  // Warn if BENCH somehow empty
+  if(!BENCH.length){ warn.style.display='block'; warn.textContent='No named WODs loaded (using generators only).'; }
 
-  currentYear=new Date().getFullYear();
-  YEAR=buildYear(currentYear);
-  renderByDate(new Date());
+  renderByDate(currentDate);
 
-  document.getElementById('prevBtn').onclick=()=>{const d=new Date(currentDate);d.setDate(d.getDate()-1);renderByDate(d);};
-  document.getElementById('nextBtn').onclick=()=>{const d=new Date(currentDate);d.setDate(d.getDate()+1);renderByDate(d);};
-  document.getElementById('todayBtn').onclick=()=>{renderByDate(new Date());};
-
-  const chip=document.getElementById('todayStr');
-  chip.addEventListener('click',e=>{e.stopPropagation();if(cal.classList.contains('show'))closeCalendar();else openCalendar();});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&cal.classList.contains('show'))closeCalendar();});
+  document.getElementById("prevBtn").onclick=()=>{ const d=new Date(currentDate); d.setDate(d.getDate()-1); renderByDate(d); };
+  document.getElementById("nextBtn").onclick=()=>{ const d=new Date(currentDate); d.setDate(d.getDate()+1); renderByDate(d); };
+  document.getElementById("todayBtn").onclick=()=>{ renderByDate(new Date()); };
+  dateChip.addEventListener('click',(e)=>{ e.stopPropagation(); cal.classList.contains('show')?closeCalendar():openCalendar(); });
+  document.addEventListener('keydown',(e)=>{ if(e.key==='Escape' && cal.classList.contains('show')) closeCalendar(); });
 }
-document.addEventListener('DOMContentLoaded',init);
+document.addEventListener("DOMContentLoaded", init);
 </script>
 </body>
 </html>
