@@ -5,12 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>BAMBAM — Daily WOD</title>
 
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Daily WOD">
+<!-- kill aggressive caching -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+
 <meta name="theme-color" content="#0f1115">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Crect width='100%25' height='100%25' fill='%230f1115'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' fill='%23e8eaf0' font-size='64' font-family='Arial'%3E%F0%9F%8F%8B%EF%B8%8F%3C/text%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABb0P4JAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAABcUlEQVR42u3RAQ0AAAwCoNm/9C1gkQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwqgkAAQh7b7cAAAAASUVORK5CYII=" />
 
 <style>
   :root{ --bg:#0f1115; --card:#151922; --ink:#e8eaf0; --muted:#aab0c0; --accent:#61dafb; --border:#2a3345; }
@@ -96,12 +97,13 @@
   <footer>© 2025 <a href="https://bambambuilt.com" target="_blank" rel="noopener">bambambuilt.com</a>. All Rights Reserved.</footer>
 </div>
 
-<!-- ===== WOD BANK EMBED ===== -->
+<!-- ================== WOD BANK (embedded) ================== -->
 <script>
 (function () {
-  var DB1 = '1x50 lb', DB2 = '2x50 lb', KB53 = '53 lb', KB35 = '35 lb', BOX = '24"';
+  var DB1='1x50 lb', DB2='2x50 lb', KB53='53 lb', KB35='35 lb', BOX='24"';
   function W(t,y,m,b,n){return {title:t,type:y,time:m,body:b,notes:n||''};}
 
+  // Pin specific days (your hard rules)
   window.WOD_DATE_MAP = {
     '09-11':'Glen (Home)',
     '07-04':'Kalsu (DB Thruster)',
@@ -109,7 +111,8 @@
     '12-25':'12 Days of Christmas (Home)'
   };
 
-  var GIRLS = [
+  /* ------- GIRLS ------- */
+  var GIRLS=[
     W('Angie','For Time','20-40',['For time:','100 Pull-ups','100 Push-ups','100 Sit-ups','100 Air Squats'],'Partition as needed.'),
     W('Annie','For Time','10-20',['For time:','50-40-30-20-10 Double-unders','50-40-30-20-10 Sit-ups']),
     W('Barbara','For Time (5 rds)','40-50',['5 rounds:','20 Pull-ups','30 Push-ups','40 Sit-ups','50 Air Squats','Rest 3 min']),
@@ -130,7 +133,8 @@
     W('Nicole','AMRAP 20','20',['AMRAP 20:','400m Run','Max Pull-ups'])
   ];
 
-  var HEROES = [
+  /* ------- HEROES ------- */
+  var HEROES=[
     W('Murph','For Time','40-60',['For time:','1 mile Run','100 Pull-ups','200 Push-ups','300 Air Squats','1 mile Run'],'Partition as needed.'),
     W('Glen (Home)','For Time','45-60',['For time:','1 mile Run','100 Pull-ups','200 Push-ups','300 Sit-ups','1 mile Run']),
     W('Michael (Home)','For Time (3 rds)','20-35',['3 rounds:','800m Run','50 Sit-ups','50 Supermans']),
@@ -146,17 +150,17 @@
     W('Ryan (BMU+Burpee)','5 RFT','20-35',['5 rounds:','7 Bar Muscle-ups','21 Burpees']),
     W('Erin (DB)','For Time (5 rds)','30-45',['5 rounds:','15 DB Split Cleans - '+DB1,'21 Pull-ups']),
     W('Danny (DB PP)','AMRAP 20','20',['AMRAP 20:','30 Box Jumps - '+BOX,'20 DB Push Press - '+DB2,'30 Pull-ups']),
-    W('Hansen (Sub GHD)','For Time (5 rds)','25-45',['5 rounds:','30 KB Swings - '+KB53','30 Burpees','30 Sit-ups']),
+    W('Hansen (Sub GHD)','For Time (5 rds)','25-45',['5 rounds:','30 KB Swings - '+KB53,'30 Burpees','30 Sit-ups']),
     W('Loredo','For Time (6 rds)','25-45',['6 rounds:','24 Air Squats','24 Push-ups','24 Walking Lunges','400m Run']),
     W('Gallant (WB/Run)','For Time','25-45',['For time:','1 km Run','60 Burpees','800m Run','30 Wall Balls','400m Run']),
     W('Weston (DB Carry)','For Time (5 rds)','30-50',['5 rounds:','100m DB Farmers Carry - '+DB2,'100m DB Front Rack Carry - '+DB2,'100m DB Overhead Carry - '+DB1]),
     W('Hamilton','For Time (3 rds)','35-55',['3 rounds:','Row 1000m','50 Push-ups','Run 1000m','50 Pull-ups']),
-    W('Schmalls','For Time','30-50',['For time:','800m Run','50 Burpees','50 Pull-ups','50 KB Swings - '+KB53','50 Sit-ups','800m Run']),
+    W('Schmalls','For Time','30-50',['For time:','800m Run','50 Burpees','50 Pull-ups','50 KB Swings - '+KB53,'50 Sit-ups','800m Run']),
     W('Bradley','For Time (10 rds)','30-50',['10 rounds:','Sprint 100m','10 Pull-ups','100m Jog','Rest 30s']),
     W('Riley','For Time','40-60',['For time:','Run 1.5 miles','150 Burpees','Run 1.5 miles']),
     W('Severin','For Time','30-50',['For time:','50 Strict Pull-ups','100 Hand-Release Push-ups','5 km Run']),
     W('Helton (DB)','For Time (3 rds)','25-45',['3 rounds:','800m Run','30 DB Squat Cleans - '+DB2,'30 Burpees']),
-    W('Jack (DB PP)','AMRAP 20','20',['AMRAP 20:','10 DB Push Press - '+DB2,'10 KB Swings - '+KB53,'10 Box Jumps - '+BOX]),
+    W('Jack (DB PP)','AMRAP 20','20',['AMRAP 20:','10 DB Push Press - '+DB2','10 KB Swings - '+KB53','10 Box Jumps - '+BOX]),
     W('Forrest','For Time (3 rds)','30-45',['3 rounds:','20 L-Pull-ups','30 Toes-to-Bar','40 Burpees','800m Run']),
     W('Omar (DB Thruster)','For Time','20-35',['For time:','10 DB Thrusters - '+DB2,'15 Burpees','20 DB Thrusters - '+DB2,'25 Burpees','30 DB Thrusters - '+DB2,'35 Burpees']),
     W('Arnie (KB)','For Time','25-45',['For time:','21 Turkish Get-Ups (R) - '+KB53,'50 KB Swings - '+KB53,'21 Overhead Squats (L) - '+KB53]),
@@ -176,7 +180,8 @@
     W('Jared (BW)','For Time (4 rds)','25-45',['4 rounds:','800m Run','40 Pull-ups','70 Push-ups'])
   ];
 
-  var OPEN = [
+  /* ------- OPEN & OTHERS ------- */
+  var OPEN=[
     W('Open 11.1 / 14.1 (DB)','AMRAP 10','20 (cap)',['AMRAP 10:','30 Double-unders','15 Alt DB Snatches - '+DB1]),
     W('Open 12.1','AMRAP 7','20 (cap)',['AMRAP 7:','Burpees']),
     W('Open 13.2 (DB)','AMRAP 10','20 (cap)',['AMRAP 10:','5 DB Shoulder-to-Overhead - '+DB2,'10 DB Deadlifts - '+DB2,'15 Box Jumps - '+BOX]),
@@ -195,7 +200,7 @@
     W('Open 17.5 (DB)','10 RFT','20-30',['10 rounds:','9 DB Thrusters - '+DB2,'35 Double-unders']),
     W('Open 18.1','AMRAP 20','20',['AMRAP 20:','8 Toes-to-Bar','10 DB Hang Clean and Jerks - '+DB1,'14/12 Cal Row']),
     W('Open 18.2 (DB)','For Time + Heavy','10-20',['1-2-3-...-10:','DB Squats - '+DB2,'Burpees']),
-    W('Open 18.3','AMRAP 14','20 (cap)',['AMRAP 14:','100 Double-unders','20 Alt DB Snatches - '+DB1,'100 Double-unders','12 Bar Muscle-ups']),
+    W('Open 18.3','AMRAP 14','20 (cap)',['AMRAP 14:','100 Double-unders','20 Alt DB Snatches - '+DB1','100 Double-unders','12 Bar Muscle-ups']),
     W('Open 18.4 (DB)','For Time','10-25',['21-15-9:','DB Deadlifts - '+DB2,'Handstand Push-ups','then 21-15-9:','DB Deadlifts - '+DB2,'Handstand Walk or Bear Crawl']),
     W('Open 18.5 (DB)','AMRAP 7','10-20',['AMRAP 7:','Thrusters - '+DB2,'Chest-to-Bar Pull-ups']),
     W('Open 19.1','AMRAP 15','20 (cap)',['AMRAP 15:','19 Wall Balls','19 Cal Row']),
@@ -218,7 +223,7 @@
     W('Open 23.3 (DB)','For Time (3 parts)','12-25',['Wall Walks / Double-unders / DB Snatch','then Strict HSPU','then Bar MU'])
   ];
 
-  var OTHER = [
+  var OTHER=[
     W('Fight Gone Bad (3 rnd)','AMRAP (Reps)','17',['3 rounds, 1 min each:','Wall Balls','Sumo DL High Pull - '+DB1,'Box Jumps - '+BOX,'Push Press - '+DB1,'Row (Calories)','Rest 1 min'],'Score is total reps.'),
     W('Filthy Fifty (Home)','Chipper','30-45',['50 each:','Box Jumps - '+BOX,'Jumping Pull-ups','KB Swings - '+KB35,'Walking Lunges (50 steps)','Knees-to-Elbows or V-ups','Push Press - '+DB1,'Supermans','Wall Balls','Burpees','Double-unders (50)']),
     W('The Chief (DB Clean)','Intervals 5x3:00','25-35',['5 cycles of 3-min AMRAP + 1-min rest:','3 DB Power Cleans - '+DB2,'6 Push-ups','9 Air Squats']),
@@ -237,91 +242,104 @@
   window.WOD_BANK = [].concat(GIRLS, HEROES, OPEN, OTHER);
 
   window.WOD_TRIBUTES = {
-    'Murph':'Honors U.S. Navy Lt. Michael P. Murphy (MOH), killed in Afghanistan in 2005.',
-    'Glen (Home)':'Honors U.S. Navy SEAL Glen Doherty, killed on Sept 11, 2012 (Benghazi).',
-    'Michael (Home)':'Honors Navy LT Michael McGreevy Jr., KIA 2005.',
-    'JT (BW)':'Honors PO1 Jeff Taylor, KIA 2005.',
-    'Daniel (DB)':'Honors SFC Daniel Crabtree, KIA 2006.',
-    'Josh (DB OHS)':'Honors SSG Joshua Whitaker, KIA 2007.',
-    'Jason (Bar MU)':'Honors SO1 Jason Dale Lewis, KIA 2007.',
-    'Badger (DB Squat Clean)':'Honors CPO Mark Carter, KIA 2007.',
-    'Joshie (KB alt)':'Honors PO1 Joshua Harris, died 2008.',
-    'Nate (Bar MU)':'Honors PO2 Nate Hardy, KIA 2008.',
-    'Randy (DB)':'Honors Officer Randy Simmons (LAPD SWAT), KIA 2008.',
-    'Griff':'Honors SSgt Travis Griffith, USAF Pararescue, died 2003.',
-    'Ryan (BMU+Burpee)':'Honors Firefighter Ryan Hummert, KIA 2008.',
+    'Murph':'Honors U.S. Navy Lt. Michael P. Murphy (MOH), 2005.',
+    'Glen (Home)':'Honors U.S. Navy SEAL Glen Doherty, Sept 11, 2012.',
+    'Michael (Home)':'Honors Navy LT Michael McGreevy Jr., 2005.',
+    'JT (BW)':'Honors PO1 Jeff Taylor, 2005.',
+    'Daniel (DB)':'Honors SFC Daniel Crabtree, 2006.',
+    'Josh (DB OHS)':'Honors SSG Joshua Whitaker, 2007.',
+    'Jason (Bar MU)':'Honors SO1 Jason D. Lewis, 2007.',
+    'Badger (DB Squat Clean)':'Honors CPO Mark Carter, 2007.',
+    'Joshie (KB alt)':'Honors PO1 Joshua Harris, 2008.',
+    'Nate (Bar MU)':'Honors PO2 Nate Hardy, 2008.',
+    'Randy (DB)':'Honors Officer Randy Simmons (LAPD), 2008.',
+    'Griff':'Honors SSgt Travis Griffith, 2003.',
+    'Ryan (BMU+Burpee)':'Honors Firefighter Ryan Hummert, 2008.',
     'Erin (DB)':'Memorial WOD for Trooper Mark Coates.',
-    'Danny (DB PP)':'Honors Sgt. Daniel Sakai, KIA 2009.',
-    'Hansen (Sub GHD)':'Honors SSgt Daniel Hansen, USMC, KIA 2009.',
-    'Loredo':'Honors SSG Edwardo Loredo, KIA 2010.',
-    'Gallant (WB/Run)':'Honors PO Marc A. Gallant, died 2011.',
-    'Weston (DB Carry)':'Honors Officer Bryon Shane Weston, KIA 2009.',
-    'Hamilton':'Honors SFC Derek Hamilton, died 2003.',
-    'Schmalls':'Honors Sgt. Justin E. Schmalls, died 2008.',
-    'Bradley':'Honors 1LT Bradley A. Smith, KIA 2010.',
-    'Riley':'Honors SFC Riley Stephens, KIA 2012.',
-    'Severin':'Honors Sgt. Severin Summers, KIA 2009.',
-    'Helton (DB)':'Honors 1st Lt. Joseph Helton, KIA 2009.',
-    'Jack (DB PP)':'Honors SSG Jack M. Martin III, KIA 2009.',
-    'Forrest':'Honors SSgt Forrest Sibley, KIA 2015.',
-    'Omar (DB Thruster)':'Honors 1st Lt. Omar Vazquez, KIA 2011.',
-    'Arnie (KB)':'Honors Firefighter Arnaldo Quinones, died 2009.',
-    'Jerry':'Honors Sgt. Maj. Jerry D. Patton, died 2008.',
-    'Ship (DB/Row)':'Honors Lt. Jon Shipman, died 2009.',
-    'DT (DB)':'Honors SSgt Timothy P. Davis, KIA 2009.',
-    'Manion (DB Front Squat)':'Honors 1st Lt. Travis Manion, KIA 2007.',
-    'Sisson (PU sub)':'Honors 1LT Donnie W. Sisson, died 2011.',
-    'Blake (DB OH Lunge)':'Honors Lt. Brendan Looney, KIA 2010.',
-    'White (PU sub)':'Honors 1LT Ashley White-Stumpf, KIA 2011.',
-    'Roy (DB DL)':'Honors Cpl. Michael C. Roy, KIA 2009.',
-    'Holleyman (DB Clean)':'Honors SSG Aaron N. Holleyman, KIA 2004.',
-    'McGhee (DB DL)':'Honors Cpl. Ryan C. McGhee, KIA 2009.',
-    'Kalsu (DB Thruster)':'Honors 1LT James Robert Kalsu (Vietnam 1970).',
-    'Chad 1000X (24")':'Honors Navy SEAL Chad Wilkinson (2018).',
-    'Luce':'Honors Capt. Ronald A. Luce Jr., USAF, KIA 2009.',
-    'Jared (BW)':'Honors Capt. Jared C. Monti (MOH), KIA 2006.'
+    'Danny (DB PP)':'Honors Sgt. Daniel Sakai, 2009.',
+    'Hansen (Sub GHD)':'Honors SSgt Daniel Hansen, 2009.',
+    'Loredo':'Honors SSG Edwardo Loredo, 2010.',
+    'Gallant (WB/Run)':'Honors PO Marc A. Gallant, 2011.',
+    'Weston (DB Carry)':'Honors Officer Bryon S. Weston, 2009.',
+    'Hamilton':'Honors SFC Derek Hamilton, 2003.',
+    'Schmalls':'Honors Sgt. Justin E. Schmalls, 2008.',
+    'Bradley':'Honors 1LT Bradley A. Smith, 2010.',
+    'Riley':'Honors SFC Riley Stephens, 2012.',
+    'Severin':'Honors Sgt. Severin Summers, 2009.',
+    'Helton (DB)':'Honors 1LT Joseph Helton, 2009.',
+    'Jack (DB PP)':'Honors SSG Jack M. Martin III, 2009.',
+    'Forrest':'Honors SSgt Forrest Sibley, 2015.',
+    'Omar (DB Thruster)':'Honors 1LT Omar Vazquez, 2011.',
+    'Arnie (KB)':'Honors Firefighter Arnaldo Quinones, 2009.',
+    'Jerry':'Honors Sgt. Maj. Jerry D. Patton, 2008.',
+    'Ship (DB/Row)':'Honors Lt. Jon Shipman, 2009.',
+    'DT (DB)':'Honors SSgt Timothy P. Davis, 2009.',
+    'Manion (DB Front Squat)':'Honors 1LT Travis Manion, 2007.',
+    'Sisson (PU sub)':'Honors 1LT Donnie W. Sisson, 2011.',
+    'Blake (DB OH Lunge)':'Honors Lt. Brendan Looney, 2010.',
+    'White (PU sub)':'Honors 1LT Ashley White-Stumpf, 2011.',
+    'Roy (DB DL)':'Honors Cpl. Michael C. Roy, 2009.',
+    'Holleyman (DB Clean)':'Honors SSG Aaron N. Holleyman, 2004.',
+    'McGhee (DB DL)':'Honors Cpl. Ryan C. McGhee, 2009.',
+    'Kalsu (DB Thruster)':'Honors 1LT James R. Kalsu, 1970.',
+    'Chad 1000X (24")':'Honors Navy SEAL Chad Wilkinson, 2018.',
+    'Luce':'Honors Capt. Ronald A. Luce Jr., 2009.',
+    'Jared (BW)':'Honors Capt. Jared C. Monti (MOH), 2006.'
   };
 })();
 </script>
 
-<!-- ===== APP CODE ===== -->
+<!-- ================== APP CODE (no service worker) ================== -->
 <script>
-/* util */
 function mulberry32(a){return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}}
 function choice(rng,arr){return arr[Math.floor(rng()*arr.length)]}
 function shuffleInPlace(rng,arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}}
 function clamp(n,min,max){return Math.max(min,Math.min(max,n))}
-function daysInYear(y){return ((y%4===0 && y%100!==0) || (y%400===0)) ? 366 : 365;}
-function doyFromDate(dt){const start=new Date(dt.getFullYear(),0,1); return Math.floor((dt - start)/86400000)+1;}
+function daysInYear(y){return ((y%4===0&&y%100!==0)||(y%400===0))?366:365;}
+function doyFromDate(dt){const start=new Date(dt.getFullYear(),0,1);return Math.floor((dt-start)/86400000)+1;}
 function fmtDate(d){return d.toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
-function localDOY(year,month,day){const d=new Date(year,month,day);return Math.floor((d - new Date(year,0,0))/86400000)}
-function lastMondayOfMayLocal(year){const last=new Date(year,4,31);const dow=last.getDay();return 31-((dow+6)%7)}
+function localDOY(y,m,d){const dt=new Date(y,m,d);return Math.floor((dt-new Date(y,0,0))/86400000)}
+function lastMondayOfMayLocal(y){const last=new Date(y,4,31);const dow=last.getDay();return 31-((dow+6)%7)}
 
 const DB2='2x50 lb', DB1='1x50 lb', KB53='53 lb', KB35='35 lb', BOX='24"';
 
-/* warm-up / cooldown builders */
 function modalitiesFrom(w){const t=w.body.join(' ');
   return {run:/\b(\d+\s?m Run|km Run|mile Run)\b/i.test(t),row:/\b(Row( \d+m|\sfor\sCalories)?|Cal Row|km Row|5k Row)\b/i.test(t),rope:/Double-unders|Single-unders/i.test(t),
   wb:/Wall Balls?/i.test(t),pull:/Pull-ups|Chest-to-Bar|Bar Muscle-ups|L-Pull-ups/i.test(t),ttb:/Toes-to-Bar|Hanging Knee Raises/i.test(t),
   hspu:/Handstand Push-ups|Wall Walks/i.test(t),box:/Box Jump/i.test(t),kb:/\bKB\b/i.test(t),db:/\bDB\b/i.test(t),squat:/Squats?|Thrusters|Front Squats|Goblet Squats/i.test(t),hinge:/Deadlifts?|Power Cleans?|Swings|Snatches|Clean & Jerk/i.test(t)}}
-const WU={run:'5-8 min easy jog, then 2 rounds: 20s A-skips, 20s high knees, 20s butt kicks, 10 walking lunges/leg.',row:'4 min easy row. Drill 10 hard strokes, then 2x (20s hard / 40s easy).',
-rope:'2 min singles -> 3x (20 DU attempts or 30 singles + 10 penguin taps). 20 calf raises + 10 ankle rocks/side.',pull:'2x 20s active hang + 8 scap pulls. 2x10 kip swings. 2-3 easy pull-up/row sets.',
-ttb:'8 hollow rocks + 8 beat swings x2. 10 hanging knee raises or small TTB sets.',hspu:'Wrist circles 60s. 2x8 pike HSPU to abmat. 2 wall walks to 20s hold.',
-squat:'2 rounds: 10 air squats, 8 Cossack (4/side), 10 light wall balls, 10 ankle rocks/side.',hinge:'2 rounds: 10 glute bridges, 10 light DB RDL, 10 easy KB swings.',
-kb:'10 halos each way, 10 front rack shrugs, 10 squat-to-stand.',db:'Front rack flow: 10s rack hold + 8 strict press light + 8 front squats light.',
-box:'10 step-ups/leg, 10 pogo jumps, 10 small box jumps.',wb:'10 wall slides, 10-15 easy wall balls + ankle rocks.',general:'5-7 min easy cardio -> 2 rounds: 8 push-ups, 10 air squats, 10 sit-ups.'};
-const CD={run:'3-5 min walk, then 45s calf + 45s hamstring/side.',row:'2-3 min easy row, 45s thoracic child pose + 45s pec doorway/side.',
-rope:'45s calf/side + foot/plantar massage 1-2 min.',pull:'60s passive hang or banded lat/side; thread-the-needle 30s/side.',
-ttb:'Banded lat + 45s hip flexor/side.',hspu:'45s triceps/side + 45s pec doorway/side.',squat:'2x 45s couch stretch/side + 45s adductor hold.',
-hinge:'45s hamstring/side + 5 gentle McKenzie press-ups.',kb:'45s rack/forearm stretch/side + 45s lat stretch/side.',
-db:'45s front-rack/pec/side + 45s triceps/side.',box:'45s hip flexor/side + 45s calves.',wb:'45s thoracic open + 45s ankle (knee-to-wall)/side.',general:'3-5 min easy spin/walk, breathe down.'};
 
-/* known WODs (now embedded) */
+const WU={run:'5-8 min easy jog -> 2 rounds: 20s A-skips, 20s high knees, 20s butt kicks, 10 walking lunges/leg.',
+row:'4 min easy row. Drill 10 hard strokes, then 2x (20s hard / 40s easy).',
+rope:'2 min singles -> 3x (20 DU attempts or 30 singles + 10 penguin taps). 20 calf raises + 10 ankle rocks/side.',
+pull:'2x 20s active hang + 8 scap pulls. 2x10 kip swings. 2-3 easy pull-up/row sets.',
+ttb:'8 hollow rocks + 8 beat swings x2. 10 hanging knee raises or small TTB sets.',
+hspu:'Wrist circles 60s. 2x8 pike HSPU to abmat. 2 wall walks to 20s hold.',
+squat:'2 rounds: 10 air squats, 8 Cossack (4/side), 10 light wall balls, 10 ankle rocks/side.',
+hinge:'2 rounds: 10 glute bridges, 10 light DB RDL, 10 easy KB swings.',
+kb:'10 halos each way, 10 front rack shrugs, 10 squat-to-stand.',
+db:'Front rack flow: 10s rack hold + 8 strict press light + 8 front squats light.',
+box:'10 step-ups/leg, 10 pogo jumps, 10 small box jumps.',
+wb:'10 wall slides, 10-15 easy wall balls + ankle rocks.',
+general:'5-7 min easy cardio -> 2 rounds: 8 push-ups, 10 air squats, 10 sit-ups.'};
+
+const CD={run:'3-5 min walk, then 45s calf + 45s hamstring/side.',
+row:'2-3 min easy row, 45s thoracic child pose + 45s pec doorway/side.',
+rope:'45s calf/side + foot/plantar massage 1-2 min.',
+pull:'60s passive hang or banded lat/side; thread-the-needle 30s/side.',
+ttb:'Banded lat + 45s hip flexor/side.',
+hspu:'45s triceps/side + 45s pec doorway/side.',
+squat:'2x 45s couch stretch/side + 45s adductor hold.',
+hinge:'45s hamstring/side + 5 gentle McKenzie press-ups.',
+kb:'45s rack/forearm stretch/side + 45s lat stretch/side.',
+db:'45s front-rack/pec/side + 45s triceps/side.',
+box:'45s hip flexor/side + 45s calves.',
+wb:'45s thoracic open + 45s ankle (knee-to-wall)/side.',
+general:'3-5 min easy spin/walk, breathe down.'};
+
 let BENCH = Array.isArray(window.WOD_BANK)? window.WOD_BANK : [];
 let TRIBUTES = Object.assign({}, window.WOD_TRIBUTES||{});
 let DATE_MAP = (window.WOD_DATE_MAP && typeof window.WOD_DATE_MAP==='object') ? window.WOD_DATE_MAP : {};
 
-/* generators */
 const MONO=['Run 400m','Run 600m','Run 800m','Run 1000m','Row 500m','Row 750m','Row 1000m','Row 1500m','150 Single-unders','100 Double-unders','Shuttle Run 200m'];
 const GYM=['Pull-ups','Chest-to-Bar Pull-ups','Bar Muscle-ups','Toes-to-Bar','Push-ups','Sit-ups','Air Squats','Pistols (alt)','Handstand Push-ups','Burpees','Pike Push-ups','V-ups','Wall Walks','Hanging Knee Raises','Wall Balls'];
 const DBB=[{name:'DB Thrusters',load:DB2},{name:'DB Push Press',load:DB2},{name:'DB Front Squats',load:DB2},{name:'DB Power Cleans',load:DB2},{name:'DB Deadlifts',load:DB2},{name:'Alt DB Snatches',load:DB1},{name:'DB Hang Clean & Jerks',load:DB1}];
@@ -342,31 +360,30 @@ function pickGym(rng){return choice(rng,GYM)} function pickDB(rng){return choice
 function pickAny(rng){const b=choice(rng,['GYM','DB','KB','BOX']);return b==='GYM'?pickGym(rng):b==='DB'?pickDB(rng):b==='KB'?pickKB(rng):pickBOX(rng)}
 function amrapLong(rng){const mins=choice(rng,[20,24,30,40]);const depth=choice(rng,[3,3,4,4,5,6]);const scheme=choice(rng,AMRAP_SCHEMES[depth]);
   const label=scheme.pattern?scheme.label:(depth===3?'Triplet':depth===4?'Quad':depth===5?'Quint':'Sextet');const items=[];let monoUsed=false;
-  while(items.length<depth){const useMono=!monoUsed && rng()<0.35;if(useMono){items.push(choice(rng,MONO)); monoUsed=true;}else{const mv=pickAny(rng);const id=(typeof mv==='string')?mv:mv.name;if(items.some(x=>((typeof x==='string')?x:(x.name||x))===id)) continue;items.push(mv);}}
+  while(items.length<depth){const useMono=!monoUsed && rng()<0.35;if(useMono){items.push(choice(rng,MONO));monoUsed=true;}else{const mv=pickAny(rng);const id=(typeof mv==='string')?mv:mv.name;if(items.some(x=>((typeof x==='string')?x:(x.name||x))===id))continue;items.push(mv);}}
   const lines=[];let p=0;for(const mv of items){if(typeof mv==='string'&&MONO.includes(mv)){lines.push(mv);continue;}const name=(typeof mv==='string')?mv:mv.name;const rep=scheme.pattern?scheme.pattern[clamp(p,0,scheme.pattern.length-1)]:repFor(name,rng);if(scheme.pattern)p++;lines.push(fmtRep(rep,mv));}
-  return {title:'AMRAP '+mins+' - '+label, type:'AMRAP', time:String(mins), body:['As many rounds as possible in '+mins+' minutes:'].concat(lines), notes:'Tight transitions. Keep round times consistent.'};}
+  return {title:'AMRAP '+mins+' - '+label,type:'AMRAP',time:String(mins),body:['As many rounds as possible in '+mins+' minutes:'].concat(lines),notes:'Tight transitions. Keep round times consistent.'};}
 function emomLong(rng){const mins=choice(rng,[24,30,36,40]);const a=pickAny(rng),b=pickGym(rng),c=choice(rng,MONO);
-  return {title:'EMOM '+mins+' - Rotate 3', type:'EMOM', time:String(mins), body:['Every minute for '+mins+' min, rotate:','1) '+fmtRep(repFor((a.name||a),rng),a),'2) '+fmtRep(repFor(b,rng),b),'3) '+c,'Finish each minute in ~40-45s.'], notes:'Hold windows; quality first.'};}
+  return {title:'EMOM '+mins+' - Rotate 3',type:'EMOM',time:String(mins),body:['Every minute for '+mins+' min, rotate:','1) '+fmtRep(repFor((a.name||a),rng),a),'2) '+fmtRep(repFor(b,rng),b),'3) '+c,'Finish each minute in ~40-45s.'],notes:'Hold windows; quality first.'};}
 function chipperLong(rng){const count=choice(rng,[8,9,10,11,12]);const tasks=[];tasks.push(choice(rng,['25 Wall Balls','30 Wall Balls','40 Wall Balls']));tasks.push(choice(rng,MONO));
   const x=pickAny(rng);tasks.push(fmtRep(repFor((x.name||x),rng),x));const y=pickGym(rng);tasks.push(fmtRep(repFor(y,rng),y));const z=pickBOX(rng);tasks.push(fmtRep(repFor(z,rng),z));
   while(tasks.length<count){const add=(rng()<0.3)?choice(rng,MONO):(function(){const m=pickAny(rng);return fmtRep(repFor((m.name||m),rng),m);}());if(!tasks.includes(add))tasks.push(add);}
-  return {title:'Chipper - For Time (Long)', type:'For Time', time:'30-60', body:['Complete for time:'].concat(tasks), notes:'Break small and keep moving. Target 30-60 min.'};}
+  return {title:'Chipper - For Time (Long)',type:'For Time',time:'30-60',body:['Complete for time:'].concat(tasks),notes:'Break small and keep moving. Target 30-60 min.'};}
 
-/* pins */
 const PIN_TITLES={MURPH:'Murph',GLEN:'Glen (Home)',CHAD:'Chad 1000X (24")',KALSU:'Kalsu (DB Thruster)',XMAS:'12 Days of Christmas (Home)'};
 function resolveTitleToIndex(title){return BENCH.findIndex(b=>b.title===title)}
-function getFallback(title){const map={};map[PIN_TITLES.MURPH]={title:'Murph',type:'For Time',time:'40-60',body:['For time:','1 mile Run','100 Pull-ups','200 Push-ups','300 Air Squats','1 mile Run'],notes:'Partition as needed.',named:true};
-map[PIN_TITLES.GLEN]={title:'Glen (Home)',type:'For Time',time:'45-60',body:['For time:','1 mile Run','100 Pull-ups','200 Push-ups','300 Sit-ups','1 mile Run'],notes:'Partition calisthenics.',named:true};
-map[PIN_TITLES.CHAD]={title:'Chad 1000X (24")',type:'For Time',time:'35-60',body:['For time:','1,000 Box Step-ups - '+BOX],notes:'Steady pace.',named:true};
-map[PIN_TITLES.KALSU]={title:'Kalsu (DB Thruster)',type:'For Time',time:'20-40',body:['For time:','100 DB Thrusters - '+DB2,'Every minute: 5 Burpees (start with burpees)'],notes:'Grip and lungs.',named:true};
-map[PIN_TITLES.XMAS]={title:'12 Days of Christmas (Home)',type:'For Time',time:'30-50',body:['Perform like the song (1-12 then 12-1):','1 Burpee','2 KB Swings - '+KB53,'3 Wall Balls','4 Pull-ups','5 Box Jumps - '+BOX,'6 Sit-ups','7 Push-ups','8 Alt DB Snatches - '+DB1,'9 Lunges/leg','10 Double-unders','11 KB Goblet Squats - '+KB53,'12 Cal Row'],notes:'Do not sprint early.',named:true};return map[title]||null;}
-function buildPins(year){const pins=new Map();function add(m,d,title){const doy=localDOY(year,m,d);const i=resolveTitleToIndex(title);if(i>=0)pins.set(doy,{kind:'index',idx:i});else pins.set(doy,{kind:'inline',wod:getFallback(title)});}
+function fallback(title){const f={};f[PIN_TITLES.MURPH]={title:'Murph',type:'For Time',time:'40-60',body:['For time:','1 mile Run','100 Pull-ups','200 Push-ups','300 Air Squats','1 mile Run'],notes:'Partition as needed.',named:true};
+f[PIN_TITLES.GLEN]={title:'Glen (Home)',type:'For Time',time:'45-60',body:['For time:','1 mile Run','100 Pull-ups','200 Push-ups','300 Sit-ups','1 mile Run'],notes:'Partition calisthenics.',named:true};
+f[PIN_TITLES.CHAD]={title:'Chad 1000X (24")',type:'For Time',time:'35-60',body:['For time:','1,000 Box Step-ups - '+BOX],notes:'Steady pace.',named:true};
+f[PIN_TITLES.KALSU]={title:'Kalsu (DB Thruster)',type:'For Time',time:'20-40',body:['For time:','100 DB Thrusters - '+DB2,'Every minute: 5 Burpees (start with burpees)'],notes:'Grip and lungs.',named:true};
+f[PIN_TITLES.XMAS]={title:'12 Days of Christmas (Home)',type:'For Time',time:'30-50',body:['Perform like the song (1-12 then 12-1):','1 Burpee','2 KB Swings - '+KB53','3 Wall Balls','4 Pull-ups','5 Box Jumps - '+BOX','6 Sit-ups','7 Push-ups','8 Alt DB Snatches - '+DB1','9 Lunges/leg','10 Double-unders','11 KB Goblet Squats - '+KB53','12 Cal Row'],notes:'Don\'t sprint early.',named:true};
+return f[title]||null;}
+function buildPins(year){const pins=new Map();function add(m,d,title){const doy=localDOY(year,m,d);const i=resolveTitleToIndex(title);if(i>=0)pins.set(doy,{kind:'index',idx:i});else pins.set(doy,{kind:'inline',wod:fallback(title)});}
 add(4,lastMondayOfMayLocal(year),PIN_TITLES.MURPH);add(8,11,PIN_TITLES.GLEN);add(10,11,PIN_TITLES.CHAD);add(6,4,PIN_TITLES.KALSU);add(11,25,PIN_TITLES.XMAS);
 if(DATE_MAP&&typeof DATE_MAP==='object'){for(const k in DATE_MAP){const m=parseInt(k.slice(0,2),10)-1;const d=parseInt(k.slice(3,5),10);if(isNaN(m)||isNaN(d))continue;const val=DATE_MAP[k];let entry=null;
 if(typeof val==='number'&&BENCH[val])entry={kind:'index',idx:val};else if(typeof val==='string'){const idx=resolveTitleToIndex(val);entry=idx>=0?{kind:'index',idx}:null;}
 if(entry){const doy=localDOY(year,m,d);pins.set(doy,entry);}}}return pins;}
 
-/* spreading */
 function distributeKnown(openDays){const excluded=new Set(Object.values(PIN_TITLES));const mapTitles=new Set();if(DATE_MAP&&typeof DATE_MAP==='object'){for(const v of Object.values(DATE_MAP)){if(typeof v==='string')mapTitles.add(v);if(typeof v==='number'&&BENCH[v])mapTitles.add(BENCH[v].title);}}
 const useIdx=BENCH.map((w,i)=>({i,t:w.title})).filter(x=>!excluded.has(x.t)&&!mapTitles.has(x.t)).map(x=>x.i);const rng=mulberry32(1337);shuffleInPlace(rng,useIdx);const N=Math.min(useIdx.length,openDays.length);const res=new Map();
 for(let i=0;i<N;i++){const pos=Math.floor((i+0.5)*openDays.length/N);res.set(openDays[pos],{kind:'index',idx:useIdx[i]});}return res;}
@@ -378,9 +395,9 @@ for(let d=1;d<=days;d++){let w=null;if(slots.has(d)){const val=slots.get(d);if(v
 else{const dow=(d-1)%7;const gen=(dow===6)?chipperLong:(dow%2===0?amrapLong:emomLong);for(let tries=0;tries<6;tries++){const cand=gen(rng);const tg=tagBody(cand.body);const p1=d>1?tags[d-2]:null,p2=d>2?tags[d-3]:null;
 if(!violates(tg,p1,p2)){w=cand;tags[d-1]=tg;break;}if(tries===5){w=cand;tags[d-1]=tg;}}}out[d-1]=w;}return out;}
 
-/* UI */
 const elTitle=document.getElementById('wodTitle'), elBody=document.getElementById('wodBody'), elNotes=document.getElementById('wodNotes'), elType=document.getElementById('typePill'), elTime=document.getElementById('timePill'), elTarget=document.getElementById('targetPill'), elTribute=document.getElementById('wodTribute'), dateChip=document.getElementById('todayStr'), cal=document.getElementById('cal'), warn=document.getElementById('warn');
 let currentDate=new Date(); let currentYear=currentDate.getFullYear(); let YEAR=[];
+
 function isCommemorative(title){return !!(TRIBUTES&&TRIBUTES[title])}
 function paceHint(w){return (w.type==='For Time')?'Target: 30-60 min':'Target: '+w.time+' min'}
 function renderByDate(dt){if(dt.getFullYear()!==currentYear){currentYear=dt.getFullYear();YEAR=buildYear(currentYear);}const doy=doyFromDate(dt);const w=YEAR[clamp(doy,1,daysInYear(currentYear))-1];
@@ -404,18 +421,29 @@ function openCalendar(){buildCalendar(currentDate.getFullYear(),currentDate.getM
 function closeCalendar(){cal.classList.remove('show');cal.setAttribute('aria-hidden','true');document.removeEventListener('click',outsideClose);}
 function outsideClose(e){const inside=(e.composedPath&&e.composedPath().includes(cal))||cal.contains(e.target);if(!inside&&e.target!==dateChip){closeCalendar();}}
 
-/* init */
-function init(){if(!BENCH.length){const w=document.getElementById('warn');w.style.display='block';w.textContent='Heads up: no known WODs embedded.';}
-const icon192=document.querySelector('link[rel="apple-touch-icon"]').href;const manifest={name:'BAMBAM — Daily WOD',short_name:'Daily WOD',start_url:'/',display:'standalone',background_color:'#0f1115',theme_color:'#0f1115',icons:[{src:icon192,sizes:'192x192',type:'image/png'},{src:icon192,sizes:'512x512',type:'image/png'}]};
-const manBlob=new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'});const manLink=document.createElement('link');manLink.rel='manifest';manLink.href=URL.createObjectURL(manBlob);document.head.appendChild(manLink);
-if('serviceWorker' in navigator){const swCode="const CACHE='bb-wod-v1';self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['/'])));self.skipWaiting();});self.addEventListener('activate',e=>{self.clients.claim();});self.addEventListener('fetch',e=>{const req=e.request;if(req.mode==='navigate'){e.respondWith(fetch(req).catch(()=>caches.match('/')));return;}e.respondWith(caches.match(req).then(r=>r||fetch(req)));});";
-const swURL=URL.createObjectURL(new Blob([swCode],{type:'text/javascript'}));navigator.serviceWorker.register(swURL,{scope:'/'}).catch(function(){});}
-let currentYear=new Date().getFullYear();YEAR=buildYear(currentYear);renderByDate(new Date());
-document.getElementById('prevBtn').onclick=function(){const d=new Date(currentDate);d.setDate(d.getDate()-1);renderByDate(d);};
-document.getElementById('nextBtn').onclick=function(){const d=new Date(currentDate);d.setDate(d.getDate()+1);renderByDate(d);};
-document.getElementById('todayBtn').onclick=function(){renderByDate(new Date());};
-const chip=document.getElementById('todayStr');chip.addEventListener('click',function(e){e.stopPropagation();if(cal.classList.contains('show'))closeCalendar();else openCalendar();});
-document.addEventListener('keydown',function(e){if(e.key==='Escape'&&cal.classList.contains('show'))closeCalendar();});}
+/* INIT — also nuke any old ServiceWorkers/caches so you see fresh code */
+function init(){
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});
+  }
+  if('caches' in window && caches.keys){
+    caches.keys().then(function(keys){keys.forEach(function(k){caches.delete(k);});});
+  }
+
+  if(!BENCH.length){warn.style.display='block';warn.textContent='Heads up: WOD bank failed to embed.';}
+
+  currentYear=new Date().getFullYear();
+  YEAR=buildYear(currentYear);
+  renderByDate(new Date());
+
+  document.getElementById('prevBtn').onclick=function(){const d=new Date(currentDate);d.setDate(d.getDate()-1);renderByDate(d);};
+  document.getElementById('nextBtn').onclick=function(){const d=new Date(currentDate);d.setDate(d.getDate()+1);renderByDate(d);};
+  document.getElementById('todayBtn').onclick=function(){renderByDate(new Date());};
+
+  const chip=document.getElementById('todayStr');
+  chip.addEventListener('click',function(e){e.stopPropagation();if(cal.classList.contains('show'))closeCalendar();else openCalendar();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&cal.classList.contains('show'))closeCalendar();});
+}
 document.addEventListener('DOMContentLoaded',init);
 </script>
 </body>
