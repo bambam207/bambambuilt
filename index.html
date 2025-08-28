@@ -59,12 +59,16 @@ ul{margin:8px 0 0 20px} li{margin:4px 0}
 .cal .today{outline:1px dashed var(--accent);outline-offset:2px}
 .cal .selected{background:#0d1320;border-color:var(--accent)}
 
-/* Filters dropdown */
-.filters{position:relative}
-.filter-btn{background:#111723;border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;color:var(--ink);cursor:pointer}
+/* Filters dropdown (FIXED POSITIONING UNDER BUTTON) */
+.filters{position:relative;display:inline-block}
+.filter-btn{background:#111723;border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;color:#ink;cursor:pointer}
 .filter-btn:hover{border-color:var(--accent)}
-.filter-panel{position:absolute;top:120%;right:0;width:280px;background:var(--card);border:1px solid var(--border);border-radius:12px;
-              box-shadow:0 12px 36px rgba(0,0,0,.45);padding:12px;display:none;z-index:1000}
+.filter-panel{
+  position:absolute; top:120%;
+  left:50%; transform:translateX(-50%);  /* center under button */
+  width:280px; background:var(--card); border:1px solid var(--border); border-radius:12px;
+  box-shadow:0 12px 36px rgba(0,0,0,.45); padding:12px; display:none; z-index:1000
+}
 .filter-panel.show{display:block}
 .filter-panel h4{margin:0 0 8px;color:#e8eaf0;font-size:14px}
 .filter-panel label{display:flex;align-items:center;gap:8px;font-size:13px;color:#d4d8e3;margin:6px 0}
@@ -228,11 +232,11 @@ function buildCooldown(w){const m=tagText(w.body),p=[];
   if(m.kb)p.push(CD.kb); if(m.db)p.push(CD.db); if(m.box)p.push(CD.box); if(!p.length)p.push(CD.general);
   return p.slice(0,2).join('<br><br>'); }
 
-/* ===== NAMED WODS (INLINE) ===== */
+/* ===== NAMED WODS (INLINE — keep your full list if you had more) ===== */
 const BENCH=(()=>{
   const W=(title,type,time,body,notes="")=>({title,type,time,body,notes});
   const list=[];
-  /* GIRLS / BENCHMARKS (subset) */
+  /* (Same subset as before; keep/extend as you like) */
   list.push(
     W("Angie","For Time","20–40",["For time:","• 100 Pull-ups","• 100 Push-ups","• 100 Sit-ups","• 100 Air Squats"],"Partition as needed."),
     W("Annie","For Time","10–20",["For time:","• 50-40-30-20-10 Double-unders","• 50-40-30-20-10 Sit-ups"],"Add easy jog if <20."),
@@ -253,7 +257,6 @@ const BENCH=(()=>{
     W("Mary","AMRAP 20","20",["AMRAP 20:","• 5 Handstand Push-ups","• 10 Pistols (alt)","• 15 Pull-ups"]),
     W("Nicole","AMRAP 20","20",["AMRAP 20:","• 400m Run","• Max Pull-ups"])
   );
-  /* HEROES (subset) */
   list.push(
     W("Murph","For Time","40–60",["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Air Squats","• 1 mile Run"],"Partition as needed."),
     W("Glen (Home)","For Time","45–60",["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Sit-ups","• 1 mile Run"],"Partition."),
@@ -279,7 +282,6 @@ const BENCH=(()=>{
     W('Chad 1000X (24")',"For Time","35–60",["For time:","• 1,000 Box Step-ups — "+BOX]),
     W("Kalsu (DB Thruster)","For Time","30–60",["For time:","• 100 DB Thrusters — "+DB2,"At the top of every minute: 5 Burpees (start with burpees)"])
   );
-  /* OPEN / OTHER (subset) */
   list.push(
     W("Open 11.1 / 14.1 (DB)","AMRAP 10","20 (cap)",["AMRAP 10:","• 30 Double-unders","• 15 Alt DB Snatches — "+DB1]),
     W("Open 14.4 / 23.1 (DB)","AMRAP 14","20 (cap)",["AMRAP 14:","• Row 60 Cal","• 50 Toes-to-Bar","• 40 Wall Balls","• 30 DB Cleans — "+DB2,"• 20 Bar Muscle-ups"]),
@@ -301,7 +303,7 @@ const TRIBUTES={
   "Kalsu (DB Thruster)":"Honors 1LT James Robert Kalsu (KIA 1970)."
 };
 
-/* ===== GENERATORS (obey filters) ===== */
+/* ===== GENERATORS (respect filters) ===== */
 const MONO=["Run 400m","Run 600m","Run 800m","Run 1000m","Row 500m","Row 750m","Row 1000m","Row 1500m","150 Single-unders","100 Double-unders","Shuttle Run 200m"];
 const GYM=["Pull-ups","Chest-to-Bar Pull-ups","Bar Muscle-ups","Toes-to-Bar","Push-ups","Sit-ups","Air Squats","Pistols (alt)","Handstand Push-ups","Burpees","Pike Push-ups","V-ups","Wall Walks","Hanging Knee Raises","Wall Balls"];
 const DBB=[{name:"DB Thrusters",load:DB2},{name:"DB Push Press",load:DB2},{name:"DB Front Squats",load:DB2},{name:"DB Power Cleans",load:DB2},{name:"DB Deadlifts",load:DB2},{name:"Alt DB Snatches",load:DB1},{name:"DB Hang Clean & Jerks",load:DB1}];
@@ -315,21 +317,16 @@ const REP_RULES={
   "Alt DB Snatches":[12,16,20],"DB Hang Clean & Jerks":[10,12,16],"KB Swings":[20,25,30],"KB Goblet Squats":[16,20,24],"KB Clean & Press (alt)":[10,12,14],
   "Box Jumps":[15,20,24],"Burpee Box Jump-Overs":[10,12,14]
 };
-function allowedMonoPool(){
-  return MONO.filter(s=>!violatesFilters(tagText([s])));
-}
-function allowedGymPool(){ return GYM.filter(n=>!violatesFilters(tagText([n]))); }
-function allowedDB(){ return DBB.filter(m=>!violatesFilters(tagText([m.name]))); }
-function allowedKB(){ return KBB.filter(m=>!violatesFilters(tagText([m.name]))); }
-function allowedBOX(){ return BOXM.filter(n=>!violatesFilters(tagText([n]))); }
+function allowedMonoPool(){return MONO.filter(s=>!violatesFilters(tagText([s])));}
+function allowedGymPool(){return GYM.filter(n=>!violatesFilters(tagText([n])));}
+function allowedDB(){return DBB.filter(m=>!violatesFilters(tagText([m.name])));}
+function allowedKB(){return KBB.filter(m=>!violatesFilters(tagText([m.name])));}
+function allowedBOX(){return BOXM.filter(n=>!violatesFilters(tagText([n])));}
 function repFor(name,rng){const a=REP_RULES[name]||[12,15,20];return a[Math.floor(rng()*a.length)]}
 function fmtRep(rep,mv){return (typeof mv==="string")?`${rep} ${mv}`:`${rep} ${mv.name} — ${mv.load}`}
 function pickAnyAllowed(rng){
-  const buckets=[];
-  if(allowedGymPool().length) buckets.push("GYM");
-  if(allowedDB().length) buckets.push("DB");
-  if(allowedKB().length) buckets.push("KB");
-  if(allowedBOX().length) buckets.push("BOX");
+  const buckets=[]; if(allowedGymPool().length) buckets.push("GYM"); if(allowedDB().length) buckets.push("DB");
+  if(allowedKB().length) buckets.push("KB"); if(allowedBOX().length) buckets.push("BOX");
   if(!buckets.length) return null;
   const b=choice(rng,buckets);
   if(b==="GYM") return choice(rng,allowedGymPool());
@@ -388,8 +385,7 @@ function chipperLong(rng){
   const y=choice(rng,allowedGymPool()); if(y) tasks.push(fmtRep(repFor(y,rng),y));
   const z=choice(rng,allowedBOX()); if(z) tasks.push(fmtRep(repFor(z,rng),z));
   while(tasks.length<count){
-    const add = (rng()<0.35 && monoPool.length)? choice(rng,monoPool)
-               : ( ()=>{const m=pickAnyAllowed(rng); return m?fmtRep(repFor((m.name||m),rng),m):null;} )();
+    const add=(rng()<0.35 && monoPool.length)?choice(rng,monoPool):( ()=>{const m=pickAnyAllowed(rng);return m?fmtRep(repFor((m.name||m),rng),m):null;} )();
     if(add && !tasks.includes(add)) tasks.push(add); else break;
   }
   if(!tasks.length) return amrapLong(rng);
@@ -530,7 +526,6 @@ function init(){
   });
   showFilterStatus();
 
-  // Warn if BENCH empty
   if(!BENCH.length){ warn.style.display='block'; warn.textContent='No named WODs loaded (using generators only).'; }
 
   renderByDate(currentDate);
@@ -541,7 +536,7 @@ function init(){
   dateChip.addEventListener('click',(e)=>{ e.stopPropagation(); cal.classList.contains('show')?closeCalendar():openCalendar(); });
   document.addEventListener('keydown',(e)=>{ if(e.key==='Escape' && cal.classList.contains('show')) closeCalendar(); });
 
-  /* PWA (optional lightweight) */
+  /* PWA mini */
   const icon192='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABb0P4JAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAABcUlEQVR42u3RAQ0AAAwCoNm/9C1gkQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwqgkAAQh7b7cAAAAASUVORK5CYII=';
   const manifest={name:"BAMBAM — Daily WOD",short_name:"Daily WOD",start_url:"./",display:"standalone",background_color:"#0f1115",theme_color:"#0f1115",icons:[{src:icon192,sizes:"192x192",type:"image/png"},{src:icon192,sizes:"512x512",type:"image/png"}]};
   const manBlob=new Blob([JSON.stringify(manifest)],{type:"application/manifest+json"});
