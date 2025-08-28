@@ -8,8 +8,8 @@
 <style>
 :root{
   --bg:#0f1115; --card:#151922; --ink:#e8eaf0; --muted:#aab0c0;
-  --accent:#ffd24d;          /* yellow: replaces old blue for notice bars, hovers */
-  --metcon:#ff6b6b;          /* red bar for workout body */
+  --accent:#ffd24d;          /* yellow (warmup/cooldown bars, hovers) */
+  --metcon:#ff6b6b;          /* red bar for metcon body */
   --border:#2a3345;
 }
 *{box-sizing:border-box}
@@ -30,7 +30,7 @@ ul{margin:8px 0 0 20px} li{margin:4px 0}
 
 /* Accent bars */
 .notice{background:#1a2030;border-left:4px solid var(--accent);padding:10px 12px;border-radius:8px}
-.metcon{border-left:4px solid var(--metcon);padding-left:12px}
+.metcon{background:#1a2030;border-left:4px solid var(--metcon);padding:10px 12px;border-radius:8px}
 
 /* Date chip + calendar */
 .date-chip{cursor:pointer;display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#0d1320;user-select:none}
@@ -41,7 +41,7 @@ ul{margin:8px 0 0 20px} li{margin:4px 0}
      box-shadow:0 12px 36px rgba(0,0,0,.45);padding:12px;display:none;z-index:1000}
 .cal.show{display:block}
 .cal header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.cal .hdr-btn{background:#111723;border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;color:var(--ink);cursor:pointer}
+.cal .hdr-btn{background:#111723;border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;color:#e8eaf0;cursor:pointer}
 .cal .hdr-btn:hover{border-color:var(--accent)}
 .cal .label{font-weight:700;color:#e8eaf0}
 .cal .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:8px}
@@ -54,7 +54,7 @@ ul{margin:8px 0 0 20px} li{margin:4px 0}
 
 /* Filters dropdown */
 .filters{position:relative}
-.filter-btn{background:#111723;border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;color:var(--ink);cursor:pointer}
+.filter-btn{background:#111723;border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;color:#e8eaf0;cursor:pointer}
 .filter-btn:hover{border-color:var(--accent)}
 .filter-panel{position:absolute;top:120%;left:50%;transform:translateX(-50%);
               width:280px;background:var(--card);border:1px solid var(--border);border-radius:12px;
@@ -62,7 +62,6 @@ ul{margin:8px 0 0 20px} li{margin:4px 0}
 .filter-panel.show{display:block}
 .filter-panel h4{margin:0 0 8px;color:#e8eaf0;font-size:14px}
 .filter-panel label{display:flex;align-items:center;gap:8px;font-size:13px;color:#d4d8e3;margin:6px 0}
-.filter-chip{display:inline-block;margin-left:6px;padding:2px 8px;border:1px solid var(--border);border-radius:999px;background:#0d1320;font-size:12px;color:#aab0c0}
 .small{font-size:12px;color:#8a93a7}
 
 @media print{ .controls, .footer, .cal, .filters {display:none} body{background:#fff;color:#111} .card{box-shadow:none;border-color:#ddd}}
@@ -83,15 +82,15 @@ footer a:hover{color:#e8eaf0}
     </div>
     <div id="warn" class="warn" style="display:none"></div>
 
-    <!-- Nav buttons -->
+    <!-- Nav -->
     <div class="row controls" style="margin-top:8px;">
       <button id="prevBtn">◀ Prev</button>
       <button id="todayBtn">Today</button>
       <button id="nextBtn">Next ▶</button>
     </div>
 
-    <!-- Filters row (moved here) -->
-    <div class="row" id="filterRow" style="gap:10px;margin-top:4px;">
+    <!-- Filters row -->
+    <div class="row" style="gap:10px;margin-top:4px;">
       <div class="filters">
         <button id="filterBtn" class="filter-btn">Filters ▾</button>
         <div id="filterPanel" class="filter-panel" aria-hidden="true">
@@ -110,17 +109,15 @@ footer a:hover{color:#e8eaf0}
       </div>
       <div id="filterStatus" class="small"></div>
     </div>
-
-    <div id="activeFilters" class="small center" style="margin-top:6px;"></div>
   </div>
 
-  <!-- WARM-UP at top -->
+  <!-- WARM-UP -->
   <div class="card">
     <h3>Warm-Up</h3>
     <div id="warmup" class="notice"></div>
   </div>
 
-  <!-- WOD CARD (metcon red bar on body) -->
+  <!-- METCON (red rounded bar body) -->
   <div class="card">
     <div class="row" style="justify-content:space-between">
       <h2 id="wodTitle">Workout</h2>
@@ -164,24 +161,15 @@ let currentDate=new Date(); let currentYear=currentDate.getFullYear(); let YEAR=
 
 function saveFilters(){
   localStorage.setItem("bb_excluded",JSON.stringify([...excluded]));
-  YEAR = buildYear(currentYear);
-  showActiveFilters();
+  YEAR = buildYear(currentYear);     // rebuild the year with new constraints
   renderByDate(currentDate);
+  showFilterStatus();
 }
-function showActiveFilters(){
-  const map={pull:"Pull-up bar",box:"Box",wb:"Wall ball",rope:"Rope",run:"Run",row:"Row",db:"DB",kb:"KB",hspu:"HSPU"};
-  const chips=document.getElementById("activeFilters");
-  const status=document.getElementById("filterStatus");
-  if(!excluded.size){
-    chips.textContent="";
-    status.textContent="No filters applied";
-  }else{
-    chips.innerHTML="Excluded:"+[...excluded].map(k=>`<span class="filter-chip">${map[k]}</span>`).join("");
-    status.textContent="Filters applied";
-  }
+function showFilterStatus(){
+  document.getElementById("filterStatus").textContent = excluded.size ? "Filters applied" : "No filters applied";
 }
 
-/* ===== TAGGING (filters & warmups) ===== */
+/* ===== TAGGING ===== */
 function tagText(lines){
   const t=lines.join(" ");
   return {
@@ -208,7 +196,7 @@ function violatesFilters(tags){
          (excluded.has("db") && tags.db);
 }
 
-/* ===== Warm-Up / Cooldown ===== */
+/* ===== WARM-UP / COOLDOWN ===== */
 const WU={ run:`5–8 min easy jog → 2 rounds: 20s A-skips · 20s high knees · 20s butt kicks · 10 walking lunges/leg.`,
            row:`4 min easy row, then 2× (:20 hard / :40 easy).`,
            rope:`2 min singles → 3× (20 DU attempts or 30 singles) · 20 calf raises + 10 ankle rocks/side.`,
@@ -244,24 +232,118 @@ function buildCooldown(w){const m=tagText(w.body),p=[];
   if(m.kb)p.push(CD.kb); if(m.db)p.push(CD.db); if(m.box)p.push(CD.box);
   if(!p.length)p.push(CD.general); return p.slice(0,2).join('<br><br>'); }
 
-/* ===== Named WODs (kept in this file) ===== */
-const BENCH=(()=>{const W=(title,type,time,body,notes="")=>({title,type,time,body,notes});const list=[];
-/* (sample set — same as your last working version; keep adding as you like) */
-list.push(
-  W("Murph","For Time","40–60",["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Air Squats","• 1 mile Run"],"Partition as needed."),
-  W("Glen (Home)","For Time","45–60",["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Sit-ups","• 1 mile Run"],"Partition."),
-  W("Cindy","AMRAP 20","20",["AMRAP 20:","• 5 Pull-ups","• 10 Push-ups","• 15 Air Squats"]),
-  W("Karen","For Time","12–20",["For time:","• 150 Wall Balls"]),
-  W("Helen","For Time (3 rds)","12–20",["3 rounds:","• 400m Run","• 21 KB Swings — 53 lb","• 12 Pull-ups"])
-);
-return list;})();
+/* ===== NAMED WODS (BIG LIST, all inline) ===== */
+const BENCH=(()=>{
+  const W=(title,type,time,body,notes="")=>({title,type,time,body,notes});
+  const list=[];
 
+  /* — GIRLS / BENCHMARKS — */
+  list.push(
+    W("Angie","For Time","20–40",["For time:","• 100 Pull-ups","• 100 Push-ups","• 100 Sit-ups","• 100 Air Squats"],"Partition as needed."),
+    W("Annie","For Time","10–20",["For time:","• 50-40-30-20-10 Double-unders","• 50-40-30-20-10 Sit-ups"],"Add easy jog if <20."),
+    W("Barbara","For Time (5 rds)","40–50",["5 rounds:","• 20 Pull-ups","• 30 Push-ups","• 40 Sit-ups","• 50 Air Squats","Rest 3 min"],"Even splits."),
+    W("Chelsea","EMOM 30","30",["Every min for 30:","• 5 Pull-ups, 10 Push-ups, 15 Air Squats"],"Keep work ≤45s."),
+    W("Cindy","AMRAP 20","20",["AMRAP 20:","• 5 Pull-ups","• 10 Push-ups","• 15 Air Squats"],"No redline."),
+    W("Christine (DB)","For Time (3 rds)","12–25",["3 rounds:","• Row 500m","• 12 DB Deadlifts — "+DB2,"• 21 Box Jumps — "+BOX],"DB for 135/95."),
+    W("Diane (DB)","For Time","10–20",["21-15-9:","• DB Deadlifts — "+DB2,"• Handstand Push-ups"],"DB swap."),
+    W("Elizabeth (DB)","For Time","10–20",["21-15-9:","• DB Squat Cleans — "+DB2,"• Strict Dips or Deficit Push-ups"],"No rings → push-ups."),
+    W("Eva (Scaled)","For Time (5 rds)","35–55",["5 rounds:","• 800m Run","• 30 KB Swings — "+KB53,"• 30 Pull-ups"],"Grip mgt."),
+    W("Fran (DB)","For Time","10–20",["21-15-9:","• DB Thrusters — "+DB2,"• Pull-ups"],"DB swap."),
+    W("Grace (DB C&J)","For Time","8–20",["For time:","• 30 DB Clean & Jerks — "+DB2], "DBs for 135/95."),
+    W("Helen","For Time (3 rds)","12–20",["3 rounds:","• 400m Run","• 21 KB Swings — "+KB53,"• 12 Pull-ups"],"Breathe on run."),
+    W("Isabel (DB Snatch)","For Time","8–15",["For time:","• 30 Alt DB Snatches — "+DB1]),
+    W("Jackie (DB Thruster)","For Time","12–20",["For time:","• Row 1000m","• 50 Thrusters — "+DB1,"• 30 Pull-ups"]),
+    W("Karen","For Time","12–20",["For time:","• 150 Wall Balls"],"Break early."),
+    W("Kelly","For Time (5 rds)","25–40",["5 rounds:","• 400m Run","• 30 Box Jumps — "+BOX,"• 30 Wall Balls"]),
+    W("Mary","AMRAP 20","20",["AMRAP 20:","• 5 Handstand Push-ups","• 10 Pistols (alt)","• 15 Pull-ups"]),
+    W("Megan","For Time","12–25",["21-15-9:","• Burpees","• KB Swings — "+KB53,"• Double-unders"]),
+    W("Nancy (DB/KB OHS)","For Time (5 rds)","20–35",["5 rounds:","• 400m Run","• 15 Overhead Squats — Single DB/KB"]),
+    W("Nicole","AMRAP 20","20",["AMRAP 20:","• 400m Run","• Max Pull-ups"])
+  );
+
+  /* — HERO / COMMEMORATIVE — */
+  list.push(
+    W("Murph","For Time","40–60",["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Air Squats","• 1 mile Run"],"Partition as needed."),
+    W("Glen (Home)","For Time","45–60",["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Sit-ups","• 1 mile Run"],"Partition."),
+    W("Michael (Home)","For Time (3 rds)","20–35",["3 rounds:","• 800m Run","• 50 Sit-ups","• 50 Supermans"]),
+    W("JT (BW)","For Time","10–25",["21-15-9:","• Handstand Push-ups","• Push-ups","• Dips or Deficit Push-ups"]),
+    W("Daniel (DB)","For Time","20–35",["For time:","• 50 DB Thrusters — "+DB2,"• 400m Run","• 21 Pull-ups","• 800m Run","• 21 Pull-ups","• 400m Run","• 50 DB Thrusters — "+DB2]),
+    W("Josh (DB OHS)","For Time","20–35",["For time:","• 21 Overhead Squats — "+DB1,"• 42 Pull-ups","• 15 Overhead Squats — "+DB1,"• 30 Pull-ups","• 9 Overhead Squats — "+DB1,"• 18 Pull-ups"]),
+    W("Jason (Bar MU)","For Time","20–40",["For time:","• 100 Squats","• 5 Bar Muscle-ups","• 75 Squats","• 10 Bar Muscle-ups","• 50 Squats","• 15 Bar Muscle-ups","• 25 Squats","• 20 Bar Muscle-ups"]),
+    W("Badger (DB)","For Time (3 rds)","30–50",["3 rounds:","• 30 DB Squat Cleans — "+DB2,"• 30 Pull-ups","• 800m Run"]),
+    W("Nate (Bar MU)","AMRAP 20","20",["AMRAP 20:","• 2 Bar Muscle-ups","• 4 Handstand Push-ups","• 8 KB Swings — "+KB53]),
+    W("Randy (DB)","For Time","5–12",["For time:","• 75 Alt DB Snatches — "+DB1]),
+    W("Griff","For Time","10–20",["For time:","• 800m Run","• 400m Run (backward)","• 800m Run","• 400m Run (backward)"]),
+    W("Ryan (BMU+Burpee)","For Time (5 rds)","20–35",["5 rounds:","• 7 Bar Muscle-ups","• 21 Burpees"]),
+    W("Danny (DB PP)","AMRAP 20","20",["AMRAP 20:","• 30 Box Jumps — "+BOX,"• 20 DB Push Press — "+DB2,"• 30 Pull-ups"]),
+    W("Hansen (Sit-up sub)","For Time (5 rds)","25–45",["5 rounds:","• 30 KB Swings — "+KB53,"• 30 Burpees","• 30 Sit-ups"]),
+    W("Loredo","For Time (6 rds)","25–45",["6 rounds:","• 24 Air Squats","• 24 Push-ups","• 24 Walking Lunges","• 400m Run"]),
+    W("Hamilton","For Time (3 rds)","35–55",["3 rounds:","• Row 1000m","• 50 Push-ups","• Run 1000m","• 50 Pull-ups"]),
+    W("Schmalls","For Time","30–50",["For time:","• 800m Run","• 50 Burpees","• 50 Pull-ups","• 50 KB Swings — "+KB53,"• 50 Sit-ups","• 800m Run"]),
+    W("Riley","For Time","40–60",["For time:","• Run 1.5 miles","• 150 Burpees","• Run 1.5 miles"]),
+    W("Helton (DB)","For Time (3 rds)","25–45",["3 rounds:","• 800m Run","• 30 DB Squat Cleans — "+DB2,"• 30 Burpees"]),
+    W("Forrest","For Time (3 rds)","30–45",["3 rounds:","• 20 L-Pull-ups","• 30 Toes-to-Bar","• 40 Burpees","• 800m Run"]),
+    W("Omar (DB Thruster)","For Time","20–35",["For time:","• 10 DB Thrusters — "+DB2,"• 15 Burpees","• 20 DB Thrusters — "+DB2,"• 25 Burpees","• 30 DB Thrusters — "+DB2,"• 35 Burpees"]),
+    W("Arnie (KB)","For Time","25–45",["For time:","• 21 Turkish Get-Ups (R) — "+KB53,"• 50 KB Swings — "+KB53,"• 21 Overhead Squats (L) — "+KB53]),
+    W("Jerry","For Time","20–40",["For time:","• Run 1 mile","• Row 2 km","• Run 1 mile"]),
+    W("DT (DB)","For Time (5 rds)","15–25",["5 rounds:","• 12 DB Deadlifts — "+DB2,"• 9 DB Hang Power Cleans — "+DB2,"• 6 DB Push Jerks — "+DB2]),
+    W("Manion (DB Front Squat)","For Time (7 rds)","30–50",["7 rounds:","• 400m Run","• 29 DB Front Squats — "+DB2]),
+    W("Blake (DB OH Lunge)","For Time (4 rds)","30–50",["4 rounds:","• 100-ft DB Overhead Walking Lunge — "+DB1,"• 30 Box Jumps — "+BOX,"• 20 Wall Balls","• 10 Handstand Push-ups"]),
+    W("Roy (DB DL)","For Time (5 rds)","25–45",["5 rounds:","• 15 DB Deadlifts — "+DB2,"• 20 Box Jumps — "+BOX,"• 25 Pull-ups"]),
+    W("Holleyman (DB Clean)","For Time (30 rds)","30–50",["30 rounds:","• 5 Wall Balls","• 3 Handstand Push-ups","• 1 DB Clean — "+DB2]),
+    W("McGhee (DB DL)","AMRAP 30","30",["AMRAP 30:","• 5 DB Deadlifts — "+DB2,"• 13 Push-ups","• 9 Box Jumps — "+BOX]),
+    W('Chad 1000X (24")',"For Time","35–60",["For time:","• 1,000 Box Step-ups — "+BOX]),
+    W("Kalsu (DB Thruster)","For Time","30–60",["For time:","• 100 DB Thrusters — "+DB2,"At the top of every minute: 5 Burpees (start with burpees)"])
+  );
+
+  /* — OPEN (DB/KB/Bodyweight variants) — */
+  list.push(
+    W("Open 11.1 / 14.1 (DB)","AMRAP 10","20 (cap)",["AMRAP 10:","• 30 Double-unders","• 15 Alt DB Snatches — "+DB1]),
+    W("Open 13.2 (DB)","AMRAP 10","20 (cap)",["AMRAP 10:","• 5 DB Shoulder-to-Overhead — "+DB2,"• 10 DB Deadlifts — "+DB2,"• 15 Box Jumps — "+BOX]),
+    W("Open 14.2 (DB OHS)","Every 3:00","20–30",["Every 3 min add 2 reps, start 10:","• DB Overhead Squats — "+DB1,"• Chest-to-Bar Pull-ups"]),
+    W("Open 14.4 / 23.1 (DB)","AMRAP 14","20 (cap)",["AMRAP 14:","• Row 60 Cal","• 50 Toes-to-Bar","• 40 Wall Balls","• 30 DB Cleans — "+DB2,"• 20 Bar Muscle-ups"]),
+    W("Open 14.5 / 16.5 (DB)","For Time","20–30",["21-18-15-12-9-6-3:","• DB Thrusters — "+DB2,"• Burpees"]),
+    W("Open 15.1 (DB)","AMRAP 9","20 (cap)",["AMRAP 9:","• Toes-to-Bar","• DB Deadlifts — "+DB2,"• Alt DB Snatches — "+DB1]),
+    W("Open 16.1 (DB OH Lunge)","AMRAP 20","20",["25-ft OH Lunge — "+DB1+" / 8 Burpees / 25-ft OH Lunge / 8 C2B"]),
+    W("Open 16.4 / 17.4 (DB)","AMRAP 13","20 (cap)",["AMRAP 13:","• 55 DB Deadlifts — "+DB2,"• 55 Wall Balls","• 55 Cal Row","• 55 Handstand Push-ups"]),
+    W("Open 17.1 / 21.2 (DB)","For Time","20–30",["10-20-30-40-50:","• Alt DB Snatches — "+DB1,"After each set: 15 Burpee Box Jump-Overs — "+BOX]),
+    W("Open 17.2 (DB)","AMRAP 12","20 (cap)",["AMRAP 12:","• 50-ft DB Front Rack Lunge — "+DB2,"• 16 Toes-to-Bar","• 8 DB Power Cleans — "+DB2]),
+    W("Open 17.5 (DB)","10 RFT","20–30",["10 rounds:","• 9 DB Thrusters — "+DB2,"• 35 Double-unders"]),
+    W("Open 18.1","AMRAP 20","20",["AMRAP 20:","• 8 Toes-to-Bar","• 10 DB Hang Clean & Jerks — "+DB1,"• 14/12 Cal Row"]),
+    W("Open 18.2 (DB)","For Time","10–20",["1-2-3-…-10:","• DB Squats — "+DB2,"• Burpees"]),
+    W("Open 18.5 (DB)","AMRAP 7","10–20",["AMRAP 7:","• DB Thrusters — "+DB2,"• Chest-to-Bar Pull-ups"]),
+    W("Open 19.1","AMRAP 15","20 (cap)",["AMRAP 15:","• 19 Wall Balls","• 19 Cal Row"]),
+    W("Open 19.5 (DB)","For Time","15–30",["33-27-21-15-9:","• DB Thrusters — "+DB2,"• Chest-to-Bar Pull-ups"]),
+    W("Open 20.2","AMRAP 20","20",["AMRAP 20:","• 4 DB Thrusters — "+DB2,"• 6 Toes-to-Bar","• 24 Double-unders"]),
+    W("Open 22.1","AMRAP 15","20 (cap)",["AMRAP 15:","• 3 Wall Walks","• 12 DB Snatches — "+DB1,"• 15 Box Jumps — "+BOX]),
+    W("Open 22.2 (DB)","For Time","20–30",["1-2-…-10-…-2-1:","• DB Deadlifts — "+DB2,"• Burpees"]),
+    W("Open 22.3 (DB Thruster)","For Time","15–30",["For time:","• 21 PU / 42 DUs / 21 DB Thrusters — "+DB2,"• 18 C2B / 36 DUs / 18 DB Thrusters — "+DB2,"• 15 BMU / 30 DUs / 15 DB Thrusters — "+DB2])
+  );
+
+  /* — OTHER CLASSICS — */
+  list.push(
+    W("Fight Gone Bad (3 rnd)","AMRAP (Reps)","17",["3 rounds, 1-min stations:","• Wall Balls","• Sumo DL High Pull — "+DB1,"• Box Jumps — "+BOX,"• Push Press — "+DB1,"• Row (Calories)","Rest 1 min"]),
+    W("Filthy Fifty (Home)","Chipper","30–45",["50 each:","• Box Jumps — "+BOX,"• Jumping Pull-ups","• KB Swings — "+KB35,"• Walking Lunges (50 steps)","• Knees-to-Elbows (or V-ups)","• Push Press — "+DB1,"• Supermans","• Wall Balls","• Burpees","• 50 Double-unders"]),
+    W("The Chief (DB Clean)","Intervals 5×3:00","25–35",["5 cycles of 3-min AMRAP + 1-min rest:","• 3 DB Power Cleans — "+DB2,"• 6 Push-ups","• 9 Air Squats"]),
+    W("Baseline","For Time","8–15",["For time:","• Row 500m","• 40 Air Squats","• 30 Sit-ups","• 20 Push-ups","• 10 Pull-ups"]),
+    W("5K Run","For Time","20–35",["For time:","• 5 km Run"]),
+    W("5K Row","For Time","20–25",["For time:","• 5 km Row"]),
+    W("12 Days of Christmas (Home)","For Time","30–50",["Perform like the song (1→12 then 12→1):","1 Burpee","2 KB Swings — "+KB53,"3 Wall Balls","4 Pull-ups","5 Box Jumps — "+BOX,"6 Sit-ups","7 Push-ups","8 Alt DB Snatches — "+DB1,"9 Lunges/leg","10 Double-unders","11 KB Goblet Squats — "+KB53,"12 Cal Row"])
+  );
+
+  return list;
+})();
+
+/* Tributes */
 const TRIBUTES={
   "Murph":"Honors U.S. Navy Lt. Michael P. Murphy (MOH), KIA Afghanistan 2005.",
-  "Glen (Home)":"Honors former U.S. Navy SEAL Glen Doherty, killed Sept 11, 2012 (Benghazi)."
+  "Glen (Home)":"Honors former U.S. Navy SEAL Glen Doherty, killed Sept 11, 2012 (Benghazi).",
+  'Chad 1000X (24")':"Honors Navy SEAL Chad Wilkinson (2018). 1,000 step-ups for veteran mental health.",
+  "Kalsu (DB Thruster)":"Honors 1LT James Robert Kalsu (KIA 1970).",
+  "12 Days of Christmas (Home)":"Seasonal suffer-fest performed like the song."
 };
 
-/* ===== Generators (respect filters) ===== */
+/* ===== GENERATORS (respect filters) ===== */
 const MONO=["Run 400m","Run 600m","Run 800m","Run 1000m","Row 500m","Row 750m","Row 1000m","Row 1500m","150 Single-unders","100 Double-unders","Shuttle Run 200m"];
 const GYM=["Pull-ups","Chest-to-Bar Pull-ups","Bar Muscle-ups","Toes-to-Bar","Push-ups","Sit-ups","Air Squats","Pistols (alt)","Handstand Push-ups","Burpees","Pike Push-ups","V-ups","Wall Walks","Hanging Knee Raises","Wall Balls"];
 const DBB=[{name:"DB Thrusters",load:DB2},{name:"DB Push Press",load:DB2},{name:"DB Front Squats",load:DB2},{name:"DB Power Cleans",load:DB2},{name:"DB Deadlifts",load:DB2},{name:"Alt DB Snatches",load:DB1},{name:"DB Hang Clean & Jerks",load:DB1}];
@@ -355,16 +437,21 @@ function chipperLong(rng){
     notes:"Break small and keep moving. Target 30–60 min."};
 }
 
-/* ===== Pins & schedule ===== */
+/* ===== PINS & SCHEDULE ===== */
 const PINS={ MURPH:"Murph", GLEN:"Glen (Home)", CHAD:'Chad 1000X (24")', KALSU:"Kalsu (DB Thruster)", XMAS:"12 Days of Christmas (Home)" };
 function resolveByTitle(title){ return BENCH.findIndex(b=>b.title===title) }
 function buildPins(year){
   const pins=new Map(); const add=(m,d,title)=>{ const doy=localDOY(year,m,d); const idx=resolveByTitle(title);
     pins.set(doy, idx>=0?{kind:"index",idx}:{kind:"inline",wod:{title,type:"For Time",time:"",body:[""],notes:""}}); };
-  add(4,lastMondayOfMay(year),PINS.MURPH); add(8,11,PINS.GLEN); add(10,11,PINS.CHAD); add(6,4,PINS.KALSU); add(11,25,PINS.XMAS);
+  add(4,lastMondayOfMay(year),PINS.MURPH);
+  add(8,11,PINS.GLEN);
+  add(10,11,PINS.CHAD);
+  add(6,4,PINS.KALSU);
+  add(11,25,PINS.XMAS);
   return pins;
 }
-function distributeKnown(open){const excludeTitles=new Set(Object.values(PINS));
+function distributeKnown(open){
+  const excludeTitles=new Set(Object.values(PINS));
   const useIdx=BENCH.map((w,i)=>({i,t:w.title})).filter(x=>!excludeTitles.has(x.t)).map(x=>x.i);
   const rng=mulberry32(1337); shuffleInPlace(rng,useIdx);
   const N=Math.min(useIdx.length,open.length), out=new Map();
@@ -396,7 +483,7 @@ function buildYear(year){
   return out;
 }
 
-/* ===== UI & Render ===== */
+/* ===== UI & RENDER ===== */
 const elTitle=document.getElementById("wodTitle");
 const elBody=document.getElementById("wodBody");
 const elNotes=document.getElementById("wodNotes");
@@ -471,7 +558,7 @@ function init(){
     const k=cb.getAttribute('data-key'); cb.checked=excluded.has(k);
     cb.onchange=()=>{ cb.checked?excluded.add(k):excluded.delete(k); saveFilters(); };
   });
-  showActiveFilters();
+  showFilterStatus();
 
   if(!BENCH.length){ warn.style.display='block'; warn.textContent='No named WODs loaded (using generators only).'; }
 
