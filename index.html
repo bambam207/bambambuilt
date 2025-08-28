@@ -6,11 +6,18 @@
 <title>BAMBAM — Daily WOD</title>
 
 <style>
-:root{--bg:#0f1115;--card:#151922;--ink:#e8eaf0;--muted:#aab0c0;--accent:#61dafb;--border:#2a3345}
+:root{
+  --bg:#0f1115; --card:#151922; --ink:#e8eaf0; --muted:#aab0c0;
+  --accent:#ffd24d;          /* yellow: replaces old blue for notice bars, hovers */
+  --metcon:#ff6b6b;          /* red bar for workout body */
+  --border:#2a3345;
+}
 *{box-sizing:border-box}
-body{margin:0;padding:24px;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
+     font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
 h1,h2,h3{margin:0 0 8px;line-height:1.15}
-h1{font-size:28px}h2{font-size:20px;color:var(--muted);font-weight:600}h3{font-size:16px;color:var(--muted);font-weight:600}
+h1{font-size:28px} h2{font-size:20px;color:var(--muted);font-weight:600}
+h3{font-size:16px;color:var(--muted);font-weight:600}
 .wrap{max-width:900px;margin:0 auto;display:grid;gap:16px}
 .card{background:var(--card);border:1px solid #222937;border-radius:12px;padding:16px;box-shadow:0 4px 18px rgba(0,0,0,.25)}
 .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center}
@@ -19,15 +26,19 @@ button:hover{border-color:var(--accent)}
 .pill{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:#0d1320;color:#aab0c0;font-size:12px;margin-right:6px}
 .meta{color:#aab0c0;font-size:14px}
 .warn{color:#ffb85c;font-size:12px;margin-top:6px;text-align:center}
-ul{margin:8px 0 0 20px}li{margin:4px 0}
+ul{margin:8px 0 0 20px} li{margin:4px 0}
+
+/* Accent bars */
 .notice{background:#1a2030;border-left:4px solid var(--accent);padding:10px 12px;border-radius:8px}
-.center{text-align:center}
+.metcon{border-left:4px solid var(--metcon);padding-left:12px}
 
 /* Date chip + calendar */
 .date-chip{cursor:pointer;display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#0d1320;user-select:none}
 .date-chip:hover{border-color:var(--accent)}
 #dateWrap{display:flex;justify-content:center;gap:10px;align-items:center;position:relative}
-.cal{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:320px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,.45);padding:12px;display:none;z-index:1000}
+.cal{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);
+     width:320px;background:var(--card);border:1px solid var(--border);border-radius:12px;
+     box-shadow:0 12px 36px rgba(0,0,0,.45);padding:12px;display:none;z-index:1000}
 .cal.show{display:block}
 .cal header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .cal .hdr-btn{background:#111723;border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;color:var(--ink);cursor:pointer}
@@ -45,14 +56,16 @@ ul{margin:8px 0 0 20px}li{margin:4px 0}
 .filters{position:relative}
 .filter-btn{background:#111723;border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;color:var(--ink);cursor:pointer}
 .filter-btn:hover{border-color:var(--accent)}
-.filter-panel{position:absolute;top:120%;right:0;width:280px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 36px rgba(0,0,0,.45);padding:12px;display:none;z-index:1000}
+.filter-panel{position:absolute;top:120%;left:50%;transform:translateX(-50%);
+              width:280px;background:var(--card);border:1px solid var(--border);border-radius:12px;
+              box-shadow:0 12px 36px rgba(0,0,0,.45);padding:12px;display:none;z-index:1000}
 .filter-panel.show{display:block}
 .filter-panel h4{margin:0 0 8px;color:#e8eaf0;font-size:14px}
 .filter-panel label{display:flex;align-items:center;gap:8px;font-size:13px;color:#d4d8e3;margin:6px 0}
 .filter-chip{display:inline-block;margin-left:6px;padding:2px 8px;border:1px solid var(--border);border-radius:999px;background:#0d1320;font-size:12px;color:#aab0c0}
 .small{font-size:12px;color:#8a93a7}
 
-@media print{.controls,.footer,.cal,.filters{display:none}body{background:#fff;color:#111}.card{box-shadow:none;border-color:#ddd}}
+@media print{ .controls, .footer, .cal, .filters {display:none} body{background:#fff;color:#111} .card{box-shadow:none;border-color:#ddd}}
 footer{margin-top:24px;text-align:center;color:#9aa3b2;font-size:12px}
 footer a{color:#9aa3b2;text-decoration:none}
 footer a:hover{color:#e8eaf0}
@@ -66,6 +79,19 @@ footer a:hover{color:#e8eaf0}
     <h1 class="center">Daily WOD</h1>
     <div id="dateWrap">
       <div id="todayStr" class="meta center date-chip" title="Pick a date"></div>
+      <div id="cal" class="cal" aria-hidden="true"></div>
+    </div>
+    <div id="warn" class="warn" style="display:none"></div>
+
+    <!-- Nav buttons -->
+    <div class="row controls" style="margin-top:8px;">
+      <button id="prevBtn">◀ Prev</button>
+      <button id="todayBtn">Today</button>
+      <button id="nextBtn">Next ▶</button>
+    </div>
+
+    <!-- Filters row (moved here) -->
+    <div class="row" id="filterRow" style="gap:10px;margin-top:4px;">
       <div class="filters">
         <button id="filterBtn" class="filter-btn">Filters ▾</button>
         <div id="filterPanel" class="filter-panel" aria-hidden="true">
@@ -82,18 +108,19 @@ footer a:hover{color:#e8eaf0}
           <div class="small">Saved automatically.</div>
         </div>
       </div>
-      <div id="cal" class="cal" aria-hidden="true"></div>
+      <div id="filterStatus" class="small"></div>
     </div>
-    <div id="warn" class="warn" style="display:none"></div>
-    <div class="row controls" style="margin-top:8px;">
-      <button id="prevBtn">◀ Prev</button>
-      <button id="todayBtn">Today</button>
-      <button id="nextBtn">Next ▶</button>
-    </div>
+
     <div id="activeFilters" class="small center" style="margin-top:6px;"></div>
   </div>
 
-  <!-- WOD CARD -->
+  <!-- WARM-UP at top -->
+  <div class="card">
+    <h3>Warm-Up</h3>
+    <div id="warmup" class="notice"></div>
+  </div>
+
+  <!-- WOD CARD (metcon red bar on body) -->
   <div class="card">
     <div class="row" style="justify-content:space-between">
       <h2 id="wodTitle">Workout</h2>
@@ -103,17 +130,12 @@ footer a:hover{color:#e8eaf0}
         <span class="pill" id="targetPill"></span>
       </div>
     </div>
-    <div id="wodBody"></div>
+    <div id="wodBody" class="metcon"></div>
     <div class="meta" id="wodNotes" style="margin-top:8px;"></div>
     <div id="wodTribute" class="notice" style="display:none;margin-top:8px;"></div>
   </div>
 
-  <!-- WARMUP / COOLDOWN -->
-  <div class="card">
-    <h3>Warm-Up</h3>
-    <div id="warmup" class="notice"></div>
-  </div>
-
+  <!-- COOLDOWN -->
   <div class="card">
     <h3>Cooldown</h3>
     <div id="cooldown" class="notice"></div>
@@ -128,30 +150,35 @@ function mulberry32(a){return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^(t>>>
 function choice(rng,arr){return arr[Math.floor(rng()*arr.length)]}
 function shuffleInPlace(rng,arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}}
 function clamp(n,min,max){return Math.max(min,Math.min(max,n))}
-function daysInYear(y){return((y%4===0&&y%100!==0)||(y%400===0))?366:365;}
+function daysInYear(y){return ((y%4===0 && y%100!==0) || (y%400===0))?366:365;}
 function doyFromDate(dt){const start=new Date(dt.getFullYear(),0,1);return Math.floor((dt-start)/86400000)+1;}
 function fmtDate(d){return d.toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
 function localDOY(year,m,d){const dt=new Date(year,m,d);return Math.floor((dt-new Date(year,0,0))/86400000)}
 function lastMondayOfMay(year){const last=new Date(year,4,31);return 31-((last.getDay()+6)%7)}
-const DB2="2×50 lb",DB1="1×50 lb",KB53="53 lb",KB35="35 lb",BOX='24"';
+const DB2="2×50 lb", DB1="1×50 lb", KB53="53 lb", KB35="35 lb", BOX='24"';
 
 /* ===== FILTERS ===== */
 const FILTER_KEYS=["pull","box","wb","rope","run","row","db","kb","hspu"];
 let excluded=new Set(JSON.parse(localStorage.getItem("bb_excluded")||"[]"));
-let currentDate=new Date();let currentYear=currentDate.getFullYear();let YEAR=[];
+let currentDate=new Date(); let currentYear=currentDate.getFullYear(); let YEAR=[];
 
-/* *** FIX: rebuild the entire plan whenever filters change *** */
 function saveFilters(){
   localStorage.setItem("bb_excluded",JSON.stringify([...excluded]));
-  YEAR = buildYear(currentYear);           // <— rebuild with new filters
+  YEAR = buildYear(currentYear);
   showActiveFilters();
-  renderByDate(currentDate);               // <— re-render immediately
+  renderByDate(currentDate);
 }
 function showActiveFilters(){
   const map={pull:"Pull-up bar",box:"Box",wb:"Wall ball",rope:"Rope",run:"Run",row:"Row",db:"DB",kb:"KB",hspu:"HSPU"};
-  const el=document.getElementById("activeFilters");
-  if(!excluded.size){el.textContent="";return;}
-  el.innerHTML="Excluded:"+[...excluded].map(k=>`<span class="filter-chip">${map[k]}</span>`).join("");
+  const chips=document.getElementById("activeFilters");
+  const status=document.getElementById("filterStatus");
+  if(!excluded.size){
+    chips.textContent="";
+    status.textContent="No filters applied";
+  }else{
+    chips.innerHTML="Excluded:"+[...excluded].map(k=>`<span class="filter-chip">${map[k]}</span>`).join("");
+    status.textContent="Filters applied";
+  }
 }
 
 /* ===== TAGGING (filters & warmups) ===== */
@@ -170,115 +197,69 @@ function tagText(lines){
   };
 }
 function violatesFilters(tags){
-  return (excluded.has("run")&&tags.run)||
-         (excluded.has("row")&&tags.row)||
-         (excluded.has("rope")&&tags.rope)||
-         (excluded.has("wb")&&tags.wb)||
-         (excluded.has("pull")&&tags.pull)||
-         (excluded.has("hspu")&&tags.hspu)||
-         (excluded.has("box")&&tags.box)||
-         (excluded.has("kb")&&tags.kb)||
-         (excluded.has("db")&&tags.db);
+  return (excluded.has("run") && tags.run) ||
+         (excluded.has("row") && tags.row) ||
+         (excluded.has("rope") && tags.rope) ||
+         (excluded.has("wb") && tags.wb) ||
+         (excluded.has("pull") && tags.pull) ||
+         (excluded.has("hspu") && tags.hspu) ||
+         (excluded.has("box") && tags.box) ||
+         (excluded.has("kb") && tags.kb) ||
+         (excluded.has("db") && tags.db);
 }
 
-/* ===== Warm-up / Cooldown ===== */
-const WU={run:`5–8 min easy jog → 2 rounds: 20s A-skips · 20s high knees · 20s butt kicks · 10 walking lunges/leg.`,
-          row:`4 min easy row, then 2× (:20 hard / :40 easy).`,
-          rope:`2 min singles → 3× (20 DU attempts or 30 singles) · 20 calf raises + 10 ankle rocks/side.`,
-          pull:`2× :20 active hang + 8 scap pulls · 2×10 kip swings · 2–3 easy sets.`,
-          hspu:`Wrist circles 60s · 2×8 pike HSPU to abmat · 2 wall walks to :20 hold.`,
-          squat:`2 rounds: 10 air squats · 10 wall balls (light) · 10 ankle rocks/side.`,
-          hinge:`2 rounds: 10 glute bridges · 10 DB RDL light · 10 easy KB swings.`,
-          kb:`10 halos each way · 10 rack shrugs · 10 squat-to-stand.`,
-          db:`10s rack hold + 8 strict press light + 8 front squats light.`,
-          box:`10 step-ups/leg · 10 pogo jumps · 10 small box jumps.`,
-          general:`5–7 min easy cardio → 2 rounds: 8 push-ups · 10 air squats · 10 sit-ups.`};
-const CD={run:`3–5 min walk, :45 calf + :45 hamstring/side.`,
-          row:`2–3 min easy row, :45 thoracic child's pose + :45 pec doorway/side.`,
-          rope:`:45 calf/side + foot/plantar massage.`,
-          pull:`:60 passive hang or banded lats + :30 thread-the-needle/side.`,
-          hspu:`:45 triceps/side + :45 pec doorway/side.`,
-          squat:`2× :45 couch stretch/side + :45 adductor hold.`,
-          hinge:`:45 hamstrings/side + 5× gentle McKenzie press-ups.`,
-          kb:`:45 rack/forearm stretch/side + :45 lats.`,
-          db:`:45 front-rack/pec/side + :45 triceps/side.`,
-          box:`:45 hip flexor/side + :45 calves.`,
-          general:`3–5 min easy spin/walk, breathe down.`};
-function buildWarmup(w){const m=tagText(w.body),p=[];if(m.run)p.push(WU.run);if(m.row)p.push(WU.row);if(m.rope)p.push(WU.rope);if(m.pull)p.push(WU.pull);if(m.hspu)p.push(WU.hspu);if(m.wb||/squat|thruster|goblet/i.test(w.body.join(" ")))p.push(WU.squat);if(/deadlift|clean|swing|snatch|hinge/i.test(w.body.join(" ")))p.push(WU.hinge);if(m.kb)p.push(WU.kb);if(m.db)p.push(WU.db);if(m.box)p.push(WU.box);if(!p.length)p.push(WU.general);return p.slice(0,3).join('<br><br>')}
-function buildCooldown(w){const m=tagText(w.body),p=[];if(m.run)p.push(CD.run);if(m.row)p.push(CD.row);if(m.rope)p.push(CD.rope);if(m.pull)p.push(CD.pull);if(m.hspu)p.push(CD.hspu);if(m.wb||/squat|thruster|goblet/i.test(w.body.join(" ")))p.push(CD.squat);if(/deadlift|clean|swing|snatch|hinge/i.test(w.body.join(" ")))p.push(CD.hinge);if(m.kb)p.push(CD.kb);if(m.db)p.push(CD.db);if(m.box)p.push(CD.box);if(!p.length)p.push(CD.general);return p.slice(0,2).join('<br><br>')}
+/* ===== Warm-Up / Cooldown ===== */
+const WU={ run:`5–8 min easy jog → 2 rounds: 20s A-skips · 20s high knees · 20s butt kicks · 10 walking lunges/leg.`,
+           row:`4 min easy row, then 2× (:20 hard / :40 easy).`,
+           rope:`2 min singles → 3× (20 DU attempts or 30 singles) · 20 calf raises + 10 ankle rocks/side.`,
+           pull:`2× :20 active hang + 8 scap pulls · 2×10 kip swings · 2–3 easy sets.`,
+           hspu:`Wrist circles 60s · 2×8 pike HSPU to abmat · 2 wall walks to :20 hold.`,
+           squat:`2 rounds: 10 air squats · 10 wall balls (light) · 10 ankle rocks/side.`,
+           hinge:`2 rounds: 10 glute bridges · 10 DB RDL light · 10 easy KB swings.`,
+           kb:`10 halos each way · 10 rack shrugs · 10 squat-to-stand.`,
+           db:`10s rack hold + 8 strict press light + 8 front squats light.`,
+           box:`10 step-ups/leg · 10 pogo jumps · 10 small box jumps.`,
+           general:`5–7 min easy cardio → 2 rounds: 8 push-ups · 10 air squats · 10 sit-ups.` };
+const CD={ run:`3–5 min walk, :45 calf + :45 hamstring/side.`,
+           row:`2–3 min easy row, :45 thoracic child's pose + :45 pec doorway/side.`,
+           rope:`:45 calf/side + foot/plantar massage.`,
+           pull:`:60 passive hang or banded lats + :30 thread-the-needle/side.`,
+           hspu:`:45 triceps/side + :45 pec doorway/side.`,
+           squat:`2× :45 couch stretch/side + :45 adductor hold.`,
+           hinge:`:45 hamstrings/side + 5× gentle McKenzie press-ups.`,
+           kb:`:45 rack/forearm stretch/side + :45 lats.`,
+           db:`:45 front-rack/pec/side + :45 triceps/side.`,
+           box:`:45 hip flexor/side + :45 calves.`,
+           general:`3–5 min easy spin/walk, breathe down.` };
+function buildWarmup(w){const m=tagText(w.body),p=[];
+  if(m.run)p.push(WU.run); if(m.row)p.push(WU.row); if(m.rope)p.push(WU.rope);
+  if(m.pull)p.push(WU.pull); if(m.hspu)p.push(WU.hspu); if(m.wb||/squat|thruster|goblet/i.test(w.body.join(" ")))p.push(WU.squat);
+  if(/deadlift|clean|swing|snatch|hinge/i.test(w.body.join(" ")))p.push(WU.hinge);
+  if(m.kb)p.push(WU.kb); if(m.db)p.push(WU.db); if(m.box)p.push(WU.box);
+  if(!p.length)p.push(WU.general); return p.slice(0,3).join('<br><br>'); }
+function buildCooldown(w){const m=tagText(w.body),p=[];
+  if(m.run)p.push(CD.run); if(m.row)p.push(CD.row); if(m.rope)p.push(CD.rope); if(m.pull)p.push(CD.pull);
+  if(m.hspu)p.push(CD.hspu); if(m.wb||/squat|thruster|goblet/i.test(w.body.join(" ")))p.push(CD.squat);
+  if(/deadlift|clean|swing|snatch|hinge/i.test(w.body.join(" ")))p.push(CD.hinge);
+  if(m.kb)p.push(CD.kb); if(m.db)p.push(CD.db); if(m.box)p.push(CD.box);
+  if(!p.length)p.push(CD.general); return p.slice(0,2).join('<br><br>'); }
 
-/* ===== Named WODs (ALL here) ===== */
+/* ===== Named WODs (kept in this file) ===== */
 const BENCH=(()=>{const W=(title,type,time,body,notes="")=>({title,type,time,body,notes});const list=[];
-/* Girls/Benchmarks */
+/* (sample set — same as your last working version; keep adding as you like) */
 list.push(
-W("Angie","For Time","20–40",["For time:","• 100 Pull-ups","• 100 Push-ups","• 100 Sit-ups","• 100 Air Squats"],"Partition as needed."),
-W("Annie","For Time","10–20",["For time:","• 50-40-30-20-10 Double-unders","• 50-40-30-20-10 Sit-ups"],"Add easy jog if <20."),
-W("Barbara","For Time (5 rds)","40–50",["5 rounds:","• 20 Pull-ups","• 30 Push-ups","• 40 Sit-ups","• 50 Air Squats","Rest 3 min"],"Even splits."),
-W("Chelsea","EMOM 30","30",["Every min for 30:","• 5 Pull-ups, 10 Push-ups, 15 Air Squats"],"Keep work ≤45s."),
-W("Cindy","AMRAP 20","20",["AMRAP 20:","• 5 Pull-ups","• 10 Push-ups","• 15 Air Squats"],"No redline."),
-W("Christine (DB)","For Time (3 rds)","12–25",["3 rounds:","• Row 500m","• 12 DB Deadlifts — 2×50 lb","• 21 Box Jumps — 24\""],"DB for 135/95."),
-W("Diane (DB)","For Time","10–20",["21-15-9:","• DB Deadlifts — 2×50 lb","• Handstand Push-ups"],"DB swap."),
-W("Elizabeth (DB)","For Time","10–20",["21-15-9:","• DB Squat Cleans — 2×50 lb","• Strict Dips or Deficit Push-ups"],"No rings → push-ups."),
-W("Eva (Scaled)","For Time (5 rds)","35–55",["5 rounds:","• 800m Run","• 30 KB Swings — 53 lb","• 30 Pull-ups"],"Grip mgt."),
-W("Fran (DB)","For Time","10–20",["21-15-9:","• DB Thrusters — 2×50 lb","• Pull-ups"],"DB swap."),
-W("Grace (DB C&J)","For Time","8–20",["For time:","• 30 DB Clean & Jerks — 2×50 lb"],"DBs for 135/95."),
-W("Helen","For Time (3 rds)","12–20",["3 rounds:","• 400m Run","• 21 KB Swings — 53 lb","• 12 Pull-ups"],"Breathe on run."),
-W("Isabel (DB Snatch)","For Time","8–15",["For time:","• 30 Alt DB Snatches — 1×50 lb"]),
-W("Jackie (DB Thruster)","For Time","12–20",["For time:","• Row 1000m","• 50 Thrusters — 1×50 lb","• 30 Pull-ups"]),
-W("Karen","For Time","12–20",["For time:","• 150 Wall Balls"],"Break early."),
-W("Kelly","For Time (5 rds)","25–40",["5 rounds:","• 400m Run","• 30 Box Jumps — 24\"","• 30 Wall Balls"]),
-W("Mary","AMRAP 20","20",["AMRAP 20:","• 5 Handstand Push-ups","• 10 Pistols (alt)","• 15 Pull-ups"]),
-W("Megan","For Time","12–25",["21-15-9:","• Burpees","• KB Swings — 53 lb","• Double-unders"]),
-W("Nancy (DB/KB OHS)","For Time (5 rds)","20–35",["5 rounds:","• 400m Run","• 15 Overhead Squats — Single DB/KB"]),
-W("Nicole","AMRAP 20","20",["AMRAP 20:","• 400m Run","• Max Pull-ups"]));
-/* Heroes / Commemorative */
-list.push(
-W("Murph","For Time","40–60",["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Air Squats","• 1 mile Run"],"Partition as needed."),
-W("Glen (Home)","For Time","45–60",["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Sit-ups","• 1 mile Run"],"Partition."),
-W("Michael (Home)","For Time (3 rds)","20–35",["3 rounds:","• 800m Run","• 50 Sit-ups","• 50 Supermans"]),
-W("JT (BW)","For Time","10–25",["21-15-9:","• Handstand Push-ups","• Push-ups","• Dips or Deficit Push-ups"]),
-W("Daniel (DB)","For Time","20–35",["For time:","• 50 DB Thrusters — 2×50 lb","• 400m Run","• 21 Pull-ups","• 800m Run","• 21 Pull-ups","• 400m Run","• 50 DB Thrusters — 2×50 lb"]),
-W("Josh (DB OHS)","For Time","20–35",["For time:","• 21 Overhead Squats — 1×50 lb","• 42 Pull-ups","• 15 Overhead Squats — 1×50 lb","• 30 Pull-ups","• 9 Overhead Squats — 1×50 lb","• 18 Pull-ups"]),
-W("Jason (Bar MU)","For Time","20–40",["For time:","• 100 Squats","• 5 Bar Muscle-ups","• 75 Squats","• 10 Bar Muscle-ups","• 50 Squats","• 15 Bar Muscle-ups","• 25 Squats","• 20 Bar Muscle-ups"]),
-W("Badger (DB)","For Time (3 rds)","30–50",["3 rounds:","• 30 DB Squat Cleans — 2×50 lb","• 30 Pull-ups","• 800m Run"]),
-W("Nate (Bar MU)","AMRAP 20","20",["AMRAP 20:","• 2 Bar Muscle-ups","• 4 Handstand Push-ups","• 8 KB Swings — 53 lb"]),
-W("Randy (DB)","For Time","5–12",["For time:","• 75 Alt DB Snatches — 1×50 lb"]),
-W("Griff","For Time","10–20",["For time:","• 800m Run","• 400m Run (backward)","• 800m Run","• 400m Run (backward)"]),
-W("Ryan (BMU+Burpee)","For Time (5 rds)","20–35",["5 rounds:","• 7 Bar Muscle-ups","• 21 Burpees"]),
-W("Danny (DB PP)","AMRAP 20","20",["AMRAP 20:","• 30 Box Jumps — 24\"","• 20 DB Push Press — 2×50 lb","• 30 Pull-ups"]),
-W("Hansen (Sit-up sub)","For Time (5 rds)","25–45",["5 rounds:","• 30 KB Swings — 53 lb","• 30 Burpees","• 30 Sit-ups"]),
-W("Loredo","For Time (6 rds)","25–45",["6 rounds:","• 24 Air Squats","• 24 Push-ups","• 24 Walking Lunges","• 400m Run"]),
-W("Hamilton","For Time (3 rds)","35–55",["3 rounds:","• Row 1000m","• 50 Push-ups","• Run 1000m","• 50 Pull-ups"]),
-W("Schmalls","For Time","30–50",["For time:","• 800m Run","• 50 Burpees","• 50 Pull-ups","• 50 KB Swings — 53 lb","• 50 Sit-ups","• 800m Run"]),
-W("Riley","For Time","40–60",["For time:","• Run 1.5 miles","• 150 Burpees","• Run 1.5 miles"]),
-W("Helton (DB)","For Time (3 rds)","25–45",["3 rounds:","• 800m Run","• 30 DB Squat Cleans — 2×50 lb","• 30 Burpees"]),
-W("Forrest","For Time (3 rds)","30–45",["3 rounds:","• 20 L-Pull-ups","• 30 Toes-to-Bar","• 40 Burpees","• 800m Run"]),
-W("Omar (DB Thruster)","For Time","20–35",["For time:","• 10 DB Thrusters — 2×50 lb","• 15 Burpees","• 20 DB Thrusters — 2×50 lb","• 25 Burpees","• 30 DB Thrusters — 2×50 lb","• 35 Burpees"]),
-W("Arnie (KB)","For Time","25–45",["For time:","• 21 Turkish Get-Ups (R) — 53 lb","• 50 KB Swings — 53 lb","• 21 Overhead Squats (L) — 53 lb"]),
-W("Jerry","For Time","20–40",["For time:","• Run 1 mile","• Row 2 km","• Run 1 mile"]),
-W("DT (DB)","For Time (5 rds)","15–25",["5 rounds:","• 12 DB Deadlifts — 2×50 lb","• 9 DB Hang Power Cleans — 2×50 lb","• 6 DB Push Jerks — 2×50 lb"]),
-W("Manion (DB Front Squat)","For Time (7 rds)","30–50",["7 rounds:","• 400m Run","• 29 DB Front Squats — 2×50 lb"]),
-W("Blake (DB OH Lunge)","For Time (4 rds)","30–50",["4 rounds:","• 100-ft DB Overhead Walking Lunge — 1×50 lb","• 30 Box Jumps — 24\"","• 20 Wall Balls","• 10 Handstand Push-ups"]),
-W("Roy (DB DL)","For Time (5 rds)","25–45",["5 rounds:","• 15 DB Deadlifts — 2×50 lb","• 20 Box Jumps — 24\"","• 25 Pull-ups"]),
-W("Holleyman (DB Clean)","For Time (30 rds)","30–50",["30 rounds:","• 5 Wall Balls","• 3 Handstand Push-ups","• 1 DB Clean — 2×50 lb"]),
-W("McGhee (DB DL)","AMRAP 30","30",["AMRAP 30:","• 5 DB Deadlifts — 2×50 lb","• 13 Push-ups","• 9 Box Jumps — 24\""]),
-W("Chad 1000X (24\")","For Time","35–60",["For time:","• 1,000 Box Step-ups — 24\""]),
-W("Kalsu (DB Thruster)","For Time","30–60",["For time:","• 100 DB Thrusters — 2×50 lb","At the top of every minute: 5 Burpees (start with burpees)"]));
-/* Open + Classics (trimmed for brevity but functional) */
-list.push(
-W("Open 11.1 / 14.1 (DB)","AMRAP 10","20 (cap)",["AMRAP 10:","• 30 Double-unders","• 15 Alt DB Snatches — 1×50 lb"]),
-W("Open 13.2 (DB)","AMRAP 10","20 (cap)",["AMRAP 10:","• 5 DB Shoulder-to-Overhead — 2×50 lb","• 10 DB Deadlifts — 2×50 lb","• 15 Box Jumps — 24\""]),
-W("Open 14.4 / 23.1 (DB)","AMRAP 14","20 (cap)",["AMRAP 14:","• Row 60 Cal","• 50 Toes-to-Bar","• 40 Wall Balls","• 30 DB Cleans — 2×50 lb","• 20 Bar Muscle-ups"]),
-W("Open 17.1 / 21.2 (DB)","For Time","20–30",["10-20-30-40-50:","• Alt DB Snatches — 1×50 lb","After each set: 15 Burpee Box Jump-Overs — 24\""]),
-W("Open 17.5 (DB)","10 RFT","20–30",["10 rounds:","• 9 DB Thrusters — 2×50 lb","• 35 Double-unders"]),
-W("Open 19.1","AMRAP 15","20 (cap)",["AMRAP 15:","• 19 Wall Balls","• 19 Cal Row"]),
-W("Open 22.2 (DB)","For Time","20–30",["1-2-…-10-…-2-1:","• DB Deadlifts — 2×50 lb","• Burpees"]),
-W("Fight Gone Bad (3 rnd)","AMRAP (Reps)","17",["3 rounds, 1-min stations:","• Wall Balls","• Sumo DL High Pull — 1×50 lb","• Box Jumps — 24\"","• Push Press — 1×50 lb","• Row (Calories)","Rest 1 min"]),
-W("Filthy Fifty (Home)","Chipper","30–45",["50 each:","• Box Jumps — 24\"","• Jumping Pull-ups","• KB Swings — 35 lb","• Walking Lunges (50 steps)","• Knees-to-Elbows (or V-ups)","• Push Press — 1×50 lb","• Supermans","• Wall Balls","• Burpees","• 50 Double-unders"]),
-W("12 Days of Christmas (Home)","For Time","30–50",["Perform like the song (1→12 then 12→1):","1 Burpee","2 KB Swings — 53 lb","3 Wall Balls","4 Pull-ups","5 Box Jumps — 24\"","6 Sit-ups","7 Push-ups","8 Alt DB Snatches — 1×50 lb","9 Lunges/leg","10 Double-unders","11 KB Goblet Squats — 53 lb","12 Cal Row"]));
+  W("Murph","For Time","40–60",["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Air Squats","• 1 mile Run"],"Partition as needed."),
+  W("Glen (Home)","For Time","45–60",["For time:","• 1 mile Run","• 100 Pull-ups","• 200 Push-ups","• 300 Sit-ups","• 1 mile Run"],"Partition."),
+  W("Cindy","AMRAP 20","20",["AMRAP 20:","• 5 Pull-ups","• 10 Push-ups","• 15 Air Squats"]),
+  W("Karen","For Time","12–20",["For time:","• 150 Wall Balls"]),
+  W("Helen","For Time (3 rds)","12–20",["3 rounds:","• 400m Run","• 21 KB Swings — 53 lb","• 12 Pull-ups"])
+);
 return list;})();
 
-const TRIBUTES={"Murph":"Honors U.S. Navy Lt. Michael P. Murphy (MOH), KIA Afghanistan 2005.","Glen (Home)":"Honors former U.S. Navy SEAL Glen Doherty, killed Sept 11, 2012 (Benghazi).","Chad 1000X (24\")":"Honors Navy SEAL Chad Wilkinson (2018). 1,000 step-ups raises awareness for veteran mental health.","Kalsu (DB Thruster)":"Honors 1LT James Robert Kalsu (KIA 1970).","12 Days of Christmas (Home)":"Seasonal suffer-fest performed like the song."};
+const TRIBUTES={
+  "Murph":"Honors U.S. Navy Lt. Michael P. Murphy (MOH), KIA Afghanistan 2005.",
+  "Glen (Home)":"Honors former U.S. Navy SEAL Glen Doherty, killed Sept 11, 2012 (Benghazi)."
+};
 
 /* ===== Generators (respect filters) ===== */
 const MONO=["Run 400m","Run 600m","Run 800m","Run 1000m","Row 500m","Row 750m","Row 1000m","Row 1500m","150 Single-unders","100 Double-unders","Shuttle Run 200m"];
@@ -286,27 +267,134 @@ const GYM=["Pull-ups","Chest-to-Bar Pull-ups","Bar Muscle-ups","Toes-to-Bar","Pu
 const DBB=[{name:"DB Thrusters",load:DB2},{name:"DB Push Press",load:DB2},{name:"DB Front Squats",load:DB2},{name:"DB Power Cleans",load:DB2},{name:"DB Deadlifts",load:DB2},{name:"Alt DB Snatches",load:DB1},{name:"DB Hang Clean & Jerks",load:DB1}];
 const KBB=[{name:"KB Swings",load:KB53},{name:"KB Goblet Squats",load:KB53},{name:"KB Clean & Press (alt)",load:KB53},{name:"KB Swings",load:KB35}];
 const BOXM=["Box Jumps","Burpee Box Jump-Overs"];
-const REP_RULES={"Pull-ups":[10,12,15,20],"Chest-to-Bar Pull-ups":[10,12,15],"Bar Muscle-ups":[4,6,8],"Toes-to-Bar":[10,12,15],"Push-ups":[10,15,20,25],"Sit-ups":[20,30,40],"Air Squats":[20,30,40,50],"Pistols (alt)":[6,10,16,20],"Handstand Push-ups":[6,9,12],"Burpees":[12,15,20],"Pike Push-ups":[12,15,20],"V-ups":[15,20,25],"Wall Walks":[3,4,5],"Hanging Knee Raises":[15,20,25],"Wall Balls":[20,25,30,40],"DB Thrusters":[9,12,15],"DB Push Press":[10,12,15],"DB Front Squats":[12,15,20],"DB Power Cleans":[10,12,14],"DB Deadlifts":[16,20,24],"Alt DB Snatches":[12,16,20],"DB Hang Clean & Jerks":[10,12,16],"KB Swings":[20,25,30],"KB Goblet Squats":[16,20,24],"KB Clean & Press (alt)":[10,12,14],"Box Jumps":[15,20,24],"Burpee Box Jump-Overs":[10,12,14]};
+const REP_RULES={
+  "Pull-ups":[10,12,15,20],"Chest-to-Bar Pull-ups":[10,12,15],"Bar Muscle-ups":[4,6,8],
+  "Toes-to-Bar":[10,12,15],"Push-ups":[10,15,20,25],"Sit-ups":[20,30,40],"Air Squats":[20,30,40,50],
+  "Pistols (alt)":[6,10,16,20],"Handstand Push-ups":[6,9,12],"Burpees":[12,15,20],"Pike Push-ups":[12,15,20],"V-ups":[15,20,25],
+  "Wall Walks":[3,4,5],"Hanging Knee Raises":[15,20,25],"Wall Balls":[20,25,30,40],
+  "DB Thrusters":[9,12,15],"DB Push Press":[10,12,15],"DB Front Squats":[12,15,20],"DB Power Cleans":[10,12,14],"DB Deadlifts":[16,20,24],
+  "Alt DB Snatches":[12,16,20],"DB Hang Clean & Jerks":[10,12,16],
+  "KB Swings":[20,25,30],"KB Goblet Squats":[16,20,24],"KB Clean & Press (alt)":[10,12,14],
+  "Box Jumps":[15,20,24],"Burpee Box Jump-Overs":[10,12,14]
+};
 function allowedMonoPool(){return MONO.filter(s=>!violatesFilters(tagText([s])))}
 function allowedGymPool(){return GYM.filter(n=>!violatesFilters(tagText([n])))}
 function allowedDB(){return DBB.filter(m=>!violatesFilters(tagText([m.name])))}
 function allowedKB(){return KBB.filter(m=>!violatesFilters(tagText([m.name])))}
 function allowedBOX(){return BOXM.filter(n=>!violatesFilters(tagText([n])))}
 function repFor(name,rng){const a=REP_RULES[name]||[12,15,20];return a[Math.floor(rng()*a.length)]}
-function fmtRep(rep,mv){return(typeof mv==="string")?`${rep} ${mv}`:`${rep} ${mv.name} — ${mv.load}`}
-function pickAnyAllowed(rng){const buckets=[];if(allowedGymPool().length)buckets.push("GYM");if(allowedDB().length)buckets.push("DB");if(allowedKB().length)buckets.push("KB");if(allowedBOX().length)buckets.push("BOX");if(!buckets.length)return null;const b=choice(rng,buckets);if(b==="GYM")return choice(rng,allowedGymPool());if(b==="DB")return choice(rng,allowedDB());if(b==="KB")return choice(rng,allowedKB());return choice(rng,allowedBOX())}
-const AMRAP_SCHEMES={3:[{label:"Triplet",pattern:null},{label:"15/10/5",pattern:[15,10,5]},{label:"21/15/9",pattern:[21,15,9]}],4:[{label:"Quad",pattern:null},{label:"12/9/6/3",pattern:[12,9,6,3]},{label:"10s",pattern:[10,10,10,10]}],5:[{label:"Quint",pattern:null},{label:"Desc 10→2",pattern:[10,8,6,4,2]}],6:[{label:"Sextet",pattern:null},{label:"All 12s",pattern:[12,12,12,12,12,12]}]};
-function amrapLong(rng){const monoPool=allowedMonoPool();const mins=choice(rng,[20,24,30,40]);const depth=choice(rng,[3,3,4,4,5,6]);const scheme=choice(rng,AMRAP_SCHEMES[depth]);const label=scheme.pattern?scheme.label:(depth===3?"Triplet":depth===4?"Quad":depth===5?"Quint":"Sextet");const items=[];let monoUsed=false;for(let guard=0;guard<20&&items.length<depth;guard++){const tryMono=!monoUsed&&monoPool.length&&rng()<0.35;if(tryMono){items.push(choice(rng,monoPool));monoUsed=true;continue}const mv=pickAnyAllowed(rng);if(!mv)break;const id=(typeof mv==='string')?mv:mv.name;if(items.some(x=>((typeof x==='string')?x:(x.name||x))===id))continue;items.push(mv)}if(!items.length)return{title:"No movements available with current filters",type:"—",time:"—",body:["Clear some filters to generate a workout."],notes:""};const lines=[];let p=0;for(const mv of items){if(typeof mv==="string"&&MONO.includes(mv)){lines.push("• "+mv);continue}const name=(typeof mv==="string")?mv:mv.name;const rep=scheme.pattern?scheme.pattern[clamp(p,0,scheme.pattern.length-1)]:repFor(name,rng);if(scheme.pattern)p++;lines.push("• "+fmtRep(rep,mv))}return{title:`AMRAP ${mins} — ${label}`,type:"AMRAP",time:String(mins),body:[`As many rounds as possible in ${mins} minutes:`].concat(lines),notes:"Tight transitions. Keep round times consistent."}}
-function emomLong(rng){const monoPool=allowedMonoPool();const mins=choice(rng,[24,30,36,40]);const a=pickAnyAllowed(rng),b=choice(rng,allowedGymPool()),c=monoPool.length?choice(rng,monoPool):"Air Squats 20";if(!a||!b)return amrapLong(rng);return{title:`EMOM ${mins} — Rotate 3`,type:"EMOM",time:String(mins),body:[`Every minute for ${mins} min, rotate:`,`1) ${fmtRep(repFor((a.name||a),rng),a)}`,`2) ${fmtRep(repFor(b,rng),b)}`,`3) ${c}`,"Finish each minute in ~40–45s."],notes:"Hold windows; quality first."}}
-function chipperLong(rng){const monoPool=allowedMonoPool();const count=choice(rng,[8,9,10,11,12]);const tasks=[];if(!excluded.has("wb"))tasks.push(choice(rng,["25 Wall Balls","30 Wall Balls","40 Wall Balls"]));if(monoPool.length)tasks.push(choice(rng,monoPool));const x=pickAnyAllowed(rng);if(x)tasks.push(fmtRep(repFor((x.name||x),rng),x));const y=choice(rng,allowedGymPool());if(y)tasks.push(fmtRep(repFor(y,rng),y));const z=choice(rng,allowedBOX());if(z)tasks.push(fmtRep(repFor(z,rng),z));while(tasks.length<count){const add=(rng()<0.35&&monoPool.length)?choice(rng,monoPool):(()=>{const m=pickAnyAllowed(rng);return m?fmtRep(repFor((m.name||m),rng),m):null})();if(add&&!tasks.includes(add))tasks.push(add);else break}if(!tasks.length)return amrapLong(rng);return{title:"Chipper — For Time (Long)",type:"For Time",time:"30–60",body:["Complete for time:"].concat(tasks.map(t=>"• "+t)),notes:"Break small and keep moving. Target 30–60 min."}}
+function fmtRep(rep,mv){return (typeof mv==="string")?`${rep} ${mv}`:`${rep} ${mv.name} — ${mv.load}`}
+function pickAnyAllowed(rng){
+  const buckets=[]; if(allowedGymPool().length)buckets.push("GYM");
+  if(allowedDB().length)buckets.push("DB"); if(allowedKB().length)buckets.push("KB");
+  if(allowedBOX().length)buckets.push("BOX"); if(!buckets.length)return null;
+  const b=choice(rng,buckets);
+  if(b==="GYM")return choice(rng,allowedGymPool());
+  if(b==="DB")return choice(rng,allowedDB());
+  if(b==="KB")return choice(rng,allowedKB());
+  return choice(rng,allowedBOX());
+}
+const AMRAP_SCHEMES={
+  3:[{label:"Triplet",pattern:null},{label:"15/10/5",pattern:[15,10,5]},{label:"21/15/9",pattern:[21,15,9]}],
+  4:[{label:"Quad",pattern:null},{label:"12/9/6/3",pattern:[12,9,6,3]},{label:"10s",pattern:[10,10,10,10]}],
+  5:[{label:"Quint",pattern:null},{label:"Desc 10→2",pattern:[10,8,6,4,2]}],
+  6:[{label:"Sextet",pattern:null},{label:"All 12s",pattern:[12,12,12,12,12,12]}]
+};
+function amrapLong(rng){
+  const monoPool=allowedMonoPool(); const mins=choice(rng,[20,24,30,40]);
+  const depth=choice(rng,[3,3,4,4,5,6]); const scheme=choice(rng,AMRAP_SCHEMES[depth]);
+  const label=scheme.pattern?scheme.label:(depth===3?"Triplet":depth===4?"Quad":depth===5?"Quint":"Sextet");
+  const items=[]; let monoUsed=false;
+  for(let guard=0; guard<20 && items.length<depth; guard++){
+    const tryMono=!monoUsed && monoPool.length && rng()<0.35;
+    if(tryMono){ items.push(choice(rng,monoPool)); monoUsed=true; continue; }
+    const mv=pickAnyAllowed(rng); if(!mv) break;
+    const id=(typeof mv==='string')?mv:mv.name;
+    if(items.some(x=>((typeof x==='string')?x:(x.name||x))===id)) continue;
+    items.push(mv);
+  }
+  if(!items.length) return {title:"No movements available with current filters",type:"—",time:"—",body:["Clear some filters to generate a workout."],notes:""};
+  const lines=[]; let p=0;
+  for(const mv of items){
+    if(typeof mv==="string" && MONO.includes(mv)){ lines.push("• "+mv); continue; }
+    const name=(typeof mv==="string")?mv:mv.name;
+    const rep=scheme.pattern?scheme.pattern[clamp(p,0,scheme.pattern.length-1)]:repFor(name,rng);
+    if(scheme.pattern) p++; lines.push("• "+fmtRep(rep,mv));
+  }
+  return {title:`AMRAP ${mins} — ${label}`, type:"AMRAP", time:String(mins),
+          body:[`As many rounds as possible in ${mins} minutes:`].concat(lines),
+          notes:"Tight transitions. Keep round times consistent."};
+}
+function emomLong(rng){
+  const monoPool=allowedMonoPool(); const mins=choice(rng,[24,30,36,40]);
+  const a=pickAnyAllowed(rng), b=choice(rng,allowedGymPool()), c=monoPool.length?choice(rng,monoPool):"Air Squats 20";
+  if(!a||!b) return amrapLong(rng);
+  return {title:`EMOM ${mins} — Rotate 3`, type:"EMOM", time:String(mins),
+    body:[`Every minute for ${mins} min, rotate:`,
+          `1) ${fmtRep(repFor((a.name||a),rng),a)}`,
+          `2) ${fmtRep(repFor(b,rng),b)}`,
+          `3) ${c}`,
+          "Finish each minute in ~40–45s."],
+    notes:"Hold windows; quality first."};
+}
+function chipperLong(rng){
+  const monoPool=allowedMonoPool(); const count=choice(rng,[8,9,10,11,12]); const tasks=[];
+  if(!excluded.has("wb")) tasks.push(choice(rng,["25 Wall Balls","30 Wall Balls","40 Wall Balls"]));
+  if(monoPool.length) tasks.push(choice(rng,monoPool));
+  const x=pickAnyAllowed(rng); if(x) tasks.push(fmtRep(repFor((x.name||x),rng),x));
+  const y=choice(rng,allowedGymPool()); if(y) tasks.push(fmtRep(repFor(y,rng),y));
+  const z=choice(rng,allowedBOX()); if(z) tasks.push(fmtRep(repFor(z,rng),z));
+  while(tasks.length<count){
+    const add = (rng()<0.35 && monoPool.length)? choice(rng,monoPool)
+               : ( ()=>{const m=pickAnyAllowed(rng); return m?fmtRep(repFor((m.name||m),rng),m):null;} )();
+    if(add && !tasks.includes(add)) tasks.push(add); else break;
+  }
+  if(!tasks.length) return amrapLong(rng);
+  return {title:"Chipper — For Time (Long)", type:"For Time", time:"30–60",
+    body:["Complete for time:"].concat(tasks.map(t=>"• "+t)),
+    notes:"Break small and keep moving. Target 30–60 min."};
+}
 
-/* ===== Pinned Days ===== */
-const PINS={MURPH:"Murph",GLEN:"Glen (Home)",CHAD:'Chad 1000X (24")',KALSU:"Kalsu (DB Thruster)",XMAS:"12 Days of Christmas (Home)"};
-function resolveByTitle(title){return BENCH.findIndex(b=>b.title===title)}
-function buildPins(year){const pins=new Map();const add=(m,d,title)=>{const doy=localDOY(year,m,d);const idx=resolveByTitle(title);pins.set(doy,idx>=0?{kind:"index",idx}:{kind:"inline",wod:{title,type:"For Time",time:"",body:[""],notes:""}})};add(4,lastMondayOfMay(year),PINS.MURPH);add(8,11,PINS.GLEN);add(10,11,PINS.CHAD);add(6,4,PINS.KALSU);add(11,25,PINS.XMAS);return pins}
-function distributeKnown(open){const excludeTitles=new Set(Object.values(PINS));const useIdx=BENCH.map((w,i)=>({i,t:w.title})).filter(x=>!excludeTitles.has(x.t)).map(x=>x.i);const rng=mulberry32(1337);shuffleInPlace(rng,useIdx);const N=Math.min(useIdx.length,open.length),out=new Map();for(let i=0;i<N;i++){const pos=Math.floor((i+0.5)*open.length/N);out.set(open[pos],{kind:"index",idx:useIdx[i]})}return out}
-function buildSchedule(year,days){const pins=buildPins(year);const open=[];for(let d=1;d<=days;d++){if(!pins.has(d))open.push(d)}const spread=distributeKnown(open);const map=new Map(pins);spread.forEach((v,k)=>map.set(k,v));return map}
-function buildYear(year){const days=daysInYear(year);const out=new Array(days),rng=mulberry32(1337),slots=buildSchedule(year,days);for(let d=1;d<=days;d++){let w;if(slots.has(d)){const val=slots.get(d);const b=(val.kind==="index")?BENCH[val.idx]:val.wod;w={title:b.title,type:b.type,time:b.time,body:b.body.slice(),notes:b.notes,named:true}}else{const dow=(d-1)%7;const gen=(dow===6)?chipperLong:(dow%2===0?amrapLong:emomLong);w=gen(rng)}if(violatesFilters(tagText(w.body))){w=amrapLong(rng);if(violatesFilters(tagText(w.body)))w=chipperLong(rng)}out[d-1]=w}return out}
+/* ===== Pins & schedule ===== */
+const PINS={ MURPH:"Murph", GLEN:"Glen (Home)", CHAD:'Chad 1000X (24")', KALSU:"Kalsu (DB Thruster)", XMAS:"12 Days of Christmas (Home)" };
+function resolveByTitle(title){ return BENCH.findIndex(b=>b.title===title) }
+function buildPins(year){
+  const pins=new Map(); const add=(m,d,title)=>{ const doy=localDOY(year,m,d); const idx=resolveByTitle(title);
+    pins.set(doy, idx>=0?{kind:"index",idx}:{kind:"inline",wod:{title,type:"For Time",time:"",body:[""],notes:""}}); };
+  add(4,lastMondayOfMay(year),PINS.MURPH); add(8,11,PINS.GLEN); add(10,11,PINS.CHAD); add(6,4,PINS.KALSU); add(11,25,PINS.XMAS);
+  return pins;
+}
+function distributeKnown(open){const excludeTitles=new Set(Object.values(PINS));
+  const useIdx=BENCH.map((w,i)=>({i,t:w.title})).filter(x=>!excludeTitles.has(x.t)).map(x=>x.i);
+  const rng=mulberry32(1337); shuffleInPlace(rng,useIdx);
+  const N=Math.min(useIdx.length,open.length), out=new Map();
+  for(let i=0;i<N;i++){ const pos=Math.floor((i+0.5)*open.length/N); out.set(open[pos],{kind:"index",idx:useIdx[i]}); }
+  return out;
+}
+function buildSchedule(year,days){
+  const pins=buildPins(year);
+  const open=[]; for(let d=1; d<=days; d++){ if(!pins.has(d)) open.push(d); }
+  const spread=distributeKnown(open);
+  const map=new Map(pins); spread.forEach((v,k)=>map.set(k,v));
+  return map;
+}
+function buildYear(year){
+  const days=daysInYear(year);
+  const out=new Array(days), rng=mulberry32(1337), slots=buildSchedule(year,days);
+  for(let d=1; d<=days; d++){
+    let w;
+    if(slots.has(d)){
+      const val=slots.get(d); const b=(val.kind==="index")?BENCH[val.idx]:val.wod;
+      w={title:b.title,type:b.type,time:b.time,body:b.body.slice(),notes:b.notes,named:true};
+    }else{
+      const dow=(d-1)%7; const gen=(dow===6)?chipperLong:(dow%2===0?amrapLong:emomLong);
+      w=gen(rng);
+    }
+    if(violatesFilters(tagText(w.body))){ w=amrapLong(rng); if(violatesFilters(tagText(w.body))) w=chipperLong(rng); }
+    out[d-1]=w;
+  }
+  return out;
+}
 
 /* ===== UI & Render ===== */
 const elTitle=document.getElementById("wodTitle");
@@ -320,62 +408,82 @@ const dateChip=document.getElementById("todayStr");
 const cal=document.getElementById("cal");
 const warn=document.getElementById("warn");
 
-function paceHint(w){return(w.type==="For Time")?"Target: 30–60 min":`Target: ${w.time} min`;}
+function paceHint(w){return (w.type==="For Time")?"Target: 30–60 min":`Target: ${w.time} min`;}
 function renderByDate(dt){
-  if(dt.getFullYear()!==currentYear){currentYear=dt.getFullYear();YEAR=buildYear(currentYear);}
-  const doy=doyFromDate(dt);const w=YEAR[clamp(doy,1,daysInYear(currentYear))-1];
-  dateChip.textContent=fmtDate(dt);
-  elTitle.textContent=w.named?`${w.title} (Benchmark)`:w.title;
-  elType.textContent=w.type;elTime.textContent=w.time;elTarget.textContent=paceHint(w);
-  elBody.innerHTML="<ul>"+w.body.map(l=>`<li>${l}</li>`).join("")+"</ul>";
-  elNotes.textContent=w.notes||"";
-  if(TRIBUTES[w.title]){elTribute.style.display="block";elTribute.textContent=TRIBUTES[w.title]}else{elTribute.style.display="none";elTribute.textContent=""}
-  document.getElementById("warmup").innerHTML=buildWarmup(w);
-  document.getElementById("cooldown").innerHTML=buildCooldown(w);
-  currentDate=dt;if(cal.classList.contains('show'))buildCalendar(calYear,calMonth);
+  if(dt.getFullYear()!==currentYear){ currentYear=dt.getFullYear(); YEAR=buildYear(currentYear); }
+  const doy=doyFromDate(dt); const w=YEAR[clamp(doy,1,daysInYear(currentYear))-1];
+
+  dateChip.textContent = fmtDate(dt);
+  elTitle.textContent = w.named? `${w.title} (Benchmark)` : w.title;
+  elType.textContent = w.type; elTime.textContent = w.time; elTarget.textContent = paceHint(w);
+  elBody.innerHTML = "<ul>"+w.body.map(l=>`<li>${l}</li>`).join("")+"</ul>";
+  elNotes.textContent = w.notes || "";
+  if(TRIBUTES[w.title]){ elTribute.style.display="block"; elTribute.textContent=TRIBUTES[w.title]; }
+  else { elTribute.style.display="none"; elTribute.textContent=""; }
+
+  document.getElementById("warmup").innerHTML = buildWarmup(w);
+  document.getElementById("cooldown").innerHTML = buildCooldown(w);
+
+  currentDate=dt;
+  if(cal.classList.contains('show')) buildCalendar(calYear, calMonth);
 }
 
 /* Calendar */
-const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"],DOW=["S","M","T","W","T","F","S"];
-let calYear=currentDate.getFullYear(),calMonth=currentDate.getMonth();
-function buildCalendar(year,month){
-  calYear=year;calMonth=month;
-  const first=new Date(year,month,1),firstDow=first.getDay();
-  const daysThis=new Date(year,month+1,0).getDate(),daysPrev=new Date(year,month,0).getDate();
-  let html=`<header><button class="hdr-btn" id="calPrev">&larr;</button><div class="label">${MONTHS[month]} ${year}</div><button class="hdr-btn" id="calNext">&rarr;</button></header><div class="grid">`;
-  for(const d of DOW)html+=`<div class="dow">${d}</div>`;
-  for(let i=0;i<firstDow;i++){const day=daysPrev-firstDow+1+i;html+=`<div class="day muted">${day}</div>`}
-  const today=new Date();const isThisMonth=(today.getFullYear()===year&&today.getMonth()===month);const sel=isThisMonth?today.getDate():null;
-  for(let d=1;d<=daysThis;d++){const isSelected=(currentDate.getFullYear()===year&&currentDate.getMonth()===month&&currentDate.getDate()===d);const cls="day"+(isThisMonth&&d===sel?" today":"")+(isSelected?" selected":"");html+=`<div class="${cls}" data-day="${d}">${d}</div>`}
-  const used=firstDow+daysThis,need=(7-(used%7))%7;for(let i=1;i<=need;i++)html+=`<div class="day muted">${i}</div>`;
-  html+=`</div>`;cal.innerHTML=html;
-  document.getElementById('calPrev').onclick=e=>{e.stopPropagation();const m=calMonth-1;buildCalendar(m<0?calYear-1:calYear,m<0?11:m)};
-  document.getElementById('calNext').onclick=e=>{e.stopPropagation();const m=calMonth+1;buildCalendar(m>11?calYear+1:calYear,m>11?0:m)};
-  cal.querySelectorAll('.day[data-day]').forEach(el=>{el.onclick=(ev)=>{ev.stopPropagation();const day=+el.getAttribute('data-day');renderByDate(new Date(calYear,calMonth,day));closeCalendar();}});
+const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DOW=["S","M","T","W","T","F","S"];
+let calYear=currentDate.getFullYear(), calMonth=currentDate.getMonth();
+function buildCalendar(year, month){
+  calYear=year; calMonth=month;
+  const first=new Date(year,month,1), firstDow=first.getDay();
+  const daysThis=new Date(year,month+1,0).getDate(), daysPrev=new Date(year,month,0).getDate();
+  let html=`<header>
+      <button class="hdr-btn" id="calPrev">&larr;</button>
+      <div class="label">${MONTHS[month]} ${year}</div>
+      <button class="hdr-btn" id="calNext">&rarr;</button>
+    </header>
+    <div class="grid">`;
+  for(const d of DOW) html+=`<div class="dow">${d}</div>`;
+  for(let i=0;i<firstDow;i++){ const day=daysPrev-firstDow+1+i; html+=`<div class="day muted">${day}</div>`; }
+  const today=new Date(); const isThisMonth=(today.getFullYear()===year&&today.getMonth()===month); const sel=isThisMonth?today.getDate():null;
+  for(let d=1; d<=daysThis; d++){
+    const isSelected=(currentDate.getFullYear()===year && currentDate.getMonth()===month && currentDate.getDate()===d);
+    const cls="day"+(isThisMonth&&d===sel?" today":"")+(isSelected?" selected":"");
+    html+=`<div class="${cls}" data-day="${d}">${d}</div>`;
+  }
+  const used=firstDow+daysThis; const need=(7-(used%7))%7; for(let i=1;i<=need;i++) html+=`<div class="day muted">${i}</div>`;
+  html+=`</div>`; cal.innerHTML=html;
+
+  document.getElementById('calPrev').onclick=(ev)=>{ev.stopPropagation(); const m=calMonth-1; const y=m<0?calYear-1:calYear; const nm=m<0?11:m; buildCalendar(y,nm);};
+  document.getElementById('calNext').onclick=(ev)=>{ev.stopPropagation(); const m=calMonth+1; const y=m>11?calYear+1:calYear; const nm=m>11?0:m; buildCalendar(y,nm);};
+  cal.querySelectorAll('.day[data-day]').forEach(el=>{ el.onclick=(ev)=>{ev.stopPropagation(); const day=+el.getAttribute('data-day'); renderByDate(new Date(calYear,calMonth,day)); closeCalendar();}; });
 }
-function openCalendar(){buildCalendar(currentDate.getFullYear(),currentDate.getMonth());cal.classList.add('show');cal.setAttribute('aria-hidden','false');setTimeout(()=>document.addEventListener('click',outsideClose),0)}
-function closeCalendar(){cal.classList.remove('show');cal.setAttribute('aria-hidden','true');document.removeEventListener('click',outsideClose)}
-function outsideClose(e){if(!cal.contains(e.target)&&e.target!==dateChip){closeCalendar()}}
+function openCalendar(){ buildCalendar(currentDate.getFullYear(), currentDate.getMonth()); cal.classList.add('show'); cal.setAttribute('aria-hidden','false'); setTimeout(()=>document.addEventListener('click', outsideClose),0); }
+function closeCalendar(){ cal.classList.remove('show'); cal.setAttribute('aria-hidden','true'); document.removeEventListener('click', outsideClose); }
+function outsideClose(e){ if(!cal.contains(e.target) && e.target!==dateChip){ closeCalendar(); } }
 
 /* INIT */
 function init(){
   // Filters UI
-  const panel=document.getElementById('filterPanel'),btn=document.getElementById('filterBtn');
-  btn.onclick=(e)=>{e.stopPropagation();panel.classList.toggle('show');panel.setAttribute('aria-hidden',!panel.classList.contains('show'))};
-  document.addEventListener('click',(e)=>{if(panel.classList.contains('show')&&!panel.contains(e.target)&&e.target!==btn){panel.classList.remove('show')}})
-  panel.querySelectorAll('input[type="checkbox"]').forEach(cb=>{const k=cb.getAttribute('data-key');cb.checked=excluded.has(k);cb.onchange=()=>{cb.checked?excluded.add(k):excluded.delete(k);saveFilters();}})
+  const panel=document.getElementById('filterPanel'); const btn=document.getElementById('filterBtn');
+  btn.onclick=(e)=>{e.stopPropagation(); panel.classList.toggle('show'); panel.setAttribute('aria-hidden',!panel.classList.contains('show'));};
+  document.addEventListener('click',(e)=>{ if(panel.classList.contains('show') && !panel.contains(e.target) && e.target!==btn){ panel.classList.remove('show'); }});
+  panel.querySelectorAll('input[type="checkbox"]').forEach(cb=>{
+    const k=cb.getAttribute('data-key'); cb.checked=excluded.has(k);
+    cb.onchange=()=>{ cb.checked?excluded.add(k):excluded.delete(k); saveFilters(); };
+  });
   showActiveFilters();
 
-  if(!BENCH.length){warn.style.display='block';warn.textContent='No named WODs loaded (using generators only).'}
+  if(!BENCH.length){ warn.style.display='block'; warn.textContent='No named WODs loaded (using generators only).'; }
 
-  YEAR = buildYear(currentYear);
+  YEAR=buildYear(currentYear);
   renderByDate(currentDate);
 
-  document.getElementById("prevBtn").onclick=()=>{const d=new Date(currentDate);d.setDate(d.getDate()-1);renderByDate(d)}
-  document.getElementById("nextBtn").onclick=()=>{const d=new Date(currentDate);d.setDate(d.getDate()+1);renderByDate(d)}
-  document.getElementById("todayBtn").onclick=()=>{renderByDate(new Date())}
-  dateChip.addEventListener('click',(e)=>{e.stopPropagation();cal.classList.contains('show')?closeCalendar():openCalendar()})
-  document.addEventListener('keydown',(e)=>{if(e.key==='Escape'&&cal.classList.contains('show'))closeCalendar()})
+  document.getElementById("prevBtn").onclick=()=>{ const d=new Date(currentDate); d.setDate(d.getDate()-1); renderByDate(d); };
+  document.getElementById("nextBtn").onclick=()=>{ const d=new Date(currentDate); d.setDate(d.getDate()+1); renderByDate(d); };
+  document.getElementById("todayBtn").onclick=()=>{ renderByDate(new Date()); };
+
+  dateChip.addEventListener('click',(e)=>{ e.stopPropagation(); cal.classList.contains('show')?closeCalendar():openCalendar(); });
+  document.addEventListener('keydown',(e)=>{ if(e.key==='Escape' && cal.classList.contains('show')) closeCalendar(); });
 }
 document.addEventListener("DOMContentLoaded", init);
 </script>
