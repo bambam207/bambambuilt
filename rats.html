@@ -101,6 +101,88 @@ h2 .emoji{font-size:20px; margin-right:6px}
 }
 </style>
 </head>
+<!-- ===== BAMBAM Legal Disclaimer (drop-in) ===== -->
+<style>
+  :root{ --bb-bg:#0f1115; --bb-card:#151922; --bb-ink:#e8eaf0; --bb-muted:#aab0c0; --bb-border:#2a3345; --bb-accent:#61dafb; }
+  .bb-legal__overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;z-index:9999}
+  .bb-legal__modal{
+    max-width:680px;margin:6vh auto;background:var(--card, var(--bb-card));
+    color:var(--ink, var(--bb-ink)); border:1px solid var(--border, var(--bb-border));
+    border-radius:14px; padding:18px; box-shadow:0 12px 40px rgba(0,0,0,.5)
+  }
+  .bb-legal__title{margin:0 0 6px;font-size:20px}
+  .bb-legal__text{background:#111723;border:1px solid var(--border, var(--bb-border));
+    border-radius:10px;padding:12px;max-height:42vh;overflow:auto;color:var(--bb-muted);font-size:14px}
+  .bb-legal__row{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:10px}
+  .bb-legal__btn{background:#111723;border:1px solid var(--border, var(--bb-border));
+    color:var(--ink, var(--bb-ink));border-radius:10px;padding:10px 12px;cursor:pointer}
+  .bb-legal__btn--primary{background:var(--accent, var(--bb-accent));color:#0b141c;border:0;font-weight:700}
+  .bb-legal__check{display:flex;gap:8px;align-items:flex-start;margin-top:10px;color:var(--ink, var(--bb-ink));font-size:14px}
+  .bb-legal__link{color:#9ecbff;text-decoration:none}
+  @media (max-width:720px){ .bb-legal__modal{margin:0 12px} }
+</style>
+
+<div id="bbLegalOverlay" class="bb-legal__overlay" role="dialog" aria-modal="true" aria-labelledby="bbLegalTitle">
+  <div class="bb-legal__modal">
+    <h2 id="bbLegalTitle" class="bb-legal__title">Safety & Terms</h2>
+    <div class="bb-legal__text" id="bbLegalText">
+      <p><strong>Not medical advice.</strong> Workouts here are general info, not personal medical or coaching advice.</p>
+      <p><strong>Talk to a doctor</strong> before starting exercise. <strong>Stop immediately</strong> if you feel pain, dizziness, or shortness of breath.</p>
+      <p><strong>Use at your own risk.</strong> You are responsible for your space, equipment, and how you train.</p>
+      <p><strong>Minors.</strong> If you’re under 18, use this with a parent/guardian and coach approval.</p>
+      <p><strong>Liability.</strong> To the fullest extent allowed by law, BAMBAM Built and its owners aren’t liable for injuries, losses, or damages from using this site.</p>
+      <p><strong>Privacy & Terms:</strong> See <a class="bb-legal__link" href="/legal.html" target="_blank" rel="noopener">/legal.html</a>.</p>
+    </div>
+
+    <label class="bb-legal__check">
+      <input type="checkbox" id="bbLegalAgree">
+      <span>I’m 18+ (or have a parent/guardian) and I agree to these terms.</span>
+    </label>
+
+    <div class="bb-legal__row">
+      <button class="bb-legal__btn" type="button" onclick="location.href='https://google.com'">Leave</button>
+      <button id="bbLegalAccept" class="bb-legal__btn bb-legal__btn--primary" type="button" disabled>I Agree & Continue</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const VERSION = 'bb_terms_v2'; // bump this to re-prompt everybody
+  const overlay = document.getElementById('bbLegalOverlay');
+  const agree = document.getElementById('bbLegalAgree');
+  const accept = document.getElementById('bbLegalAccept');
+
+  function lockScroll(on){ document.body.style.overflow = on ? 'hidden' : ''; }
+
+  function openModal(){
+    overlay.style.display = 'block';
+    lockScroll(true);
+    // prevent closing via ESC / click outside
+    overlay.addEventListener('keydown', e => { if(e.key==='Escape'){ e.preventDefault(); } }, {once:true});
+    overlay.addEventListener('click', e => {
+      const modal = e.currentTarget.querySelector('.bb-legal__modal');
+      if(!modal.contains(e.target)) e.stopPropagation();
+    });
+  }
+
+  function closeModal(){
+    overlay.style.display = 'none';
+    lockScroll(false);
+  }
+
+  // Show if not previously accepted
+  if(localStorage.getItem(VERSION) !== '1'){ openModal(); }
+
+  agree.addEventListener('change', () => { accept.disabled = !agree.checked; });
+  accept.addEventListener('click', () => {
+    if(!agree.checked) return;
+    localStorage.setItem(VERSION, '1');
+    closeModal();
+  });
+})();
+</script>
+<!-- ===== /BAMBAM Legal Disclaimer ===== -->
 <body>
 <div class="wrap">
 
