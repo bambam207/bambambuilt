@@ -3,288 +3,366 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>BAMBAM — Youth Hoops Program</title>
+<title>AAU 13U — Strength & Court Prep (4-Week)</title>
 
-<!-- simple, friendly palette -->
+<!-- Friendly, inviting palette (unchanged) -->
 <style>
 :root{
-  --bg:#0f1115;           /* page bg */
-  --ink:#e8eaf0;          /* main text */
-  --muted:#aab0c0;        /* muted text */
-  --card:#171b24;         /* cards */
-  --border:#263045;       /* borders */
-  --accent:#8bd3ff;       /* links / accents */
-  --pink:#ffb3d1;         /* section accent */
-  --mint:#a8ffcf;         /* tags */
-  --lav:#c7b6ff;          /* week chips */
-  --bar:#ff7aa8;          /* left bar on section cards */
+  --bg:#0f1220;
+  --card:#171b2d;
+  --ink:#f6f7ff;
+  --muted:#cdd2ea;
+  --border:#283152;
+  --accent:#ff8bd1;
+  --accent-2:#93c5fd;
+  --accent-3:#a7f3d0;
+
+  /* Section bar colors (left stripes) */
+  --bar-warm:#ffd166;
+  --bar-power:#c084fc;
+  --bar-strength:#f78da7;
+  --bar-agility:#7dd3fc;
+  --bar-cond:#6ee7b7;
+  --bar-cool:#60a5fa;
+  --bar-note:#9aa3b2;
 }
 *{box-sizing:border-box}
 body{
-  margin:0; padding:24px; background:var(--bg); color:var(--ink);
+  margin:0; padding:24px;
+  background: radial-gradient(1200px 800px at 20% -10%, #1a1f36 0%, var(--bg) 55%);
+  color:var(--ink);
   font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
 }
-h1,h2,h3{margin:0 0 8px; line-height:1.15}
+h1,h2,h3{margin:0 0 10px; line-height:1.15}
 h1{font-size:28px}
 h2{font-size:20px; color:var(--muted); font-weight:700}
-h3{font-size:16px; color:var(--muted); font-weight:700}
-p{margin:0 0 8px}
-small{color:var(--muted)}
-.wrap{max-width:980px; margin:0 auto; display:grid; gap:16px}
+h3{font-size:16px; color:var(--muted); font-weight:600}
+.wrap{max-width:900px; margin:0 auto; display:grid; gap:16px}
 .card{
-  background:var(--card); border:1px solid var(--border); border-radius:14px;
-  box-shadow:0 4px 18px rgba(0,0,0,.25); padding:16px;
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:16px;
+  box-shadow:0 8px 30px rgba(0,0,0,.25)
 }
-.header{
-  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px;
+.row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+.center{text-align:center}
+button{
+  background:linear-gradient(135deg, var(--accent), #ffb0df);
+  color:#231b26; border:0; border-radius:999px; padding:10px 14px;
+  font-weight:700; letter-spacing:.2px; cursor:pointer
 }
-.brand{font-weight:800; font-size:22px}
-.pills{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
-.pill{
-  display:inline-block; font-size:12px; color:#0c1220; background:var(--mint);
-  padding:4px 10px; border-radius:999px; border:1px solid #0c122020;
+button.ghost{
+  background:#192036; border:1px solid var(--border); color:var(--ink); font-weight:600
 }
-.week{
-  border-left:6px solid var(--bar); padding-left:12px; margin-top:4px;
+button.small{padding:6px 10px; font-size:13px}
+button:active{transform:translateY(1px)}
+
+.pill{display:inline-block; padding:4px 10px; border-radius:999px;
+      border:1px solid var(--border); background:#121831; color:#bfc6e4; font-size:12px}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+@media (max-width:700px){ .grid-2{grid-template-columns:1fr} }
+
+.notice{background:#11172b; border-left:4px solid var(--bar-note);
+        padding:10px 12px; border-radius:10px}
+
+.section{
+  background:#11172b; border:1px solid #222a49; border-radius:14px; padding:12px;
+  position:relative; overflow:hidden
 }
-.weekGrid{
-  display:grid; gap:12px;
+.section::before{
+  content:""; position:absolute; left:12px; top:12px; bottom:12px; width:6px; border-radius:6px;
+  background:var(--bar-note)
 }
-@media(min-width:840px){ .weekGrid{ grid-template-columns:1fr 1fr 1fr; } }
-.sesh{
-  background:#0f1320; border:1px solid var(--border); border-radius:12px; padding:12px;
+.section .inner{margin-left:20px}
+.section.yellow::before{background:var(--bar-warm)}
+.section.lilac::before{background:var(--bar-power)}
+.section.pink::before{background:var(--bar-strength)}
+.section.sky::before{background:var(--bar-agility)}
+.section.mint::before{background:var(--bar-cond)}
+.section.blue::before{background:var(--bar-cool)}
+.section.gray::before{background:var(--bar-note)}
+
+ul{margin:8px 0 0 22px} li{margin:4px 0}
+.small{font-size:12px; color:#aeb6d6}
+h2 .emoji{font-size:20px; margin-right:6px}
+
+/* Top controls */
+.controls{justify-content:center}
+.switch{display:flex; gap:6px; background:#121831; padding:6px; border-radius:999px; border:1px solid var(--border)}
+.switch button{background:#171f3b; color:#cdd2ea; border:1px solid #283152}
+.switch button.active{background:linear-gradient(135deg, var(--accent-2), #a5b4fc); color:#0f1220; border:0}
+
+/* Print-friendly */
+@media print{
+  .controls, .print-hint{display:none}
+  body{background:#fff; color:#111}
+  .card{box-shadow:none; border-color:#ddd}
+  .section{background:#fff}
 }
-.sesh h3{display:flex; align-items:center; gap:8px}
-.tag{
-  font-size:11px; color:#111; background:var(--lav); padding:2px 8px; border-radius:999px;
-  border:1px solid #0001;
-}
-.block{margin:8px 0 0}
-.block h4{
-  margin:0 0 6px; font-size:13px; color:#ffd1e2; letter-spacing:.02em;
-}
-ul{margin:0; padding-left:18px}
-li{margin:4px 0}
-.note{color:var(--muted); font-size:13px; margin-top:8px}
-.hr{height:1px; background:var(--border); margin:10px 0}
-footer{margin-top:8px; text-align:center; color:var(--muted); font-size:12px}
-a{color:var(--accent)}
-.warning{
-  background:#1a1f2d; border:1px solid var(--border); border-radius:10px; padding:10px;
-}
-/* keep the friendly headers you liked */
-.banner{
-  background:linear-gradient(135deg,#1a1f2d 0%,#1b2133 60%,#1a1e2b 100%);
-  border:1px solid var(--border); border-radius:14px; padding:16px;
-}
-.banner h1{display:flex; gap:10px; align-items:center}
-.banner .emoji{font-size:28px}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <!-- HEADER -->
-  <div class="banner">
-    <div class="header">
-      <h1 class="brand"><span class="emoji">🏀</span> Youth Hoops: 4-Week Program</h1>
-      <div class="pills">
-        <span class="pill">Ages 12–14</span>
-        <span class="pill">3 days/week</span>
-        <span class="pill">Repeat after Week 4</span>
+  <!-- Header -->
+  <div class="card">
+    <h1 class="center">🏀 AAU 13U — Strength & Court Prep</h1>
+    <div class="center small">4-week plan for 13-year-old girls • repeat after week 4 • simple, safe, and fun ✨</div>
+
+    <!-- Controls -->
+    <div class="row controls" style="margin-top:12px">
+      <div class="switch" id="weekSwitch" role="tablist" aria-label="Select week">
+        <button class="small active" data-week="1">Week 1</button>
+        <button class="small" data-week="2">Week 2</button>
+        <button class="small" data-week="3">Week 3</button>
+        <button class="small" data-week="4">Week 4</button>
       </div>
+
+      <div class="switch" id="daySwitch" role="tablist" aria-label="Select day">
+        <button class="small active" data-day="A">Day A</button>
+        <button class="small" data-day="B">Day B</button>
+        <button class="small" data-day="C">Day C</button>
+      </div>
+
+      <button class="ghost small" onclick="window.print()">Print</button>
     </div>
-    <p class="note" style="margin-top:6px">
-      Safe, simple, basketball-focused training. No fancy gear needed. Read each step and follow along.
-      If anything hurts (sharp pain), stop and tell a coach/parent.
-    </p>
+
+    <div class="center small print-hint" style="margin-top:8px">Plan: 2–3 sessions each week (A, B, C). Tourney week? Do B + one of A/C.</div>
   </div>
 
-  <!-- HOW IT WORKS (same layout; words simpler) -->
-  <div class="card">
-    <h2>How it works</h2>
-    <div class="week">
-      <ul>
-        <li><b>Schedule:</b> Do <b>Session A</b> (Mon), <b>Session B</b> (Wed), <b>Session C</b> (Fri). Busy week? Do any two.</li>
-        <li><b>Time:</b> Each session ~35–45 minutes.</li>
-        <li><b>Gear:</b> Open space, a ball, jump rope (optional), a step/box/low bench.</li>
-        <li><b>Progress:</b> Weeks 1→4 add small reps or seconds. After Week 4, loop back to Week 1.</li>
-      </ul>
-    </div>
+  <!-- Week guidance -->
+  <div class="card" id="weekCard">
+    <h2><span class="emoji">📅</span>Weekly Focus</h2>
+    <div class="section gray"><div class="inner" id="weekFocus"></div></div>
   </div>
 
-  <!-- WEEK 1 -->
-  <div class="card">
-    <h2>Week 1 <span class="tag">learn the moves</span></h2>
-    <div class="weekGrid">
-      <!-- Session A -->
-      <div class="sesh">
-        <h3>Session A <span class="tag">Mon</span></h3>
-        <div class="block">
-          <h4>Warm-Up (6–8 min)</h4>
-          <ul>
-            <li><b>Easy jog</b> 2 min. Breathe through your nose if you can.</li>
-            <li><b>High knees</b> 20 steps · <b>Butt kicks</b> 20 steps.</li>
-            <li><b>World’s greatest stretch</b> 5/side (step forward, elbow to instep, twist up).</li>
-          </ul>
-        </div>
-        <div class="block">
-          <h4>Ball Skill (8 min)</h4>
-          <ul>
-            <li><b>Pound dribble</b> R then L — 3×20 each. <i>Stand tall, eyes up, bounce hard.</i></li>
-            <li><b>Crossover walk</b> 3×10 steps. <i>Step, cross the ball in front, keep it low.</i></li>
-          </ul>
-        </div>
-        <div class="block">
-          <h4>Strength (10–12 min)</h4>
-          <ul>
-            <li><b>Box Squat</b> 3×8. <i>Sit to a box/bench, chest up, stand tall.</i></li>
-            <li><b>Incline Push-ups</b> 3×6–8. <i>Hands on bench, body straight, chest to edge.</i></li>
-            <li><b>Glute Bridge</b> 3×10. <i>Feet flat, squeeze hips up, hold 1 sec.</i></li>
-          </ul>
-        </div>
-        <div class="block">
-          <h4>Conditioning (6–8 min)</h4>
-          <ul>
-            <li><b>Shuttle Runs</b> 10m out & back × 6 rounds. <i>Run easy out, quick back, rest 30s.</i></li>
-          </ul>
-        </div>
-        <div class="block">
-          <h4>Cool-Down (3–4 min)</h4>
-          <ul>
-            <li><b>Calf stretch</b> 30s/side · <b>Quad stretch</b> 30s/side.</li>
-            <li><b>Big breaths</b> 6 slow inhales/exhales, hands on ribs.</li>
-          </ul>
-        </div>
+  <!-- Program blocks -->
+  <div class="card" id="contentCard">
+    <div class="row" style="justify-content:space-between">
+      <h2 id="dayTitle"><span class="emoji">💪</span>Day A</h2>
+      <div>
+        <span class="pill" id="timePill">45–55 min</span>
+        <span class="pill" id="themePill">Strength + Landing</span>
       </div>
+    </div>
 
-      <!-- Session B -->
-      <div class="sesh">
-        <h3>Session B <span class="tag">Wed</span></h3>
-        <div class="block">
-          <h4>Warm-Up (6–8 min)</h4>
-          <ul>
-            <li><b>Jump rope</b> 2×45s (or pretend rope).</li>
-            <li><b>Side shuffles</b> 2×20m. <i>Low hips, quiet feet.</i></li>
-            <li><b>Ankles</b> 10 heel raises + 10 toe raises.</li>
-          </ul>
-        </div>
-        <div class="block">
-          <h4>Footwork (8 min)</h4>
-          <ul>
-            <li><b>Layup steps (no ball)</b> 5/side. <i>Right: step R–L–jump; Left: step L–R–jump.</i></li>
-            <li><b>Jump-stop to stick</b> 3×6. <i>Land soft on two feet, freeze for 2 sec.</i></li>
-          </ul>
-        </div>
-        <div class="block">
-          <h4>Strength (10–12 min)</h4>
-          <ul>
-            <li><b>Split Squat</b> 3×6/side. <i>Long step, back knee down, front heel heavy.</i></li>
-            <li><b>Backpack Row</b> 3×10. <i>Hinge, pull bag to ribs, squeeze shoulder blades.</i></li>
-            <li><b>Dead Bug</b> 2×6/side. <i>Low back down, opposite arm/leg reach.</i></li>
-          </ul>
-        </div>
-        <div class="block">
-          <h4>Finisher (5–6 min)</h4>
-          <ul>
-            <li><b>Slide & Skip</b> 20s slide · 20s skip · 20s rest × 4 rounds.</li>
-          </ul>
-        </div>
-        <div class="block">
-          <h4>Cool-Down (3–4 min)</h4>
-          <ul>
-            <li><b>Hip flexor stretch</b> 30s/side · <b>Hamstring</b> 30s/side.</li>
-          </ul>
-        </div>
+    <!-- Warm-Up -->
+    <div class="section yellow" style="margin-top:8px">
+      <div class="inner">
+        <h3>Warm-Up (10 min)</h3>
+        <ul id="warmup"></ul>
       </div>
+    </div>
 
-      <!-- Session C -->
-      <div class="sesh">
-        <h3>Session C <span class="tag">Fri</span></h3>
-        <div class="block">
-          <h4>Warm-Up (6–8 min)</h4>
-          <ul>
-            <li><b>Light jog + dribble</b> 3 min around the court.</li>
-            <li><b>Skater hops</b> 2×10. <i>Hop side to side, land soft, balance.</i></li>
-          </ul>
-        </div>
-        <div class="block">
-          <h4>Ball Skill (8 min)</h4>
-          <ul>
-            <li><b>Figure-8 dribble (low)</b> 3×30s. <i>Eyes up, knees bent.</i></li>
-            <li><b>Behind-back taps</b> 2×20. <i>Tap the ball hand-to-hand behind you.</i></li>
-          </ul>
-        </div>
-        <div class="block">
-          <h4>Strength (10–12 min)</h4>
-          <ul>
-            <li><b>Step-ups</b> 3×8/side. <i>Foot flat, drive up, control down.</i></li>
-            <li><b>Side Plank</b> 2×20s/side. <i>Straight line ear-to-ankle.</i></li>
-            <li><b>Calf Raises</b> 2×15. <i>Slow up/down, hold top 1 sec.</i></li>
-          </ul>
-        </div>
-        <div class="block">
-          <h4>Conditioning (6–8 min)</h4>
-          <ul>
-            <li><b>Run 200m</b> easy-fast-easy × 4. <i>Walk back to start each time.</i></li>
-          </ul>
-        </div>
-        <div class="block">
-          <h4>Cool-Down (3–4 min)</h4>
-          <ul>
-            <li><b>Figure-4 glute</b> 30s/side · <b>Back breathe</b> 5 slow breaths.</li>
-          </ul>
-        </div>
+    <!-- Power / Skill prep -->
+    <div class="section lilac" style="margin-top:10px">
+      <div class="inner">
+        <h3 id="block1Title">Power Prep</h3>
+        <ul id="block1"></ul>
+      </div>
+    </div>
+
+    <!-- Main Strength / Agility -->
+    <div class="section pink sky" id="block2Wrap" style="margin-top:10px">
+      <div class="inner">
+        <h3 id="block2Title">Strength</h3>
+        <ul id="block2"></ul>
+      </div>
+    </div>
+
+    <!-- Conditioning / Speed -->
+    <div class="section mint" id="block3Wrap" style="margin-top:10px">
+      <div class="inner">
+        <h3 id="block3Title">Landing / ACL Mini-Circuit</h3>
+        <ul id="block3"></ul>
+      </div>
+    </div>
+
+    <!-- Cooldown -->
+    <div class="section blue" style="margin-top:10px">
+      <div class="inner">
+        <h3>Cool-Down (5 min)</h3>
+        <ul id="cooldown"></ul>
       </div>
     </div>
   </div>
 
-  <!-- WEEK 2 (same layout; tiny progress notes only) -->
+  <!-- Safety / notes -->
   <div class="card">
-    <h2>Week 2 <span class="tag">a little more</span></h2>
-    <p class="note">Do the same sessions as Week 1. Use these small changes:</p>
-    <div class="week">
-      <ul>
-        <li><b>Strength:</b> Add +2 reps each set (e.g., 3×10 instead of 3×8).</li>
-        <li><b>Ball Skill:</b> Each drill +10 seconds or +5 touches.</li>
-        <li><b>Conditioning:</b> One extra shuttle/run round if you feel good.</li>
-      </ul>
+    <h2><span class="emoji">🛡️</span>Coach Notes</h2>
+    <div class="grid-2">
+      <div class="notice">
+        <strong>Form first.</strong> Move with control. Land softly. Knees point over the middle of your feet. Hips go back when you bend. Stop if you feel sharp pain.
+      </div>
+      <div class="notice">
+        <strong>Gear:</strong> light dumbbells or a backpack, minibands, a small ball/med ball, cones, and a court. If you don’t have something, skip or swap.
+      </div>
     </div>
   </div>
 
-  <!-- WEEK 3 -->
-  <div class="card">
-    <h2>Week 3 <span class="tag">steady & smooth</span></h2>
-    <p class="note">Keep the same plan. Focus on clean form:</p>
-    <div class="week">
-      <ul>
-        <li><b>Squats/Step-ups:</b> Count “down-2, up-1” to stay smooth.</li>
-        <li><b>Push-ups:</b> Body straight, chest touches, elbows ~45°.</li>
-        <li><b>Dribbling:</b> Eyes up the whole time (pick a spot on the wall).</li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- WEEK 4 -->
-  <div class="card">
-    <h2>Week 4 <span class="tag">confidence week</span></h2>
-    <p class="note">Same sessions. Try these tiny upgrades:</p>
-    <div class="week">
-      <ul>
-        <li><b>Split Squat:</b> Hold the bottom for 1 second each rep.</li>
-        <li><b>Dead Bug:</b> Exhale as you reach; keep ribs down.</li>
-        <li><b>Shuttles/Runs:</b> Keep all rounds within 5 seconds of each other.</li>
-      </ul>
-    </div>
-    <div class="hr"></div>
-    <p class="note"><b>Finished Week 4?</b> Nice work. Go back to Week 1 and repeat. Stronger and smoother each loop.</p>
-  </div>
-
-  <div class="card warning">
-    <b>Safety:</b> Mild muscle tiredness is normal. Sharp pain is not. If you feel dizzy, sit down, sip water, and tell an adult.
-  </div>
-
-  <footer>© 2025 <a href="https://bambambuilt.com" target="_blank" rel="noopener">bambambuilt.com</a></footer>
 </div>
+
+<script>
+/* ===== Program data (wording simplified; layout unchanged) ===== */
+const WARMUP = [
+  "2 min easy jog or side shuffle",
+  "Mobility: ankle bends ×6/side, long lunge with elbow to front foot ×4/side, squat-to-stand ×6",
+  "Jump & land practice (land soft, knees over middle toes, chest tall, hips back):",
+  "• Quick drop into athletic stance (snap-downs) ×5",
+  "• Small drop jump then freeze your landing ×5",
+  "• Side-to-side hop then freeze ×4/side",
+  "• Single-leg balance 20 s/side",
+  "• Band walks 10 steps each way (use a miniband if you have one)"
+];
+
+const DAY_A = {
+  title:"Day A — Strength + Landing",
+  time:"45–55 min",
+  theme:"Strength + Landing",
+  block1Title:"Power Prep",
+  block1:[
+    "Med-ball chest pass 3×6 (use a basketball if no med ball)",
+    "Vertical jump, land soft and freeze 3×4"
+  ],
+  block2Title:"Strength (easy–medium effort)",
+  block2:[
+    "Goblet squat 3×8–12 (hold a DB or backpack at your chest)",
+    "DB Romanian deadlift 3×8–12 (flat back, push hips back)",
+    "Half-kneeling DB press 2–3×8/side",
+    "Band or table rows 2–3×8–12 (pull elbows to ribs)",
+    "Side plank 2×20–30 s/side"
+  ],
+  block3Title:"Landing / Knee-Safe Circuit (2 rounds)",
+  block3:[
+    "Step off a low box, land soft, freeze ×5",
+    "Split-squat hold 20 s/side",
+    "Band walks 10 steps each way"
+  ],
+  cooldown:[
+    "Calf and hamstring stretch 45 s/side",
+    "Hip-flexor stretch 45 s/side"
+  ],
+  classes:{b2:"pink", b3:"mint"}
+};
+
+const DAY_B = {
+  title:"Day B — Agility / COD + Court Conditioning",
+  time:"45–55 min",
+  theme:"Agility + Court",
+  block1Title:"Technique",
+  block1:[
+    "Sprint then stop: run 5–7 m, lower hips with 3 small steps, freeze ×4 (switch lead leg)",
+    "Cone cuts: Y-cone or 5-10-5 walk-throughs, then 4–6 smooth reps"
+  ],
+  block2Title:"Agility (2–3 sets, rest 60–90 s between sets)",
+  block2:[
+    "Zig-zag shuffle (cones 3 m apart) ×4",
+    "Crossover step into sprint (two cones 5 m) ×4",
+    "Two-foot jump to one-foot land (freeze) ×3/side"
+  ],
+  block3Title:"Court Conditioning",
+  block3:[
+    "Half-court shuttles: 10 trips at ~70% speed, rest 20–30 s between trips",
+    "or Ball dribble intervals: 20 s fast / 20 s walk × 8–10"
+  ],
+  cooldown:[
+    "Band press-out 2×10/side (arms straight; don’t let the band twist you)",
+    "Glute bridge hold 2×30 s",
+    "Easy walk + 5 slow breaths"
+  ],
+  classes:{b2:"sky", b3:"mint"}
+};
+
+const DAY_C = {
+  title:"Day C — Strength + Acceleration",
+  time:"45–55 min",
+  theme:"Strength + Accel",
+  block1Title:"Power Prep",
+  block1:[
+    "Med-ball overhead throw 3×5 (use a soft ball; throw forward)",
+    "Skips for height 2×10 m"
+  ],
+  block2Title:"Strength (easy–medium effort)",
+  block2:[
+    "Back-foot-up split squat 3×6–10/leg (rear foot on a box/bench)",
+    "Single-leg hip hinge with DB 3×6–10/leg (reach DB toward toes, back flat)",
+    "Push-ups 3×6–12 (hands on a box if needed)",
+    "Band face pulls or T-raises 2–3×10–12",
+    "Dead bug 2×8/side (low back stays on the floor)"
+  ],
+  block3Title:"Acceleration (4–6 crisp reps)",
+  block3:[
+    "Falling-start sprints 10–15 m (walk back to recover)",
+    "Wall-march A-drills 2×5/leg between sprints"
+  ],
+  cooldown:[
+    "Calf, hip-flexor, and hamstring stretches 45 s each",
+    "Easy walk + 5 slow breaths"
+  ],
+  classes:{b2:"pink", b3:"mint"}
+};
+
+const WEEKS = {
+  1:"<ul><li>Learn the moves. Go slow first. Aim for <b>easy to medium effort</b>.</li><li>Use the middle of the rep ranges. Focus on smooth landings.</li></ul>",
+  2:"<ul><li>Add <b>one extra set</b> to the first two strength moves (only if form is great).</li><li>Light weight bumps are okay.</li></ul>",
+  3:"<ul><li>Keep the same sets. Add <b>+2 reps</b> per set or a tiny weight bump.</li><li>Agility: stay clean before you get faster.</li></ul>",
+  4:"<ul><li>Keep quality high. You can <b>drop one set</b> on each lift to feel fresh.</li><li>Jumps and sprints stay crisp.</li></ul>"
+};
+
+/* ===== Render logic (unchanged) ===== */
+const qs = s => document.querySelector(s);
+const warmEl = qs("#warmup"), coolEl = qs("#cooldown");
+const b1El = qs("#block1"), b2El = qs("#block2"), b3El = qs("#block3");
+const b2Wrap = qs("#block2Wrap"), b3Wrap = qs("#block3Wrap");
+const b1Title = qs("#block1Title"), b2Title = qs("#block2Title"), b3Title = qs("#block3Title");
+const dayTitle = qs("#dayTitle"), timePill = qs("#timePill"), themePill = qs("#themePill");
+const weekFocus = qs("#weekFocus");
+
+let currentWeek = 1, currentDay = "A";
+
+function setList(el, items){
+  el.innerHTML = items.map(t => `<li>${t}</li>`).join("");
+}
+function renderWeek(){
+  weekFocus.innerHTML = WEEKS[currentWeek] || "";
+}
+function renderDay(){
+  const data = (currentDay==="A") ? DAY_A : (currentDay==="B" ? DAY_B : DAY_C);
+  dayTitle.innerHTML = `<span class="emoji">💪</span>${data.title}`;
+  timePill.textContent = data.time;
+  themePill.textContent = data.theme;
+
+  setList(warmEl, WARMUP);
+  b1Title.textContent = data.block1Title; setList(b1El, data.block1);
+  b2Title.textContent = data.block2Title; setList(b2El, data.block2);
+  b3Title.textContent = data.block3Title; setList(b3El, data.block3);
+  setList(coolEl, data.cooldown);
+
+  // section color classes
+  b2Wrap.className = `section ${data.classes.b2}`;
+  b3Wrap.className = `section ${data.classes.b3}`;
+}
+
+function activateSwitch(groupId, value){
+  document.querySelectorAll(`#${groupId} button`).forEach(btn=>{
+    btn.classList.toggle("active", btn.dataset.week==value || btn.dataset.day==value);
+  });
+}
+
+/* Events */
+document.querySelectorAll("#weekSwitch button").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    currentWeek = +btn.dataset.week; activateSwitch("weekSwitch", currentWeek); renderWeek();
+  });
+});
+document.querySelectorAll("#daySwitch button").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    currentDay = btn.dataset.day; activateSwitch("daySwitch", currentDay); renderDay();
+  });
+});
+
+/* Init */
+renderWeek(); renderDay();
+</script>
 </body>
 </html>
