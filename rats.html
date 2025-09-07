@@ -3,365 +3,193 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>AAU 13U — Strength & Court Prep (4-Week)</title>
+<title>BAMBAM — Girls Hoops (Age 13) Program</title>
 
-<!-- Friendly, inviting palette -->
 <style>
 :root{
-  --bg:#0f1220;        /* deep navy */
-  --card:#171b2d;      /* soft indigo card */
-  --ink:#f6f7ff;       /* near-white text */
-  --muted:#cdd2ea;     /* muted text */
-  --border:#283152;    /* card border */
-  --accent:#ff8bd1;    /* pink accent for buttons */
-  --accent-2:#93c5fd;  /* sky accent */
-  --accent-3:#a7f3d0;  /* mint accent */
-
-  /* Section bar colors (left stripes) */
-  --bar-warm:#ffd166;      /* warm-up: friendly yellow */
-  --bar-power:#c084fc;     /* power prep: lilac */
-  --bar-strength:#f78da7;  /* strength: pink coral */
-  --bar-agility:#7dd3fc;   /* agility/COD: sky */
-  --bar-cond:#6ee7b7;      /* conditioning: mint */
-  --bar-cool:#60a5fa;      /* cooldown: blue */
-  --bar-note:#9aa3b2;      /* grey for notes/hero text */
+  /* keep the structure; friendly colors */
+  --bg:#0f1115;         /* page background */
+  --card:#161a22;       /* card background */
+  --ink:#eef1f7;        /* main text */
+  --muted:#b6bdcb;      /* secondary text */
+  --accent:#ff77c8;     /* highlight (fun pink) */
+  --accent2:#8be1ff;    /* light blue details */
+  --border:#2a3345;     /* card border */
+  --tag:#21283a;        /* tag chip */
 }
 *{box-sizing:border-box}
-body{
-  margin:0; padding:24px;
-  background: radial-gradient(1200px 800px at 20% -10%, #1a1f36 0%, var(--bg) 55%);
-  color:var(--ink);
-  font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
-}
-h1,h2,h3{margin:0 0 10px; line-height:1.15}
+body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
+     font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+h1,h2,h3{margin:0 0 8px;line-height:1.15}
 h1{font-size:28px}
-h2{font-size:20px; color:var(--muted); font-weight:700}
-h3{font-size:16px; color:var(--muted); font-weight:600}
-.wrap{max-width:900px; margin:0 auto; display:grid; gap:16px}
-.card{
-  background:var(--card); border:1px solid var(--border);
-  border-radius:16px; padding:16px;
-  box-shadow:0 8px 30px rgba(0,0,0,.25)
-}
-.row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+h2{font-size:20px;color:var(--muted);font-weight:600}
+h3{font-size:16px;color:var(--muted);font-weight:600}
+.wrap{max-width:900px;margin:0 auto;display:grid;gap:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:0 4px 18px rgba(0,0,0,.25)}
+.pill{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:var(--tag);color:var(--muted);font-size:12px;margin-right:6px}
+.section{display:flex;justify-content:space-between;align-items:center;gap:8px}
+ul{margin:8px 0 0 20px}
+li{margin:6px 0}
+.small{font-size:12px;color:var(--muted)}
 .center{text-align:center}
-button{
-  background:linear-gradient(135deg, var(--accent), #ffb0df);
-  color:#231b26; border:0; border-radius:999px; padding:10px 14px;
-  font-weight:700; letter-spacing:.2px; cursor:pointer
-}
-button.ghost{
-  background:#192036; border:1px solid var(--border); color:var(--ink); font-weight:600
-}
-button.small{padding:6px 10px; font-size:13px}
-button:active{transform:translateY(1px)}
-
-.pill{display:inline-block; padding:4px 10px; border-radius:999px;
-      border:1px solid var(--border); background:#121831; color:#bfc6e4; font-size:12px}
-
-.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-@media (max-width:700px){ .grid-2{grid-template-columns:1fr} }
-
-.notice{background:#11172b; border-left:4px solid var(--bar-note);
-        padding:10px 12px; border-radius:10px}
-
-.section{
-  background:#11172b; border:1px solid #222a49; border-radius:14px; padding:12px;
-  position:relative; overflow:hidden
-}
-.section::before{
-  content:""; position:absolute; left:12px; top:12px; bottom:12px; width:6px; border-radius:6px;
-  background:var(--bar-note)
-}
-.section .inner{margin-left:20px}
-.section.yellow::before{background:var(--bar-warm)}
-.section.lilac::before{background:var(--bar-power)}
-.section.pink::before{background:var(--bar-strength)}
-.section.sky::before{background:var(--bar-agility)}
-.section.mint::before{background:var(--bar-cond)}
-.section.blue::before{background:var(--bar-cool)}
-.section.gray::before{background:var(--bar-note)}
-
-ul{margin:8px 0 0 22px} li{margin:4px 0}
-.small{font-size:12px; color:#aeb6d6}
-h2 .emoji{font-size:20px; margin-right:6px}
-
-/* Top controls */
-.controls{justify-content:center}
-.switch{display:flex; gap:6px; background:#121831; padding:6px; border-radius:999px; border:1px solid var(--border)}
-.switch button{background:#171f3b; color:#cdd2ea; border:1px solid #283152}
-.switch button.active{background:linear-gradient(135deg, var(--accent-2), #a5b4fc); color:#0f1220; border:0}
-
-/* Print-friendly */
-@media print{
-  .controls, .print-hint{display:none}
-  body{background:#fff; color:#111}
-  .card{box-shadow:none; border-color:#ddd}
-  .section{background:#fff}
-}
+.hr{height:2px;background:linear-gradient(90deg,var(--accent),transparent);border:0;margin:10px 0 0 0}
+.tip{background:#1a2130;border-left:4px solid var(--accent2);padding:10px 12px;border-radius:8px;margin-top:8px}
+.warn{background:#201b1f;border-left:4px solid var(--accent);padding:10px 12px;border-radius:8px;margin-top:8px}
+footer{margin-top:24px;text-align:center;color:#9aa3b2;font-size:12px}
+footer a{color:#9aa3b2;text-decoration:none}
+footer a:hover{color:#e8eaf0}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <!-- Header -->
   <div class="card">
-    <h1 class="center">🏀 AAU 13U — Strength & Court Prep</h1>
-    <div class="center small">4-week plan for 13-year-old girls • repeat after week 4 • focus on technique & fun ✨</div>
-
-    <!-- Controls -->
-    <div class="row controls" style="margin-top:12px">
-      <div class="switch" id="weekSwitch" role="tablist" aria-label="Select week">
-        <button class="small active" data-week="1">Week 1</button>
-        <button class="small" data-week="2">Week 2</button>
-        <button class="small" data-week="3">Week 3</button>
-        <button class="small" data-week="4">Week 4</button>
-      </div>
-
-      <div class="switch" id="daySwitch" role="tablist" aria-label="Select day">
-        <button class="small active" data-day="A">Day A</button>
-        <button class="small" data-day="B">Day B</button>
-        <button class="small" data-day="C">Day C</button>
-      </div>
-
-      <button class="ghost small" onclick="window.print()">Print</button>
-    </div>
-
-    <div class="center small print-hint" style="margin-top:8px">Tip: run 2–3 sessions per week (A, B, C). On busy/tourney weeks, do B + one of A/C.</div>
-  </div>
-
-  <!-- Week guidance -->
-  <div class="card" id="weekCard">
-    <h2><span class="emoji">📅</span>Weekly Focus</h2>
-    <div class="section gray"><div class="inner" id="weekFocus"></div></div>
-  </div>
-
-  <!-- Program blocks -->
-  <div class="card" id="contentCard">
-    <div class="row" style="justify-content:space-between">
-      <h2 id="dayTitle"><span class="emoji">💪</span>Day A</h2>
+    <div class="section">
+      <h1>Girls Hoops (Age 13) — 3 Day Plan</h1>
       <div>
-        <span class="pill" id="timePill">45–55 min</span>
-        <span class="pill" id="themePill">Strength + Landing</span>
+        <span class="pill">Safe • Simple • Basketball-specific</span>
+        <span class="pill">Repeat 4-week cycle</span>
       </div>
     </div>
-
-    <!-- Warm-Up -->
-    <div class="section yellow" style="margin-top:8px">
-      <div class="inner">
-        <h3>Warm-Up (10 min)</h3>
-        <ul id="warmup"></ul>
-      </div>
-    </div>
-
-    <!-- Power / Skill prep -->
-    <div class="section lilac" style="margin-top:10px">
-      <div class="inner">
-        <h3 id="block1Title">Power Prep</h3>
-        <ul id="block1"></ul>
-      </div>
-    </div>
-
-    <!-- Main Strength / Agility -->
-    <div class="section pink sky" id="block2Wrap" style="margin-top:10px">
-      <div class="inner">
-        <h3 id="block2Title">Strength</h3>
-        <ul id="block2"></ul>
-      </div>
-    </div>
-
-    <!-- Conditioning / Speed -->
-    <div class="section mint" id="block3Wrap" style="margin-top:10px">
-      <div class="inner">
-        <h3 id="block3Title">Landing / ACL Mini-Circuit</h3>
-        <ul id="block3"></ul>
-      </div>
-    </div>
-
-    <!-- Cooldown -->
-    <div class="section blue" style="margin-top:10px">
-      <div class="inner">
-        <h3>Cool-Down (5 min)</h3>
-        <ul id="cooldown"></ul>
-      </div>
-    </div>
+    <div class="hr"></div>
+    <p class="small">How it works: Pick **Day A, Day B, or Day C** each practice day. In a month, you’ll do each one several times. Keep movements smooth, never rushed. If anything hurts (sharp), stop.</p>
   </div>
 
-  <!-- Safety / notes -->
+  <!-- WARM-UP (same spot, just kid-friendly words) -->
   <div class="card">
-    <h2><span class="emoji">🛡️</span>Coach Notes</h2>
-    <div class="grid-2">
-      <div class="notice">
-        <strong>Form first.</strong> RPE ~6–7 (easy-moderate). Stop with pain. Keep landings quiet; knees track over middle toes; chest tall; hips back.
-      </div>
-      <div class="notice">
-        <strong>Equipment:</strong> light DBs, minibands, a med ball, cones, and a court/hoop. Swap bands/backpack if DBs unavailable.
-      </div>
-    </div>
+    <h2>Warm-Up (8–10 min)</h2>
+    <ul>
+      <li><strong>Easy move</strong> (3–4 min): fast walk, light jog, or jump rope.</li>
+      <li><strong>Body wake-up</strong> (2 rounds):
+        <ul>
+          <li>10 arm circles forward + 10 back (stand tall).</li>
+          <li>10 bodyweight squats (feet shoulder-width, heels down).</li>
+          <li>10 glute bridges (lie on back, push hips up, squeeze butt).</li>
+          <li>10 step-ups each leg (low box/step, quiet feet).</li>
+        </ul>
+      </li>
+      <li><strong>Ball feel</strong> (60–90s): gentle pound dribbles R/L, side-to-side.</li>
+    </ul>
+    <div class="tip">Goal: feel warm, joints happy, breathing calm. You should be ready, not tired.</div>
   </div>
 
+  <!-- DAY A -->
+  <div class="card">
+    <div class="section">
+      <h2>Day A — Strong Legs &amp; Straight-Ahead Speed</h2>
+      <span class="pill">~35–45 min</span>
+    </div>
+    <ul>
+      <li><strong>Goblet Squat</strong> — <em>3 sets × 6–8 reps</em><br>
+        <span class="small">Hold 1 dumbbell close to your chest. Feet under shoulders. Sit down like a chair, keep heels down and chest up. Stand tall. (No weight? Hug a backpack.)</span>
+      </li>
+      <li><strong>Hip Hinge (RDL)</strong> — <em>3×8</em><br>
+        <span class="small">Hold 2 dumbbells or 1. Soft knees. Push hips back like you’re closing a car door with your butt. Keep back flat. Stand up by squeezing your butt.</span>
+      </li>
+      <li><strong>Half-Kneeling DB Press</strong> — <em>3×8 each side</em><br>
+        <span class="small">One knee down, other foot forward. Squeeze your butt and tummy. Press the dumbbell straight up, lower slow. Switch sides.</span>
+      </li>
+      <li><strong>Quick Shuttle (straight)</strong> — <em>4–6 runs × 10–15 m</em><br>
+        <span class="small">Sprint to the line, touch it with your hand, run back. Stand up tall between reps. Rest until breathing feels ready.</span>
+      </li>
+      <li><strong>Small Jumps (Pogos)</strong> — <em>3×6–8 jumps</em><br>
+        <span class="small">Hands on hips, tiny quick jumps off the balls of your feet. Land soft. Stop if it gets loud or sloppy.</span>
+      </li>
+      <li><strong>Core — Dead Bug</strong> — <em>3×6 each side</em><br>
+        <span class="small">On your back, arms up, knees up. Slowly reach opposite arm/leg away, keep lower back on floor. Switch sides.</span>
+      </li>
+      <li><strong>Conditioning — Run/Walk</strong> — <em>6–8 rounds</em><br>
+        <span class="small">Run 20 sec (easy-fast), walk 40 sec. Keep all runs the same speed, not a sprint.</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- DAY B -->
+  <div class="card">
+    <div class="section">
+      <h2>Day B — Side-to-Side &amp; Upper Back</h2>
+      <span class="pill">~35–45 min</span>
+    </div>
+    <ul>
+      <li><strong>Split Squat</strong> — <em>3×6 each leg</em><br>
+        <span class="small">Long step like a lunge. Front foot flat. Bend both knees, drop straight down, then up. Torso tall. Add dumbbells if easy.</span>
+      </li>
+      <li><strong>1-Arm DB Row</strong> — <em>3×8 each side</em><br>
+        <span class="small">One hand on bench or knee. Back flat. Pull weight to ribs. Lower slow. Switch sides.</span>
+      </li>
+      <li><strong>Hip Bridge</strong> — <em>3×12</em><br>
+        <span class="small">On back, feet flat. Push hips up, squeeze butt 1 second, lower slow. Knees don’t fall out.</span>
+      </li>
+      <li><strong>Lateral Shuffle</strong> — <em>3–5 sets</em><br>
+        <span class="small">Two cones ~5–6 m apart. Shuffle right to left and back (stay low, chest up, quiet feet). 10–15 sec each set.</span>
+      </li>
+      <li><strong>Line Hops (Side)</strong> — <em>3×10 hops</em><br>
+        <span class="small">Jump side-to-side over a line. Small, quick, soft landings.</span>
+      </li>
+      <li><strong>Core — Side Plank</strong> — <em>3×20–30 sec each side</em><br>
+        <span class="small">Elbow under shoulder, body straight like a board. Squeeze tummy and butt.</span>
+      </li>
+      <li><strong>Easy Bike/Row/Walk</strong> — <em>8–10 min</em><br>
+        <span class="small">Smooth pace, you can talk the whole time.</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- DAY C -->
+  <div class="card">
+    <div class="section">
+      <h2>Day C — Stops/Starts &amp; Core Control</h2>
+      <span class="pill">~35–45 min</span>
+    </div>
+    <ul>
+      <li><strong>Box Step-Ups</strong> — <em>3×8 each leg</em><br>
+        <span class="small">Knee-high or lower box. Step up with whole foot on box, stand tall, step down soft. Switch legs. Add dumbbells if easy.</span>
+      </li>
+      <li><strong>DB RDL → High Pull (light)</strong> — <em>3×6</em><br>
+        <span class="small">Do a small hip hinge, then stand fast and pull weights to chest height (elbows high), lower slow. Light weights only; smooth.</span>
+      </li>
+      <li><strong>Farmer Carry</strong> — <em>3×30–40 m</em><br>
+        <span class="small">Hold a dumbbell in each hand. Walk tall, shoulders down/back, quiet steps. No leaning.</span>
+      </li>
+      <li><strong>5-10-5 Shuttle</strong> — <em>3–5 sets</em><br>
+        <span class="small">Start in middle. Sprint 5 m → back 10 m → back 5 m. Touch each line. Rest until ready.</span>
+      </li>
+      <li><strong>Snap Jumps</strong> — <em>3×3</em><br>
+        <span class="small">Quarter squat, jump small, land soft in the same spot. Stick the landing for 1 second.</span>
+      </li>
+      <li><strong>Core — Pallof Press</strong> — <em>3×10 each side</em><br>
+        <span class="small">Band or cable at chest height. Stand sideways to it. Press arms straight out, don’t let your body twist, bring back in.</span>
+      </li>
+      <li><strong>Fartlek Run</strong> — <em>10–12 min</em><br>
+        <span class="small">Mostly easy jog. Every minute, run a little faster for 10–15 sec, then back to easy.</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- COOLDOWN -->
+  <div class="card">
+    <h2>Cool Down (5–7 min)</h2>
+    <ul>
+      <li>Slow walk and deep breaths (2–3 min).</li>
+      <li>Stretch: calf, hamstring, quad, hip flexor (about 30–40 sec each side).</li>
+      <li>Shoulders: doorway stretch (hands on door frame, gentle lean, 20–30 sec).</li>
+    </ul>
+    <div class="tip">You should feel calmer and ready to go on with your day.</div>
+  </div>
+
+  <!-- HOW TO PROGRESS (kept short & clear) -->
+  <div class="card">
+    <h2>How to Make It a Little Harder Each Week</h2>
+    <ul>
+      <li><strong>Week 1:</strong> Learn the moves. Use light weight. 2–3 sets.</li>
+      <li><strong>Week 2:</strong> Add 1 set on the first two strength moves.</li>
+      <li><strong>Week 3:</strong> Add 2 reps to each set <em>or</em> add a tiny weight (2.5–5 lb).</li>
+      <li><strong>Week 4:</strong> Easier week. Do one fewer set. Keep the form clean.</li>
+    </ul>
+    <div class="warn"><strong>Safety first:</strong> Movements should feel smooth and quiet. Pain = stop. Light and perfect beats heavy and sloppy.</div>
+  </div>
+
+  <footer>© 2025 <a href="https://bambambuilt.com" target="_blank" rel="noopener">bambambuilt.com</a>. All Rights Reserved.</footer>
 </div>
-
-<script>
-/* ===== Program data (simple, readable) ===== */
-const WARMUP = [
-  "2 min easy jog or shuffle",
-  "Mobility: ankle rocks ×6, world’s-greatest lunge ×4/side, squat-to-stand ×6",
-  "Neuromuscular/ACL (coach cues: land soft; knees over middle toes; chest tall; hips back):",
-  "• Snap-downs ×5 → Drop jump to stick (12–18″) ×5",
-  "• Lateral bound to stick ×4/side",
-  "• Single-leg balance 20 s/side",
-  "• Miniband lateral walks 10 steps each way"
-];
-
-const DAY_A = {
-  title:"Day A — Strength + Landing",
-  time:"45–55 min",
-  theme:"Strength + Landing",
-  block1Title:"Power Prep",
-  block1:[
-    "Med-ball chest pass 3×6",
-    "Vertical jump to stick 3×4"
-  ],
-  block2Title:"Strength (RPE 6–7)",
-  block2:[
-    "Goblet squat 3×8–12",
-    "DB Romanian deadlift 3×8–12",
-    "Half-kneeling DB press 2–3×8/side",
-    "TRX/band row 2–3×8–12",
-    "Side plank 2×20–30 s/side"
-  ],
-  block3Title:"Landing / ACL Mini-Circuit (2 rounds)",
-  block3:[
-    "Box drop to stick ×5",
-    "Split-squat isometric 20 s/side",
-    "Banded monster walk 10 steps each way"
-  ],
-  cooldown:[
-    "Calf + hamstring stretch 45 s/side",
-    "Hip flexor stretch 45 s/side"
-  ],
-  classes:{b2:"pink", b3:"mint"}
-};
-
-const DAY_B = {
-  title:"Day B — Agility / COD + Court Conditioning",
-  time:"45–55 min",
-  theme:"Agility + Court",
-  block1Title:"Technique",
-  block1:[
-    "Deceleration: sprint 5–7 m → sink hips with 3 small braking steps, stick ×4/leg lead",
-    "Cutting (closed): Y-cone or pro-agility 5-10-5 walk-throughs → 4–6 quality reps"
-  ],
-  block2Title:"Agility (2–3 sets, :60–:90 rest)",
-  block2:[
-    "Zig-zag shuffle (cones 3 m apart) ×4",
-    "Crossover step to sprint (two cones 5 m) ×4",
-    "Two-foot to single-leg hop (stick) ×3/side"
-  ],
-  block3Title:"Court Conditioning",
-  block3:[
-    "Tempo shuttles: 10× half-court down & back @ ~70% with :20–:30 rest",
-    "or Dribble intervals: :20 push / :20 walk × 8–10"
-  ],
-  cooldown:[
-    "Pallof press 2×10/side",
-    "Hip bridge hold 2×30 s",
-    "Easy walk + breathing"
-  ],
-  classes:{b2:"sky", b3:"mint"}
-};
-
-const DAY_C = {
-  title:"Day C — Strength + Acceleration",
-  time:"45–55 min",
-  theme:"Strength + Accel",
-  block1Title:"Power Prep",
-  block1:[
-    "Med-ball overhead throw 3×5",
-    "Skips for height 2×10 m"
-  ],
-  block2Title:"Strength (RPE 6–7)",
-  block2:[
-    "Rear-foot-elevated split squat 3×6–10/leg",
-    "DB single-leg RDL 3×6–10/leg",
-    "Push-ups (hands on box if needed) 3×6–12",
-    "Band face pull or Y-T-W 2–3×10–12",
-    "Dead bug 2×8/side"
-  ],
-  block3Title:"Acceleration (4–6 crisp reps)",
-  block3:[
-    "Falling start sprints 10–15 m (full walk-back rest)",
-    "Wall-march A-drills 2×5/leg between sprints"
-  ],
-  cooldown:[
-    "Calf + hip flexor + posterior chain 45 s each",
-    "Easy walk + breathing"
-  ],
-  classes:{b2:"pink", b3:"mint"}
-};
-
-const WEEKS = {
-  1:"<ul><li>Learn movements; prioritize great technique.</li><li>Use middle of rep ranges; 2–3 sets; RPE ~6.</li></ul>",
-  2:"<ul><li>Add <strong>+1 set</strong> to the first two strength lifts (if form is great).</li><li>Tiny load bump allowed.</li></ul>",
-  3:"<ul><li>Keep sets; add <strong>+2 reps</strong> per set or a small load bump (RPE ~6–7).</li><li>Agility still quality over speed.</li></ul>",
-  4:"<ul><li>Consolidate: drop one set on each lift.</li><li>Keep jumps/sprints crisp; finish feeling fresh.</li></ul>"
-};
-
-/* ===== Render logic ===== */
-const qs = s => document.querySelector(s);
-const warmEl = qs("#warmup"), coolEl = qs("#cooldown");
-const b1El = qs("#block1"), b2El = qs("#block2"), b3El = qs("#block3");
-const b2Wrap = qs("#block2Wrap"), b3Wrap = qs("#block3Wrap");
-const b1Title = qs("#block1Title"), b2Title = qs("#block2Title"), b3Title = qs("#block3Title");
-const dayTitle = qs("#dayTitle"), timePill = qs("#timePill"), themePill = qs("#themePill");
-const weekFocus = qs("#weekFocus");
-
-let currentWeek = 1, currentDay = "A";
-
-function setList(el, items){
-  el.innerHTML = items.map(t => `<li>${t}</li>`).join("");
-}
-function renderWeek(){
-  weekFocus.innerHTML = WEEKS[currentWeek] || "";
-}
-function renderDay(){
-  const data = (currentDay==="A") ? DAY_A : (currentDay==="B" ? DAY_B : DAY_C);
-  dayTitle.innerHTML = `<span class="emoji">💪</span>${data.title}`;
-  timePill.textContent = data.time;
-  themePill.textContent = data.theme;
-
-  setList(warmEl, WARMUP);
-  b1Title.textContent = data.block1Title; setList(b1El, data.block1);
-  b2Title.textContent = data.block2Title; setList(b2El, data.block2);
-  b3Title.textContent = data.block3Title; setList(b3El, data.block3);
-  setList(coolEl, data.cooldown);
-
-  // section color classes
-  b2Wrap.className = `section ${data.classes.b2}`;
-  b3Wrap.className = `section ${data.classes.b3}`;
-}
-
-function activateSwitch(groupId, value){
-  document.querySelectorAll(`#${groupId} button`).forEach(btn=>{
-    btn.classList.toggle("active", btn.dataset.week==value || btn.dataset.day==value);
-  });
-}
-
-/* Events */
-document.querySelectorAll("#weekSwitch button").forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    currentWeek = +btn.dataset.week; activateSwitch("weekSwitch", currentWeek); renderWeek();
-  });
-});
-document.querySelectorAll("#daySwitch button").forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    currentDay = btn.dataset.day; activateSwitch("daySwitch", currentDay); renderDay();
-  });
-});
-
-/* Init */
-renderWeek(); renderDay();
-</script>
 </body>
 </html>
