@@ -163,7 +163,13 @@ const DB2="2×50 lb", DB1="1×50 lb", KB53="53 lb", KB35="35 lb", BOX='24"';
 /* ===== FILTERS ===== */
 const FILTER_KEYS=["pull","box","wb","rope","run","row","db","kb","hspu"];
 let excluded=new Set(JSON.parse(localStorage.getItem("bb_excluded")||"[]"));
-function saveFilters(){localStorage.setItem("bb_excluded",JSON.stringify([...excluded]));renderByDate(currentDate);}
+
+/* >>> CHANGE: rebuild the plan when filters change so generators/named overrides respect them <<< */
+function saveFilters(){
+  localStorage.setItem("bb_excluded",JSON.stringify([...excluded]));
+  YEAR = buildYear(currentYear);        // <— rebuild with current exclusions
+  renderByDate(currentDate);            // re-render the currently viewed day
+}
 function showFilterStatus(){
   const el=document.getElementById("filterStatus");
   el.textContent = excluded.size ? "Filters applied" : "No filters applied";
@@ -232,11 +238,10 @@ function buildCooldown(w){const m=tagText(w.body),p=[];
   if(m.kb)p.push(CD.kb); if(m.db)p.push(CD.db); if(m.box)p.push(CD.box); if(!p.length)p.push(CD.general);
   return p.slice(0,2).join('<br><br>'); }
 
-/* ===== NAMED WODS (INLINE — keep your full list if you had more) ===== */
+/* ===== NAMED WODS (INLINE) ===== */
 const BENCH=(()=>{
   const W=(title,type,time,body,notes="")=>({title,type,time,body,notes});
   const list=[];
-  /* (Same subset as before; keep/extend as you like) */
   list.push(
     W("Angie","For Time","20–40",["For time:","• 100 Pull-ups","• 100 Push-ups","• 100 Sit-ups","• 100 Air Squats"],"Partition as needed."),
     W("Annie","For Time","10–20",["For time:","• 50-40-30-20-10 Double-unders","• 50-40-30-20-10 Sit-ups"],"Add easy jog if <20."),
