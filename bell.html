@@ -3,7 +3,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Today's Workout — Kettlebell</title>
-  <meta name="description" content="Single-page kettlebell training: Mobility Warm-Up and Workout of the Day.">
+  <meta name="description" content="Daily 30‑minute kettlebell training: Mobility + auto‑generated WOD from a 7‑day balanced rotation.">
   <style>
     :root{
       --bg:#0f1115;
@@ -35,33 +35,33 @@
     header{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap;margin-bottom:18px}
     header h1{font-size:clamp(28px,4vw,40px);margin:0;font-weight:800;letter-spacing:.2px}
     header .date{font-variant-numeric:tabular-nums;color:var(--muted);font-family:var(--mono)}
+    .controls{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
+    .btn{background:transparent;border:1px solid rgba(255,255,255,.2);padding:8px 12px;border-radius:10px;color:var(--ink);cursor:pointer}
+    .btn:focus{outline:2px solid rgba(125,211,252,.25);outline-offset:2px}
+    .pill{padding:8px 12px;border:1px solid rgba(255,255,255,.12);border-radius:999px;color:var(--muted);font-family:var(--mono)}
     .panel{position:relative;background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px;margin:14px 0}
     .panel h2{margin:0 0 8px 0;font-size:clamp(18px,2.5vw,22px)}
     .sub{color:var(--muted);margin:0 0 12px 0}
     ol,ul{margin:0 0 0 22px}
-    .grid{display:grid;grid-template-columns:1fr;gap:14px}
-    @media(min-width:860px){.grid{grid-template-columns:1fr 1fr}}
     .badge{display:inline-block;padding:2px 8px;border-radius:999px;background:rgba(125,211,252,.12);color:var(--accent);font-family:var(--mono);font-size:12px;margin-left:8px;vertical-align:2px}
     .meta{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 0 0;color:var(--muted);font-size:14px}
     .timer{display:flex;align-items:center;gap:10px;margin-top:10px}
-    .timer button{background:transparent;border:1px solid rgba(255,255,255,.2);padding:8px 12px;border-radius:10px;color:var(--ink);cursor:pointer}
     .timer .clock{font-family:var(--mono);font-size:20px;padding:4px 10px;border-radius:8px;background:#0b0d12}
     @media (prefers-color-scheme: light){
       .timer .clock{background:#eef2ff}
       .panel{border-color:#e5e7eb}
-      .timer button{border-color:#cbd5e1}
+      .btn{border-color:#cbd5e1}
     }
     .checklist{list-style:none;padding:0;margin:0}
     .checklist li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px dashed rgba(255,255,255,.08)}
     .checklist input{margin-top:4px;accent-color:var(--accent)}
     .details{font-size:13px;color:var(--muted)}
-
     /* color bars */
     .bar{position:relative;padding-left:16px}
     .bar:before{content:"";position:absolute;left:-1px;top:-1px;bottom:-1px;width:8px;border-radius:12px 0 0 12px}
     .bar-warn:before{background:var(--warn)}
     .bar-bad:before{background:var(--bad)}
-
+    footer{margin-top:16px;color:var(--muted);font-size:12px}
   </style>
 </head>
 <body>
@@ -71,6 +71,13 @@
       <div class="date" id="today"></div>
       <span class="badge">Kettlebell · 30 min</span>
     </header>
+
+    <div class="controls">
+      <button class="btn" id="prevBtn">◀︎ Prev</button>
+      <button class="btn" id="todayBtn">Today</button>
+      <button class="btn" id="nextBtn">Next ▶︎</button>
+      <div class="pill" id="cycleInfo">Cycle: —</div>
+    </div>
 
     <div class="panel bar bar-warn">
       <h2>Mobility Warm-Up</h2>
@@ -119,57 +126,13 @@
 
     <div class="panel bar bar-bad">
       <h2>Workout for the Day</h2>
-      <p class="sub">Full-body circuit. 3 rounds. ~20–22 minutes total. Rest ~60–90s between rounds.</p>
-
-      <ol class="checklist">
-        <li>
-          <input type="checkbox" aria-label="Swings">
-          <div>
-            <b>Two-Hand Swings</b>
-            <div class="details">15–20 reps · use your 53 lb if crisp. Hinge, snap, float to chest height.</div>
-          </div>
-        </li>
-        <li>
-          <input type="checkbox" aria-label="Goblet Squats">
-          <div>
-            <b>Goblet Squats</b>
-            <div class="details">10–12 reps · full depth, torso tall, tighten abs at the bottom.</div>
-          </div>
-        </li>
-        <li>
-          <input type="checkbox" aria-label="Clean and Push Press">
-          <div>
-            <b>Clean &amp; Push Press</b>
-            <div class="details">8 each side · clean to rack, slight leg drive, lockout overhead, switch sides.</div>
-          </div>
-        </li>
-        <li>
-          <input type="checkbox" aria-label="Renegade Row">
-          <div>
-            <b>Renegade Row</b>
-            <div class="details">8–10 each side · plank solid, minimal hip roll. Option: single-arm bent-over row.</div>
-          </div>
-        </li>
-        <li>
-          <input type="checkbox" aria-label="Snatch or High Pull">
-          <div>
-            <b>Snatch (or High Pull)</b>
-            <div class="details">6–10 each side · use ~40 lb for snatch. Smooth punch through; no banging the forearm.</div>
-          </div>
-        </li>
-        <li>
-          <input type="checkbox" aria-label="Plank">
-          <div>
-            <b>Plank Hold</b>
-            <div class="details">30–45 seconds · squeeze glutes and quads; breathe low.</div>
-          </div>
-        </li>
-      </ol>
+      <p class="sub" id="subline">Full‑body circuit. 3 rounds. ~20–22 minutes total. Rest ~60–90s between rounds.</p>
+      <ol class="checklist" id="wodList"></ol>
 
       <div class="timer">
-        <button id="startBtn" type="button">Start 30:00 Timer</button>
+        <div class="btn" id="startBtn">Start 30:00 Timer</div>
         <div class="clock" id="clock">30:00</div>
-        <button id="resetBtn" type="button">Reset</button>
+        <div class="btn" id="resetBtn">Reset</div>
       </div>
 
       <div class="meta">
@@ -184,59 +147,188 @@
       <div class="note" contenteditable="true" spellcheck="false" style="border-left:3px solid var(--accent);padding:8px 12px;background:rgba(125,211,252,.08);border-radius:8px">Type notes here…</div>
     </div>
 
-    <footer style="margin-top:16px;color:var(--muted);font-size:12px">
-      <div>Edit this file to change the session. All content is local. No external libraries.</div>
+    <footer>
+      <div>Rotation is deterministic from the date. Same date = same workout. Tomorrow = new workout.</div>
       <div id="tz"></div>
     </footer>
   </div>
 
   <script>
-    // Stamp today's date
-    const d = new Date();
-    const fmt = d.toLocaleDateString(undefined, { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-    document.getElementById('today').textContent = fmt;
+    // ---------- Utilities ----------
+    function ymdKey(d){ return d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate(); }
+    // Simple deterministic PRNG from seed
+    function lcg(seed){
+      let s = seed >>> 0;
+      return function(){
+        s = (1664525 * s + 1013904223) >>> 0;
+        return s / 0x100000000; // [0,1)
+      };
+    }
+    function pickN(rng, arr, n){
+      const pool = arr.slice();
+      const out = [];
+      while(out.length < Math.min(n, pool.length)){
+        const i = Math.floor(rng()*pool.length);
+        out.push(pool.splice(i,1)[0]);
+      }
+      return out;
+    }
+    function listItem(text){
+      const li = document.createElement('li');
+      li.innerHTML = '<input type="checkbox" aria-label="'+text.replace(/"/g,'&quot;')+'"><div><b>'+text.split(' — ')[0]+'</b>'+(text.includes(' — ')?'<div class="details">'+text.split(' — ')[1]+'</div>':'')+'</div>';
+      return li;
+    }
 
-    // Show timezone
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Local time';
-    document.getElementById('tz').textContent = 'Timezone: ' + tz;
+    // ---------- Movement Pools ----------
+    const pools = {
+      hinge: [
+        "Two‑hand swings — 15–20 reps · heavy bell if crisp",
+        "One‑hand swings — 10–15/side · anti‑rotation core",
+        "Dead‑stop swings — 10–12 · reset each rep, power",
+        "High pull — 8–12/side · snap hips, elbow high",
+        "Snatch — 6–10/side · smooth punch through",
+        "KB deadlift — 8–12 · hinge clean, braced spine",
+        "Single‑leg RDL — 8–10/side · balance, slow tempo"
+      ],
+      squat: [
+        "Goblet squats — 10–12 · full depth, torso tall",
+        "Front‑rack squats — 8–10 · single or double",
+        "Thruster — 6–10/side · squat to press",
+        "Reverse lunge (rack) — 8–10/side · long step",
+        "Split squat — 8–12/side · slow 3‑1‑1 tempo"
+      ],
+      push: [
+        "Strict press — 6–10/side · ribs down, no lean",
+        "Push press — 6–10/side · slight leg drive",
+        "Jerk (single) — 4–6/side · dip‑drive‑drop",
+        "Floor press — 8–12/side · pause, crush handle",
+        "Half‑kneeling press — 6–10/side · glute tight"
+      ],
+      pull: [
+        "Renegade row — 8–10/side · plank tight, no sway",
+        "Bent‑over row — 10–12/side · squeeze mid‑back",
+        "Gorilla row — 8–12/side · alternating",
+        "Upright row — 8–12 · elbows high",
+        "KB plank drag — 8–12/side · anti‑rotation"
+      ],
+      core: [
+        "Plank hold — 30–45 s · squeeze glutes and quads",
+        "Side plank row — 6–10/side · lats + obliques",
+        "Dead bug with KB — 8–12/side · slow control",
+        "Russian twist — 12–20 · light bell, no spine flex",
+        "Hollow hold — 20–40 s · low back down"
+      ],
+      mobility: [
+        "Turkish get‑up — 1–3/side · smooth stops",
+        "Windmill — 6–8/side · hinge to hip, stacked shoulder",
+        "Halo — 8/dir · elbows in, tall kneel optional",
+        "Arm bar — 3–5/side · slow, pack shoulder",
+        "Prying goblet squat — 3× bottom hold, 3 breaths"
+      ],
+      flow: [
+        "Clean → squat → press — 4–6/side · continuous",
+        "Swing → snatch → reverse lunge — 3–5/side",
+        "Swing → squat combo — 6–10 · steady pace",
+        "EMOM light complex — 10 min · 3‑4 moves",
+        "Ladder 1→5 clean & press — alt sides"
+      ]
+    };
 
-    // Simple 30-minute countdown
+    // ---------- 7‑Day Rotation ----------
+    const cycle = [
+      { name: "Posterior Chain Power", picks: {hinge:2, squat:1, push:1, core:1, flow:1} },
+      { name: "Lower Push",            picks: {squat:2, hinge:1, pull:1, core:1, mobility:1} },
+      { name: "Upper Push",            picks: {push:2, hinge:1, squat:1, core:1, mobility:1} },
+      { name: "Pull & Core Stability", picks: {pull:2, hinge:1, squat:1, core:1, mobility:1} },
+      { name: "Full‑Body Flow",        picks: {flow:2, hinge:1, push:1, squat:1, core:1} },
+      { name: "Mobility & Endurance",  picks: {mobility:2, hinge:1, pull:1, push:1, core:1} },
+      { name: "Conditioning Complex",  picks: {flow:1, hinge:1, squat:1, push:1, pull:1, core:1} }
+    ];
+
+    // ---------- State ----------
+    let base = new Date();
+    const todayReal = new Date();
+
+    function renderAll(){
+      // Date stamp
+      const fmt = base.toLocaleDateString(undefined, { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+      document.getElementById('today').textContent = fmt;
+      document.getElementById('tz').textContent = 'Timezone: ' + (Intl.DateTimeFormat().resolvedOptions().timeZone || 'Local');
+
+      // Cycle day: deterministic offset based on ISO week
+      const dayIdx = (Math.floor((base - new Date(base.getFullYear(),0,1)) / 86400000) + 1) % 7; // 0..6 rolling
+      const plan = cycle[dayIdx];
+      document.getElementById('cycleInfo').textContent = 'Cycle: ' + plan.name;
+
+      // Build WOD deterministically from date seed
+      const seed = ymdKey(base) + dayIdx * 97;
+      const rng = lcg(seed);
+      const items = [];
+
+      Object.entries(plan.picks).forEach(([k,n])=>{
+        items.push(...pickN(rng, pools[k], n));
+      });
+
+      // Write list
+      const list = document.getElementById('wodList');
+      list.innerHTML = '';
+      items.forEach(t => list.appendChild(listItem(t)));
+
+      // Subline tweak per day
+      const subs = [
+        "3 rounds. Rest ~60–90s between rounds.",
+        "3 rounds. Slow tempo on squats/lunges.",
+        "EMOM style optional for presses (6–8 min).",
+        "2–3 rounds. Plank‑heavy; keep form strict.",
+        "Flow pacing. Breathe steady. 15–18 min main set.",
+        "Get‑ups unhurried. Accumulate quality time under tension.",
+        "Ladder or EMOM. Keep transitions tight."
+      ];
+      document.getElementById('subline').textContent = subs[dayIdx] + " Aim for ~20–22 min of work inside 30 min total.";
+    }
+
+    // Controls
+    document.getElementById('todayBtn').addEventListener('click', ()=>{ base = new Date(todayReal); renderAll(); });
+    document.getElementById('prevBtn').addEventListener('click', ()=>{ base.setDate(base.getDate()-1); renderAll(); });
+    document.getElementById('nextBtn').addEventListener('click', ()=>{ base.setDate(base.getDate()+1); renderAll(); });
+
+    // Timer
     let total = 30 * 60; // seconds
     let left = total;
     let ticking = null;
-
-    function render(){
+    function renderClock(){
       const m = Math.floor(left / 60).toString().padStart(2,'0');
       const s = Math.floor(left % 60).toString().padStart(2,'0');
       document.getElementById('clock').textContent = m + ':' + s;
     }
-
-    function start(){
+    function startTimer(){
       if (ticking) return;
       ticking = setInterval(()=>{
         left = Math.max(0, left - 1);
-        render();
+        renderClock();
         if (left === 0){
           clearInterval(ticking);
           ticking = null;
-          // Basic visual ping
-          document.getElementById('clock').style.background = 'var(--bad)';
-          document.getElementById('clock').style.color = '#000';
+          const c = document.getElementById('clock');
+          c.style.background = 'var(--bad)';
+          c.style.color = '#000';
         }
       }, 1000);
     }
-
-    function reset(){
+    function resetTimer(){
       if (ticking){ clearInterval(ticking); ticking = null; }
       left = total;
-      document.getElementById('clock').style.background = '';
-      document.getElementById('clock').style.color = '';
-      render();
+      const c = document.getElementById('clock');
+      c.style.background = '';
+      c.style.color = '';
+      renderClock();
     }
+    document.getElementById('startBtn').addEventListener('click', startTimer);
+    document.getElementById('resetBtn').addEventListener('click', resetTimer);
 
-    document.getElementById('startBtn').addEventListener('click', start);
-    document.getElementById('resetBtn').addEventListener('click', reset);
-    render();
+    // Initial render
+    renderClock();
+    renderAll();
   </script>
 </body>
 </html>
