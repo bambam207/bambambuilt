@@ -1,124 +1,242 @@
-html = r"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Daily WOD</title>
-  <meta name="description" content="Kettlebell: Mobility Warm‑Up + Workout for the Day">
+  <title>Today's Workout — Kettlebell</title>
+  <meta name="description" content="Single-page kettlebell training: Mobility Warm-Up and Workout of the Day.">
   <style>
     :root{
-      --bg:#0b0f16;
-      --ink:#e7ebf3;
+      --bg:#0f1115;
+      --panel:#161922;
+      --ink:#e6e7eb;
       --muted:#9aa3b2;
-      --card:#131a24;
-      --card2:#0f1620;
-      --stroke:#1f2937;
-      --pill:#0e1723;
       --accent:#7dd3fc;
-      --accent-2:#fb7185;
-      --accent-3:#fbbf24;
+      --good:#86efac;
+      --warn:#fbbf24; /* yellow bar */
+      --bad:#fb7185;  /* red bar */
       --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-      --sans: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Ubuntu, Cantarell, Noto Sans, Arial, "Helvetica Neue", sans-serif;
+      --sans: system-ui, -apple-system, "SF Pro Text", Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Helvetica Neue", sans-serif;
     }
     @media (prefers-color-scheme: light){
       :root{
-        --bg:#f6f7fb; --ink:#0b0f16; --muted:#475569;
-        --card:#ffffff; --card2:#ffffff; --stroke:#e5e7eb; --pill:#eef2ff;
-        --accent:#0369a1; --accent-2:#be123c; --accent-3:#b45309;
+        --bg:#f6f7fb;
+        --panel:#ffffff;
+        --ink:#111318;
+        --muted:#4b5563;
+        --accent:#0369a1;
+        --good:#15803d;
+        --warn:#f59e0b;
+        --bad:#dc2626;
       }
     }
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55}
-    .wrap{max-width:900px;margin:0 auto;padding:24px}
-    .panel{background:var(--card); border:1px solid var(--stroke); border-radius:18px; padding:18px 18px}
-    .panel + .panel{margin-top:18px}
-    .h1{font-size:clamp(28px,4.5vw,40px);font-weight:800;margin:0 0 8px 0}
-    .header{display:flex; flex-direction:column; gap:10px}
-    .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
-    .pill{padding:8px 14px; background:var(--pill); border:1px solid var(--stroke); border-radius:999px; font-variant-numeric:tabular-nums}
-    .btn{padding:10px 14px; background:var(--pill); border:1px solid var(--stroke); border-radius:14px; cursor:pointer; user-select:none}
-    .btn:hover{outline:2px solid rgba(125,211,252,.18)}
-    .subtle{font-size:14px;color:var(--muted)}
-    .card{background:var(--card2); border:1px solid var(--stroke); border-radius:18px; padding:16px}
-    .card + .card{margin-top:14px}
-    .card h2{margin:0 0 8px 0; font-size:22px}
-    .ribbon{border-left:6px solid var(--accent-3); padding-left:14px}
-    .ribbon-red{border-left:6px solid var(--accent-2); padding-left:14px}
-    ul{margin:0 0 0 22px}
-    .badges{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px}
-    .badge{background:var(--pill); border:1px solid var(--stroke); padding:4px 10px; border-radius:999px; font-size:12px; font-family:var(--mono)}
-    .meta{display:flex; gap:12px; flex-wrap:wrap; color:var(--muted); font-size:13px}
-    .list-tight li{margin:8px 0}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale}
+    .wrap{max-width:900px;margin:0 auto;padding:28px}
+    header{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap;margin-bottom:18px}
+    header h1{font-size:clamp(28px,4vw,40px);margin:0;font-weight:800;letter-spacing:.2px}
+    header .date{font-variant-numeric:tabular-nums;color:var(--muted);font-family:var(--mono)}
+    .panel{position:relative;background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px;margin:14px 0}
+    .panel h2{margin:0 0 8px 0;font-size:clamp(18px,2.5vw,22px)}
+    .sub{color:var(--muted);margin:0 0 12px 0}
+    ol,ul{margin:0 0 0 22px}
+    .grid{display:grid;grid-template-columns:1fr;gap:14px}
+    @media(min-width:860px){.grid{grid-template-columns:1fr 1fr}}
+    .badge{display:inline-block;padding:2px 8px;border-radius:999px;background:rgba(125,211,252,.12);color:var(--accent);font-family:var(--mono);font-size:12px;margin-left:8px;vertical-align:2px}
+    .meta{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 0 0;color:var(--muted);font-size:14px}
+    .timer{display:flex;align-items:center;gap:10px;margin-top:10px}
+    .timer button{background:transparent;border:1px solid rgba(255,255,255,.2);padding:8px 12px;border-radius:10px;color:var(--ink);cursor:pointer}
+    .timer .clock{font-family:var(--mono);font-size:20px;padding:4px 10px;border-radius:8px;background:#0b0d12}
+    @media (prefers-color-scheme: light){
+      .timer .clock{background:#eef2ff}
+      .panel{border-color:#e5e7eb}
+      .timer button{border-color:#cbd5e1}
+    }
+    .checklist{list-style:none;padding:0;margin:0}
+    .checklist li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px dashed rgba(255,255,255,.08)}
+    .checklist input{margin-top:4px;accent-color:var(--accent)}
+    .details{font-size:13px;color:var(--muted)}
+
+    /* color bars */
+    .bar{position:relative;padding-left:16px}
+    .bar:before{content:"";position:absolute;left:-1px;top:-1px;bottom:-1px;width:8px;border-radius:12px 0 0 12px}
+    .bar-warn:before{background:var(--warn)}
+    .bar-bad:before{background:var(--bad)}
+
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="panel header">
-      <div class="h1">Daily WOD</div>
-      <div class="row">
-        <div class="pill" id="datepill">—</div>
-        <div class="row">
-          <div class="btn" id="prevBtn">◀︎ Prev</div>
-          <div class="btn" id="todayBtn">Today</div>
-          <div class="btn" id="nextBtn">Next ▶︎</div>
-        </div>
+    <header>
+      <h1>Today's Workout</h1>
+      <div class="date" id="today"></div>
+      <span class="badge">Kettlebell · 30 min</span>
+    </header>
+
+    <div class="panel bar bar-warn">
+      <h2>Mobility Warm-Up</h2>
+      <p class="sub">6–8 minutes. Smooth tempo. Breathe through the nose. Light bell if used.</p>
+      <ul class="checklist">
+        <li>
+          <input type="checkbox" aria-label="Halos">
+          <div>
+            <b>Halos</b>
+            <div class="details">8 each direction with a light bell. Elbows tucked, ribs down.</div>
+          </div>
+        </li>
+        <li>
+          <input type="checkbox" aria-label="Prying Goblet Squat">
+          <div>
+            <b>Prying Goblet Squat</b>
+            <div class="details">3 reps × 3 deep breaths at the bottom. Drive knees out, keep heels down.</div>
+          </div>
+        </li>
+        <li>
+          <input type="checkbox" aria-label="Hip Hinge Drill">
+          <div>
+            <b>Hip Hinge Drill</b>
+            <div class="details">10 reps bodyweight. Hips back, shins vertical, spine neutral.</div>
+          </div>
+        </li>
+        <li>
+          <input type="checkbox" aria-label="Arm Bar">
+          <div>
+            <b>KB Arm Bar</b>
+            <div class="details">3–5 each side, controlled. Shoulder packed, eyes on bell.</div>
+          </div>
+        </li>
+        <li>
+          <input type="checkbox" aria-label="Leg Swings">
+          <div>
+            <b>Leg Swings</b>
+            <div class="details">10 forward/back + 10 lateral each leg. Small to larger range.</div>
+          </div>
+        </li>
+      </ul>
+      <div class="meta">
+        <div>Target: joints warm, hips open, shoulders stable.</div>
       </div>
-      <div class="row">
-        <div class="btn">Filters ▾</div>
-        <div class="subtle">No filters applied</div>
+    </div>
+
+    <div class="panel bar bar-bad">
+      <h2>Workout for the Day</h2>
+      <p class="sub">Full-body circuit. 3 rounds. ~20–22 minutes total. Rest ~60–90s between rounds.</p>
+
+      <ol class="checklist">
+        <li>
+          <input type="checkbox" aria-label="Swings">
+          <div>
+            <b>Two-Hand Swings</b>
+            <div class="details">15–20 reps · use your 53 lb if crisp. Hinge, snap, float to chest height.</div>
+          </div>
+        </li>
+        <li>
+          <input type="checkbox" aria-label="Goblet Squats">
+          <div>
+            <b>Goblet Squats</b>
+            <div class="details">10–12 reps · full depth, torso tall, tighten abs at the bottom.</div>
+          </div>
+        </li>
+        <li>
+          <input type="checkbox" aria-label="Clean and Push Press">
+          <div>
+            <b>Clean &amp; Push Press</b>
+            <div class="details">8 each side · clean to rack, slight leg drive, lockout overhead, switch sides.</div>
+          </div>
+        </li>
+        <li>
+          <input type="checkbox" aria-label="Renegade Row">
+          <div>
+            <b>Renegade Row</b>
+            <div class="details">8–10 each side · plank solid, minimal hip roll. Option: single-arm bent-over row.</div>
+          </div>
+        </li>
+        <li>
+          <input type="checkbox" aria-label="Snatch or High Pull">
+          <div>
+            <b>Snatch (or High Pull)</b>
+            <div class="details">6–10 each side · use ~40 lb for snatch. Smooth punch through; no banging the forearm.</div>
+          </div>
+        </li>
+        <li>
+          <input type="checkbox" aria-label="Plank">
+          <div>
+            <b>Plank Hold</b>
+            <div class="details">30–45 seconds · squeeze glutes and quads; breathe low.</div>
+          </div>
+        </li>
+      </ol>
+
+      <div class="timer">
+        <button id="startBtn" type="button">Start 30:00 Timer</button>
+        <div class="clock" id="clock">30:00</div>
+        <button id="resetBtn" type="button">Reset</button>
+      </div>
+
+      <div class="meta">
+        <div>Load guide: last 2 reps should be tough with clean form.</div>
+        <div>Progression: add 1–2 reps per set or reduce rest by ~10s weekly.</div>
       </div>
     </div>
 
     <div class="panel">
-      <div class="card ribbon">
-        <h2>Warm‑Up</h2>
-        <p class="subtle">6–8 minutes. Smooth tempo. Nose breathing.</p>
-        <ul class="list-tight">
-          <li><b>4 min easy row or bike</b>, then 2× (:20 hard / :40 easy)</li>
-          <li>2× <b>:20 active hang</b> + 8 scap pulls · 2×10 kip swings</li>
-          <li><b>Prying goblet squat</b>: 3× bottom hold, 3 breaths</li>
-          <li><b>Halos</b>: 8 each direction, light bell</li>
-          <li><b>Hip hinge drill</b>: 10 reps, shins vertical</li>
-        </ul>
-      </div>
+      <h2>Notes</h2>
+      <p class="sub">Log weight, reps, and any tweaks for next time.</p>
+      <div class="note" contenteditable="true" spellcheck="false" style="border-left:3px solid var(--accent);padding:8px 12px;background:rgba(125,211,252,.08);border-radius:8px">Type notes here…</div>
     </div>
 
-    <div class="panel">
-      <div class="card ribbon-red">
-        <div class="badges">
-          <span class="badge">KB</span>
-          <span class="badge" id="emomType">Circuit</span>
-          <span class="badge" id="targetMin">Target: 20–22 min</span>
-        </div>
-        <h2>Workout for the Day</h2>
-        <ul class="list-tight">
-          <li><b>Two‑hand swings</b> — 15–20 reps · use 53 lb if crisp</li>
-          <li><b>Goblet squats</b> — 10–12 reps · full depth, torso tall</li>
-          <li><b>Clean + push press</b> — 8/side · rack clean, slight leg drive</li>
-          <li><b>Renegade row</b> — 8–10/side · plank solid, minimal hip roll</li>
-          <li><b>Snatch or high pull</b> — 6–10/side · ~40 lb if snatching</li>
-          <li><b>Plank hold</b> — 30–45 s · squeeze glutes and quads</li>
-        </ul>
-        <p class="subtle">3 rounds. Rest ~60–90 s between rounds. Load so last 2 reps are tough with clean form.</p>
-        <div class="meta">
-          <div>Progression: add 1–2 reps per set or reduce rest by ~10 s weekly.</div>
-          <div>Swap snatch/high pull as needed.</div>
-        </div>
-      </div>
-    </div>
+    <footer style="margin-top:16px;color:var(--muted);font-size:12px">
+      <div>Edit this file to change the session. All content is local. No external libraries.</div>
+      <div id="tz"></div>
+    </footer>
   </div>
 
   <script>
-    // Date pill
-    function setDate(d){
-      const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
-      document.getElementById('datepill').textContent = d.toLocaleDateString(undefined, opts);
+    // Stamp today's date
+    const d = new Date();
+    const fmt = d.toLocaleDateString(undefined, { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+    document.getElementById('today').textContent = fmt;
+
+    // Show timezone
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Local time';
+    document.getElementById('tz').textContent = 'Timezone: ' + tz;
+
+    // Simple 30-minute countdown
+    let total = 30 * 60; // seconds
+    let left = total;
+    let ticking = null;
+
+    function render(){
+      const m = Math.floor(left / 60).toString().padStart(2,'0');
+      const s = Math.floor(left % 60).toString().padStart(2,'0');
+      document.getElementById('clock').textContent = m + ':' + s;
     }
-    let base = new Date();
-    setDate(base);
-    document.getElementById('todayBtn').onclick = ()=>{ base = new Date(); setDate(base); };
-    document.getElementById('prevBtn').onclick = ()=>{ base.setDate(base.getDate()-1); setDate(base); };
-    document.getElementById('nextBtn').onclick = ()=>{ base.setDate(base.getDate()+1); setDate(base); };
+
+    function start(){
+      if (ticking) return;
+      ticking = setInterval(()=>{
+        left = Math.max(0, left - 1);
+        render();
+        if (left === 0){
+          clearInterval(ticking);
+          ticking = null;
+          // Basic visual ping
+          document.getElementById('clock').style.background = 'var(--bad)';
+          document.getElementById('clock').style.color = '#000';
+        }
+      }, 1000);
+    }
+
+    function reset(){
+      if (ticking){ clearInterval(ticking); ticking = null; }
+      left = total;
+      document.getElementById('clock').style.background = '';
+      document.getElementById('clock').style.color = '';
+      render();
+    }
+
+    document.getElementById('startBtn').addEventListener('click', start);
+    document.getElementById('resetBtn').addEventListener('click', reset);
+    render();
   </script>
 </body>
 </html>
