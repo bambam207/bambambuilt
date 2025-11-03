@@ -1,0 +1,250 @@
+# Create a single-page kettlebell workout website (index.html)
+
+html_content = """<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Today's Workout — Kettlebell</title>
+  <meta name="description" content="Single-page kettlebell training: Mobility Warm‑Up and Workout of the Day.">
+  <style>
+    :root{
+      --bg:#0f1115;
+      --panel:#161922;
+      --ink:#e6e7eb;
+      --muted:#9aa3b2;
+      --accent:#7dd3fc;
+      --good:#86efac;
+      --warn:#fde047;
+      --bad:#fca5a5;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      --sans: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Helvetica Neue", sans-serif;
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f6f7fb;
+        --panel:#ffffff;
+        --ink:#111318;
+        --muted:#4b5563;
+        --accent:#0369a1;
+        --good:#15803d;
+        --warn:#b45309;
+        --bad:#b91c1c;
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5}
+    .wrap{max-width:900px;margin:0 auto;padding:28px}
+    header{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap;margin-bottom:18px}
+    header h1{font-size:clamp(28px,4vw,40px);margin:0}
+    header .date{font-variant-numeric:tabular-nums;color:var(--muted);font-family:var(--mono)}
+    .panel{background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px;margin:14px 0}
+    .panel h2{margin:0 0 8px 0;font-size:clamp(18px,2.5vw,22px)}
+    .sub{color:var(--muted);margin:0 0 12px 0}
+    ol,ul{margin:0 0 0 22px}
+    .grid{display:grid;grid-template-columns:1fr;gap:14px}
+    @media(min-width:860px){.grid{grid-template-columns:1fr 1fr}}
+    .badge{display:inline-block;padding:2px 8px;border-radius:999px;background:rgba(125,211,252,.12);color:var(--accent);font-family:var(--mono);font-size:12px;margin-left:8px;vertical-align:2px}
+    .meta{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 0 0;color:var(--muted);font-size:14px}
+    .timer{display:flex;align-items:center;gap:10px;margin-top:10px}
+    .timer button{background:transparent;border:1px solid rgba(255,255,255,.2);padding:8px 12px;border-radius:10px;color:var(--ink);cursor:pointer}
+    .timer .clock{font-family:var(--mono);font-size:20px;padding:4px 10px;border-radius:8px;background:#0b0d12}
+    @media (prefers-color-scheme: light){
+      .timer .clock{background:#eef2ff}
+      .panel{border-color:#e5e7eb}
+      .timer button{border-color:#cbd5e1}
+    }
+    .pair{display:flex;gap:10px;align-items:flex-start;margin:8px 0}
+    .pair b{min-width:160px}
+    .note{border-left:3px solid var(--accent);padding:8px 12px;background:rgba(125,211,252,.08);border-radius:8px}
+    footer{margin-top:16px;color:var(--muted);font-size:12px}
+    code{font-family:var(--mono);font-size:12px;background:rgba(125,211,252,.08);padding:2px 6px;border-radius:6px}
+    .checklist{list-style:none;padding:0;margin:0}
+    .checklist li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px dashed rgba(255,255,255,.08)}
+    .checklist input{margin-top:4px;accent-color:var(--accent)}
+    .details{font-size:13px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Today's Workout</h1>
+      <div class="date" id="today"></div>
+      <span class="badge">Kettlebell · 30 min</span>
+    </header>
+
+    <div class="panel">
+      <h2>Mobility Warm‑Up</h2>
+      <p class="sub">6–8 minutes. Smooth tempo. Breathe through the nose. Light bell if used.</p>
+      <ul class="checklist">
+        <li>
+          <input type="checkbox" aria-label="Halos">
+          <div>
+            <b>Halos</b>
+            <div class="details">8 each direction with a light bell. Elbows tucked, ribs down.</div>
+          </div>
+        </li>
+        <li>
+          <input type="checkbox" aria-label="Prying Goblet Squat">
+          <div>
+            <b>Prying Goblet Squat</b>
+            <div class="details">3 reps × 3 deep breaths at the bottom. Drive knees out, keep heels down.</div>
+          </div>
+        </li>
+        <li>
+          <input type="checkbox" aria-label="Hip Hinge Drill">
+          <div>
+            <b>Hip Hinge Drill</b>
+            <div class="details">10 reps bodyweight. Hips back, shins vertical, spine neutral.</div>
+          </div>
+        </li>
+        <li>
+          <input type="checkbox" aria-label="Arm Bar">
+          <div>
+            <b>KB Arm Bar</b>
+            <div class="details">3–5 each side, controlled. Shoulder packed, eyes on bell.</div>
+          </div>
+        </li>
+        <li>
+          <input type="checkbox" aria-label="Leg Swings">
+          <div>
+            <b>Leg Swings</b>
+            <div class="details">10 forward/back + 10 lateral each leg. Small to larger range.</div>
+          </div>
+        </li>
+      </ul>
+      <div class="meta">
+        <div>Target: joints warm, hips open, shoulders stable.</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Workout for the Day</h2>
+      <p class="sub">Full‑body circuit. 3 rounds. ~20–22 minutes total. Rest ~60–90s between rounds.</p>
+
+      <ol class="checklist">
+        <li>
+          <input type="checkbox" aria-label="Swings">
+          <div>
+            <b>Two‑Hand Swings</b>
+            <div class="details">15–20 reps · use your 53 lb if crisp. Hinge, snap, float to chest height.</div>
+          </div>
+        </li>
+        <li>
+          <input type="checkbox" aria-label="Goblet Squats">
+          <div>
+            <b>Goblet Squats</b>
+            <div class="details">10–12 reps · full depth, torso tall, tighten abs at the bottom.</div>
+          </div>
+        </li>
+        <li>
+          <input type="checkbox" aria-label="Clean and Push Press">
+          <div>
+            <b>Clean &amp; Push Press</b>
+            <div class="details">8 each side · clean to rack, slight leg drive, lockout overhead, switch sides.</div>
+          </div>
+        </li>
+        <li>
+          <input type="checkbox" aria-label="Renegade Row">
+          <div>
+            <b>Renegade Row</b>
+            <div class="details">8–10 each side · plank solid, minimal hip roll. Option: single‑arm bent‑over row.</div>
+          </div>
+        </li>
+        <li>
+          <input type="checkbox" aria-label="Snatch or High Pull">
+          <div>
+            <b>Snatch (or High Pull)</b>
+            <div class="details">6–10 each side · use ~40 lb for snatch. Smooth punch through; no banging the forearm.</div>
+          </div>
+        </li>
+        <li>
+          <input type="checkbox" aria-label="Plank">
+          <div>
+            <b>Plank Hold</b>
+            <div class="details">30–45 seconds · squeeze glutes and quads; breathe low.</div>
+          </div>
+        </li>
+      </ol>
+
+      <div class="timer">
+        <button id="startBtn" type="button">Start 30:00 Timer</button>
+        <div class="clock" id="clock">30:00</div>
+        <button id="resetBtn" type="button">Reset</button>
+      </div>
+
+      <div class="meta">
+        <div>Load guide: last 2 reps should be tough with clean form.</div>
+        <div>Progression: add 1–2 reps per set or reduce rest by ~10s weekly.</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Notes</h2>
+      <p class="sub">Log weight, reps, and any tweaks for next time.</p>
+      <div class="note" contenteditable="true" spellcheck="false">Type notes here…</div>
+    </div>
+
+    <footer>
+      <div>Edit this file to change the session. All content is local. No external libraries.</div>
+      <div id="tz"></div>
+    </footer>
+  </div>
+
+  <script>
+    // Stamp today's date
+    const d = new Date();
+    const fmt = d.toLocaleDateString(undefined, { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+    document.getElementById('today').textContent = fmt;
+
+    // Show timezone
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Local time';
+    document.getElementById('tz').textContent = 'Timezone: ' + tz;
+
+    // Simple 30-minute countdown
+    let total = 30 * 60; // seconds
+    let left = total;
+    let ticking = null;
+
+    function render(){
+      const m = Math.floor(left / 60).toString().padStart(2,'0');
+      const s = Math.floor(left % 60).toString().padStart(2,'0');
+      document.getElementById('clock').textContent = m + ':' + s;
+    }
+
+    function start(){
+      if (ticking) return;
+      ticking = setInterval(()=>{
+        left = Math.max(0, left - 1);
+        render();
+        if (left === 0){
+          clearInterval(ticking);
+          ticking = null;
+          // Basic visual ping
+          document.getElementById('clock').style.background = 'var(--bad)';
+          document.getElementById('clock').style.color = '#000';
+        }
+      }, 1000);
+    }
+
+    function reset(){
+      if (ticking){ clearInterval(ticking); ticking = null; }
+      left = total;
+      document.getElementById('clock').style.background = '';
+      document.getElementById('clock').style.color = '';
+      render();
+    }
+
+    document.getElementById('startBtn').addEventListener('click', start);
+    document.getElementById('resetBtn').addEventListener('click', reset);
+    render();
+  </script>
+</body>
+</html>
+"""
+
+# Write the file
+with open("/mnt/data/index.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+"/mnt/data/bell.html"
