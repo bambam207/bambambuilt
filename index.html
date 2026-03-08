@@ -443,8 +443,10 @@ function buildSchedule(year,days){
 }
 function buildYear(year){
   const days=daysInYear(year);
-  const out=new Array(days), rng=mulberry32(1337), slots=buildSchedule(year,days);
+  const out=new Array(days), slots=buildSchedule(year,days);
   for(let d=1; d<=days; d++){
+    // Per-day isolated RNG: filters on one day never cascade to other days
+    const rng=mulberry32(year*366+d);
     let w;
     if(slots.has(d)){
       const val=slots.get(d);
