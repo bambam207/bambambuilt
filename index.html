@@ -190,7 +190,7 @@ function showFilterStatus(){
 function tagText(lines){
   const t=lines.join(" ");
   return {
-    run:/\b(\d+\s?m Run|km Run|mile Run)\b/i.test(t),
+    run:/\bRun\b/i.test(t),
     row:/\b(Row( \d+m|\sfor\sCalories)?|Cal Row|km Row|5k Row)\b/i.test(t),
     rope:/Double-unders|Single-unders/i.test(t),
     wb:/Wall Balls?/i.test(t),
