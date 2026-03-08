@@ -321,17 +321,19 @@ const TRIBUTES={
 
 /* ===== GENERATORS (respect filters) ===== */
 const MONO=["Run 400m","Run 600m","Run 800m","Run 1000m","Row 500m","Row 750m","Row 1000m","Row 1500m","150 Single-unders","100 Double-unders","Shuttle Run 200m"];
-const GYM=["Pull-ups","Chest-to-Bar Pull-ups","Bar Muscle-ups","Toes-to-Bar","Push-ups","Sit-ups","Air Squats","Pistols (alt)","Handstand Push-ups","Burpees","Pike Push-ups","V-ups","Wall Walks","Hanging Knee Raises","Wall Balls"];
-const DBB=[{name:"DB Thrusters",load:DB2},{name:"DB Push Press",load:DB2},{name:"DB Front Squats",load:DB2},{name:"DB Power Cleans",load:DB2},{name:"DB Deadlifts",load:DB2},{name:"Alt DB Snatches",load:DB1},{name:"DB Hang Clean & Jerks",load:DB1}];
-const KBB=[{name:"KB Swings",load:KB53},{name:"KB Goblet Squats",load:KB53},{name:"KB Clean & Press (alt)",load:KB53},{name:"KB Swings",load:KB35}];
-const BOXM=["Box Jumps","Burpee Box Jump-Overs"];
+const GYM=["Pull-ups","Chest-to-Bar Pull-ups","Bar Muscle-ups","Toes-to-Bar","Push-ups","Sit-ups","Air Squats","Pistols (alt)","Handstand Push-ups","Burpees","Pike Push-ups","V-ups","Wall Walks","Hanging Knee Raises","Wall Balls","Walking Lunges","Hollow Rocks"];
+const DBB=[{name:"DB Thrusters",load:DB2},{name:"DB Push Press",load:DB2},{name:"DB Front Squats",load:DB2},{name:"DB Power Cleans",load:DB2},{name:"DB Deadlifts",load:DB2},{name:"Alt DB Snatches",load:DB1},{name:"DB Hang Clean & Jerks",load:DB1},{name:"DB Walking Lunges",load:DB2},{name:"Devil's Press",load:DB1}];
+const KBB=[{name:"KB Swings",load:KB53},{name:"KB Goblet Squats",load:KB53},{name:"KB Clean & Press (alt)",load:KB53},{name:"KB Swings",load:KB35},{name:"KB Deadlifts",load:KB53},{name:"Farmers Carry (50ft)",load:KB53}];
+const BOXM=["Box Jumps","Burpee Box Jump-Overs","Box Step-ups"];
 const REP_RULES={
   "Pull-ups":[10,12,15,20],"Chest-to-Bar Pull-ups":[10,12,15],"Bar Muscle-ups":[4,6,8],"Toes-to-Bar":[10,12,15],"Push-ups":[10,15,20,25],
   "Sit-ups":[20,30,40],"Air Squats":[20,30,40,50],"Pistols (alt)":[6,10,16,20],"Handstand Push-ups":[6,9,12],"Burpees":[12,15,20],
   "Pike Push-ups":[12,15,20],"V-ups":[15,20,25],"Wall Walks":[3,4,5],"Hanging Knee Raises":[15,20,25],"Wall Balls":[20,25,30,40],
   "DB Thrusters":[9,12,15],"DB Push Press":[10,12,15],"DB Front Squats":[12,15,20],"DB Power Cleans":[10,12,14],"DB Deadlifts":[16,20,24],
   "Alt DB Snatches":[12,16,20],"DB Hang Clean & Jerks":[10,12,16],"KB Swings":[20,25,30],"KB Goblet Squats":[16,20,24],"KB Clean & Press (alt)":[10,12,14],
-  "Box Jumps":[15,20,24],"Burpee Box Jump-Overs":[10,12,14]
+  "Box Jumps":[15,20,24],"Burpee Box Jump-Overs":[10,12,14],"Box Step-ups":[16,20,24],
+  "Walking Lunges":[20,30,40],"Hollow Rocks":[20,30,40],"DB Walking Lunges":[16,20,24],"Devil's Press":[8,10,12],
+  "KB Deadlifts":[16,20,24],"Farmers Carry (50ft)":[2,3,4]
 };
 function allowedMonoPool(){return MONO.filter(s=>!violatesFilters(tagText([s])));}
 function allowedGymPool(){return GYM.filter(n=>!violatesFilters(tagText([n])));}
