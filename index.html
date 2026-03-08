@@ -148,6 +148,17 @@ footer a:hover{color:#e8eaf0}
 </div>
 
 <script>
+/* ===== CONFIGURATION ===== */
+const CONFIG = {
+  equipment: {
+    DB2: "2×50 lb",   // Dual dumbbell weight
+    DB1: "1×50 lb",   // Single dumbbell weight
+    KB53: "53 lb",    // Heavy kettlebell
+    KB35: "35 lb",    // Light kettlebell
+    BOX: '24"'        // Box height
+  }
+};
+
 /* ===== UTIL ===== */
 function mulberry32(a){return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}}
 function choice(rng,arr){return arr[Math.floor(rng()*arr.length)]}
@@ -158,7 +169,7 @@ function doyFromDate(dt){const start=new Date(dt.getFullYear(),0,1); return Math
 function fmtDate(d){return d.toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
 function localDOY(year,month,day){const d=new Date(year,month,day);return Math.floor((d - new Date(year,0,0))/86400000)}
 function lastMondayOfMayLocal(year){const last=new Date(year,4,31);const dow=last.getDay();return 31-((dow+6)%7)}
-const DB2="2×50 lb", DB1="1×50 lb", KB53="53 lb", KB35="35 lb", BOX='24"';
+const {DB2, DB1, KB53, KB35, BOX} = CONFIG.equipment;
 
 /* ===== FILTERS ===== */
 const FILTER_KEYS=["pull","box","wb","rope","run","row","db","kb","hspu"];
@@ -179,7 +190,7 @@ function showFilterStatus(){
 function tagText(lines){
   const t=lines.join(" ");
   return {
-    run:/\b(\d+\s?m Run|km Run|mile Run)\b/i.test(t),
+    run:/\bRun\b/i.test(t),
     row:/\b(Row( \d+m|\sfor\sCalories)?|Cal Row|km Row|5k Row)\b/i.test(t),
     rope:/Double-unders|Single-unders/i.test(t),
     wb:/Wall Balls?/i.test(t),
@@ -432,8 +443,10 @@ function buildSchedule(year,days){
 }
 function buildYear(year){
   const days=daysInYear(year);
-  const out=new Array(days), rng=mulberry32(1337), slots=buildSchedule(year,days);
+  const out=new Array(days), slots=buildSchedule(year,days);
   for(let d=1; d<=days; d++){
+    // Per-day isolated RNG: filters on one day never cascade to other days
+    const rng=mulberry32(year*366+d);
     let w;
     if(slots.has(d)){
       const val=slots.get(d);
@@ -553,7 +566,7 @@ function init(){
       self.addEventListener('activate',e=>{self.clients.claim();});
       self.addEventListener('fetch',e=>{const req=e.request; if(req.mode==='navigate'){e.respondWith(fetch(req).catch(()=>caches.match('./')));return;} e.respondWith(caches.match(req).then(r=>r||fetch(req)));});`;
     const swURL=URL.createObjectURL(new Blob([swCode],{type:'text/javascript'}));
-    navigator.serviceWorker.register(swURL,{scope:'./'}).catch(()=>{});
+    navigator.serviceWorker.register(swURL,{scope:'./'}).catch(err => console.warn('Service Worker registration failed:', err));
   }
 }
 document.addEventListener("DOMContentLoaded", init);

@@ -1,17 +1,28 @@
 // wods.js — Known WODs for BAMBAM (HOME GEAR)
-// Paste as-is next to index.html
+// Exports a single BAMBAM_WODS namespace object
 
 (function () {
-  var DB1 = '1x50 lb';
-  var DB2 = '2x50 lb';
-  var KB53 = '53 lb';
-  var KB35 = '35 lb';
-  var BOX  = '24"';
+  'use strict';
+
+  // Equipment configuration
+  var EQUIPMENT = {
+    DB1: '1x50 lb',
+    DB2: '2x50 lb',
+    KB53: '53 lb',
+    KB35: '35 lb',
+    BOX: '24"'
+  };
+
+  var DB1 = EQUIPMENT.DB1;
+  var DB2 = EQUIPMENT.DB2;
+  var KB53 = EQUIPMENT.KB53;
+  var KB35 = EQUIPMENT.KB35;
+  var BOX = EQUIPMENT.BOX;
 
   function W(title,type,time,body,notes){ return {title:title,type:type,time:time,body:body,notes:notes||''}; }
 
   // ----- Optional date overrides (index also pins holidays automatically)
-  window.WOD_DATE_MAP = {
+  var DATE_MAP = {
     '09-11':'Glen (Home)',
     '07-04':'Kalsu (DB Thruster)',
     '11-11':'Chad 1000X (24")',
@@ -185,10 +196,8 @@
     W('Lumberjack 20 (Home)','For Time','30-60',['For time, 20 each:','DB Deadlifts - '+DB2,'KB Swings - '+KB53,'DB Overhead Squats - '+DB1,'DB Clean and Jerks - '+DB2,'Burpees','Pull-ups','Box Jumps - '+BOX,'DB Squat Cleans - '+DB2,'with 400m run between each'])
   ];
 
-  // export
-  window.WOD_BANK = [].concat(GIRLS, HEROES, OPEN, OTHER);
-
-  window.WOD_TRIBUTES = {
+  // Tributes lookup
+  var TRIBUTES = {
     'Murph':'Honors U.S. Navy Lt. Michael P. Murphy (MOH), killed in Afghanistan in 2005.',
     'Glen (Home)':'Honors former U.S. Navy SEAL Glen Doherty, killed on Sept 11, 2012 (Benghazi).',
     'Michael (Home)':'Honors Navy LT Michael McGreevy Jr., KIA 2005.',
@@ -233,4 +242,17 @@
     'Luce':'Honors Capt. Ronald A. Luce Jr., USAF, KIA 2009.',
     'Jared (BW)':'Honors Capt. Jared C. Monti (MOH), KIA 2006.'
   };
+
+  // Export single namespace object (avoids global pollution)
+  window.BAMBAM_WODS = {
+    BANK: [].concat(GIRLS, HEROES, OPEN, OTHER),
+    TRIBUTES: TRIBUTES,
+    DATE_MAP: DATE_MAP,
+    EQUIPMENT: EQUIPMENT
+  };
+
+  // Legacy exports for backwards compatibility (can be removed in future)
+  window.WOD_BANK = window.BAMBAM_WODS.BANK;
+  window.WOD_TRIBUTES = window.BAMBAM_WODS.TRIBUTES;
+  window.WOD_DATE_MAP = window.BAMBAM_WODS.DATE_MAP;
 })();
