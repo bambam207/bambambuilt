@@ -70,8 +70,25 @@
     .rest-day{text-align:center;padding:40px 20px;color:var(--muted)}
     .rest-day h2{color:var(--good);margin-bottom:12px}
   </style>
+  <style>
+    #disclaimer-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
+    #disclaimer-modal .modal-box{background:var(--panel);border:1px solid rgba(251,191,36,.35);border-radius:16px;padding:28px;max-width:480px;width:100%}
+    #disclaimer-modal h3{margin:0 0 12px;color:var(--warn);font-size:18px}
+    #disclaimer-modal p{margin:0 0 12px;font-size:14px;color:var(--muted);line-height:1.6}
+    #disclaimer-modal button{width:100%;padding:12px;background:var(--warn);color:#000;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px}
+    #disclaimer-modal button:hover{opacity:.9}
+  </style>
 </head>
 <body>
+  <div id="disclaimer-modal">
+    <div class="modal-box">
+      <h3>⚠ Heads up before you train</h3>
+      <p>I'm not a trainer, a doctor, or any kind of certified professional. I'm just a dude with too much time and access to AI.</p>
+      <p>This plan is for informational purposes only. Consult a qualified professional before starting — especially if you have injuries or medical conditions. You assume all risk. I assume zero responsibility.</p>
+      <p style="color:var(--ink)">Train smart. Listen to your body. Don't be an idiot about it.</p>
+      <button id="disclaimerOk">Got it — let's train</button>
+    </div>
+  </div>
   <div class="wrap">
     <header>
       <h1>Ultra Strength</h1>
@@ -641,6 +658,11 @@
     }
     document.getElementById('startBtn').addEventListener('click', startTimer);
     document.getElementById('resetBtn').addEventListener('click', resetTimer);
+
+    // Disclaimer modal — shows every visit
+    document.getElementById('disclaimerOk').addEventListener('click', () => {
+      document.getElementById('disclaimer-modal').style.display = 'none';
+    });
 
     // Initial render
     renderClock();
