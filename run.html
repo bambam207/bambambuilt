@@ -281,14 +281,15 @@
     const weekTypes = ["Build 1", "Build 2", "Peak", "Recovery"];
 
     // Day types within week (0=Mon, 6=Sun)
+    // Ultra runners: rest after long runs (Sunday), strength early in week
     const daySchedule = {
-      0: "rest",        // Monday - Rest
-      1: "lower",       // Tuesday - Lower Body
-      2: "core",        // Wednesday - Core + Stability
-      3: "upper",       // Thursday - Upper Body
-      4: "rest",        // Friday - Rest
-      5: "power",       // Saturday - Power/Plyos
-      6: "mobility"     // Sunday - Mobility/Prehab
+      0: "lower",       // Monday - Lower Body (recover from weekend runs)
+      1: "core",        // Tuesday - Core & Stability
+      2: "upper",       // Wednesday - Upper Body
+      3: "power",       // Thursday - Power/Plyos (before weekend)
+      4: "mobility",    // Friday - Mobility/Prehab (prep for long run)
+      5: "lower",       // Saturday - Light Lower (if not racing)
+      6: "rest"         // Sunday - Rest (long run recovery)
     };
 
     const dayNames = {
