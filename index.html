@@ -7,79 +7,189 @@
 
 <style>
 :root{
-  --bg:#0f1115; --card:#151922; --ink:#e8eaf0; --muted:#aab0c0;
-  --accent:#61dafb; --border:#2a3345;
+  --bg:#0f1115; --panel:#161922; --card:#161922; --ink:#e6e7eb; --muted:#9aa3b2;
+  --accent:#7dd3fc; --good:#86efac; --warn:#fbbf24; --bad:#fb7185; --trail:#22c55e;
+  --border:rgba(255,255,255,.07);
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --sans: system-ui, -apple-system, "SF Pro Text", Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Helvetica Neue", sans-serif;
 
-  /* Accent colors */
-  --warmup-yellow:#F5C84C;
-  --metcon-red:#FF5A66;
-  --cooldown-blue:#61DAFB;
+  /* Section accent colors */
+  --warmup-yellow:#fbbf24;
+  --metcon-red:#fb7185;
+  --cooldown-blue:#7dd3fc;
   --tribute-grey:#6B7280;
-  --tribute-bg:#171b25;
+  --tribute-bg:#151e2d;
+}
+@media (prefers-color-scheme: light){
+  :root{
+    --bg:#f6f7fb; --panel:#ffffff; --card:#ffffff; --ink:#111318; --muted:#4b5563;
+    --accent:#0369a1; --good:#15803d; --warn:#f59e0b; --bad:#dc2626; --trail:#16a34a;
+    --border:#e5e7eb;
+  }
 }
 *{box-sizing:border-box}
-body{margin:0;padding:24px;background:var(--bg);color:var(--ink);
-     font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
+body{padding:28px}
 h1,h2,h3{margin:0 0 8px;line-height:1.15}
-h1{font-size:28px} h2{font-size:20px;color:var(--muted);font-weight:600}
+h1{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:.2px}
+h2{font-size:clamp(18px,2.5vw,22px);color:var(--muted);font-weight:600}
 h3{font-size:16px;color:var(--muted);font-weight:600}
-.wrap{max-width:900px;margin:0 auto;display:grid;gap:16px}
-.card{background:var(--card);border:1px solid #222937;border-radius:12px;padding:16px;box-shadow:0 4px 18px rgba(0,0,0,.25)}
+.wrap{max-width:900px;margin:0 auto;display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;box-shadow:0 4px 18px rgba(0,0,0,.2)}
 .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center}
-button{background:#111723;color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;font:inherit}
+button{background:transparent;color:var(--ink);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:8px 12px;cursor:pointer;font:inherit}
 button:hover{border-color:var(--accent)}
-.pill{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:#0d1320;color:#aab0c0;font-size:12px;margin-right:6px}
-.meta{color:#aab0c0;font-size:14px}
-.warn{color:#ffb85c;font-size:12px;margin-top:6px;text-align:center}
+@media (prefers-color-scheme: light){
+  button{border-color:#cbd5e1}
+  .card{box-shadow:none}
+}
+.pill{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:transparent;color:var(--muted);font-family:var(--mono);font-size:12px;margin-right:6px}
+.meta{color:var(--muted);font-size:14px}
+.warn-text{color:#ffb85c;font-size:12px;margin-top:6px;text-align:center}
 ul{margin:8px 0 0 20px} li{margin:4px 0}
 
-/* Accent bars */
-.notice{background:#1a2030;border-left:4px solid var(--warmup-yellow);border-radius:8px;padding:10px 12px}
-.metcon{background:#1a2030;border-left:4px solid var(--metcon-red);border-radius:8px;padding:10px 12px}
+/* Accent bars (left-border panels, same pattern as /run) */
+.notice{background:rgba(255,255,255,.03);border-left:4px solid var(--warmup-yellow);border-radius:8px;padding:10px 12px}
+.metcon{background:rgba(255,255,255,.03);border-left:4px solid var(--metcon-red);border-radius:8px;padding:10px 12px}
 #cooldown.notice{border-left-color:var(--cooldown-blue)}
 #wodTribute.notice{border-left-color:var(--tribute-grey);background:var(--tribute-bg);color:#c7cdd8}
 
 /* Date chip + calendar */
-.date-chip{cursor:pointer;display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#0d1320;user-select:none}
-.date-chip:hover{border-color:var(--accent)}
+.date-chip{cursor:pointer;display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.15);background:transparent;color:var(--muted);font-family:var(--mono);user-select:none}
+.date-chip:hover{border-color:var(--accent);color:var(--ink)}
 #dateWrap{display:flex;justify-content:center;gap:10px;align-items:center;position:relative}
 .cal{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);
-     width:320px;background:var(--card);border:1px solid var(--border);border-radius:12px;
+     width:320px;background:var(--card);border:1px solid var(--border);border-radius:14px;
      box-shadow:0 12px 36px rgba(0,0,0,.45);padding:12px;display:none;z-index:1000}
 .cal.show{display:block}
 .cal header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.cal .hdr-btn{background:#111723;border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;color:var(--ink);cursor:pointer}
+.cal .hdr-btn{background:transparent;border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:6px 10px;font-size:13px;color:var(--ink);cursor:pointer}
 .cal .hdr-btn:hover{border-color:var(--accent)}
-.cal .label{font-weight:700;color:#e8eaf0}
+.cal .label{font-weight:700;color:var(--ink)}
 .cal .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:8px}
-.cal .dow{font-size:12px;color:#aab0c0;text-align:center}
+.cal .dow{font-size:12px;color:var(--muted);text-align:center}
 .cal .day{font-size:13px;text-align:center;padding:6px 0;border-radius:8px;border:1px solid transparent;cursor:pointer}
-.cal .day:hover{border-color:var(--accent);background:#0d1320}
+.cal .day:hover{border-color:var(--accent)}
 .cal .muted{opacity:.4}
 .cal .today{outline:1px dashed var(--accent);outline-offset:2px}
-.cal .selected{background:#0d1320;border-color:var(--accent)}
+.cal .selected{border-color:var(--accent)}
 
-/* Filters dropdown (FIXED POSITIONING UNDER BUTTON) */
+/* Filters */
 .filters{position:relative;display:inline-block}
-.filter-btn{background:#111723;border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;color:#ink;cursor:pointer}
+.filter-btn{background:transparent;border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:6px 10px;font-size:13px;color:var(--ink);cursor:pointer}
 .filter-btn:hover{border-color:var(--accent)}
 .filter-panel{
   position:absolute; top:120%;
-  left:50%; transform:translateX(-50%);  /* center under button */
-  width:280px; background:var(--card); border:1px solid var(--border); border-radius:12px;
+  left:50%; transform:translateX(-50%);
+  width:280px; background:var(--card); border:1px solid var(--border); border-radius:14px;
   box-shadow:0 12px 36px rgba(0,0,0,.45); padding:12px; display:none; z-index:1000
 }
 .filter-panel.show{display:block}
-.filter-panel h4{margin:0 0 8px;color:#e8eaf0;font-size:14px}
-.filter-panel label{display:flex;align-items:center;gap:8px;font-size:13px;color:#d4d8e3;margin:6px 0}
-.small{font-size:12px;color:#8a93a7}
+.filter-panel h4{margin:0 0 8px;color:var(--ink);font-size:14px}
+.filter-panel label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin:6px 0}
+.small{font-size:12px;color:var(--muted)}
 
-@media print{ .controls, .footer, .cal, .filters {display:none} body{background:#fff;color:#111} .card{box-shadow:none;border-color:#ddd}}
-footer{margin-top:24px;text-align:center;color:#9aa3b2;font-size:12px}
-footer a{color:#9aa3b2;text-decoration:none}
-footer a:hover{color:#e8eaf0}
+@media print{ .controls, .cal, .filters{display:none} body{background:#fff;color:#111} .card{box-shadow:none;border-color:#ddd}}
+footer{margin-top:16px;color:var(--muted);font-size:12px;text-align:center}
+footer a{color:var(--muted);text-decoration:none}
+footer a:hover{color:var(--ink)}
 </style>
 </head>
+<!-- ===== BAMBAM Legal Disclaimer (drop-in) ===== -->
+<style>
+  .bb-legal__overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,.7);
+    display:none; z-index:9999;
+    place-items:center;
+    padding:16px;
+  }
+  .bb-legal__modal{
+    max-width:680px; margin:0 12px;
+    background:var(--card);
+    color:var(--ink);
+    border:1px solid var(--border);
+    border-radius:14px; padding:18px;
+    box-shadow:0 12px 40px rgba(0,0,0,.5)
+  }
+  .bb-legal__title{margin:0 0 6px;font-size:20px}
+  .bb-legal__text{
+    background:rgba(0,0,0,.3); border:1px solid var(--border);
+    border-radius:10px; padding:12px; max-height:42vh; overflow:auto;
+    color:var(--muted); font-size:14px
+  }
+  .bb-legal__row{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:10px}
+  .bb-legal__btn{
+    background:transparent; border:1px solid rgba(255,255,255,.2);
+    color:var(--ink); border-radius:10px; padding:10px 12px; cursor:pointer
+  }
+  .bb-legal__btn:hover{border-color:var(--accent)}
+  .bb-legal__btn--primary{background:var(--accent); color:#0b141c; border:0; font-weight:700}
+  .bb-legal__check{display:flex;gap:8px;align-items:flex-start;margin-top:10px;color:var(--ink);font-size:14px}
+  .bb-legal__link{color:#9ecbff;text-decoration:none}
+</style>
+
+<div id="bbLegalOverlay" class="bb-legal__overlay" role="dialog" aria-modal="true" aria-labelledby="bbLegalTitle">
+  <div class="bb-legal__modal">
+    <h2 id="bbLegalTitle" class="bb-legal__title">Safety & Terms</h2>
+    <div class="bb-legal__text">
+      <p><strong>Not medical advice.</strong> Workouts here are general info, not personal medical or coaching advice.</p>
+      <p><strong>Talk to a doctor</strong> before starting exercise. <strong>Stop immediately</strong> if you feel pain, dizziness, or shortness of breath.</p>
+      <p><strong>Use at your own risk.</strong> You are responsible for your space, equipment, and how you train.</p>
+      <p><strong>Minors.</strong> If you're under 18, use this with a parent/guardian and coach approval.</p>
+      <p><strong>Liability.</strong> To the fullest extent allowed by law, BAMBAM Built and its owners aren't liable for injuries, losses, or damages from using this site.</p>
+      <p><strong>Privacy & Terms:</strong> See <a class="bb-legal__link" href="/legal" target="_blank" rel="noopener">/legal.html</a>.</p>
+    </div>
+
+    <label class="bb-legal__check">
+      <input type="checkbox" id="bbLegalAgree">
+      <span>I'm 18+ (or have a parent/guardian) and I agree to these terms.</span>
+    </label>
+
+    <div class="bb-legal__row">
+      <button id="bbLegalLeave" class="bb-legal__btn" type="button">Leave</button>
+      <button id="bbLegalAccept" class="bb-legal__btn bb-legal__btn--primary" type="button" disabled>I Agree & Continue</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const VERSION = 'bb_terms_v6';
+  const overlay = document.getElementById('bbLegalOverlay');
+  const agree = document.getElementById('bbLegalAgree');
+  const accept = document.getElementById('bbLegalAccept');
+
+  function lockScroll(on){ document.body.style.overflow = on ? 'hidden' : ''; }
+
+  function openModal(){
+    overlay.style.display = 'grid';
+    lockScroll(true);
+    overlay.addEventListener('keydown', e => { if(e.key==='Escape'){ e.preventDefault(); } }, {once:true});
+    overlay.addEventListener('click', e => {
+      const modal = e.currentTarget.querySelector('.bb-legal__modal');
+      if(!modal.contains(e.target)) e.stopPropagation();
+    });
+  }
+
+  function closeModal(){
+    overlay.style.display = 'none';
+    lockScroll(false);
+  }
+
+  if(localStorage.getItem(VERSION) !== '1'){ openModal(); }
+
+  agree.addEventListener('change', () => { accept.disabled = !agree.checked; });
+  accept.addEventListener('click', () => {
+    if(!agree.checked) return;
+    localStorage.setItem(VERSION, '1');
+    closeModal();
+  });
+  document.getElementById('bbLegalLeave').addEventListener('click', () => {
+    history.length > 1 ? history.back() : window.close();
+  });
+})();
+</script>
+<!-- ===== /BAMBAM Legal Disclaimer ===== -->
 <body>
 <div class="wrap">
 
@@ -114,7 +224,7 @@ footer a:hover{color:#e8eaf0}
       <div id="filterStatus" class="small">No filters applied</div>
     </div>
 
-    <div id="warn" class="warn" style="display:none"></div>
+    <div id="warn" class="warn-text" style="display:none"></div>
   </div>
 
   <!-- WARM-UP FIRST -->
@@ -144,7 +254,14 @@ footer a:hover{color:#e8eaf0}
     <div id="cooldown" class="notice"></div>
   </div>
 
-  <footer>© 2025 <a href="https://bambambuilt.com" target="_blank" rel="noopener">bambambuilt.com</a>. All Rights Reserved.</footer>
+  <div class="card" style="border-color:rgba(251,191,36,.2)">
+    <p style="margin:0;font-size:12px;color:var(--muted);line-height:1.6">
+      <strong style="color:var(--warn)">⚠ Use at your own risk.</strong>
+      Workouts here are general info, not medical or coaching advice. Consult a qualified professional before starting any exercise program, especially if you have injuries or medical conditions. Stop immediately if you feel pain, dizziness, or shortness of breath. By using this site you assume all risk of injury or adverse effects. BAMBAM Built and its owners aren't liable for injuries, losses, or damages from using this site. <a href="/legal" style="color:var(--accent)">Full terms →</a>
+    </p>
+  </div>
+
+  <footer>© <span id="yr"></span> <a href="https://bambambuilt.com" target="_blank" rel="noopener">bambambuilt.com</a>. All Rights Reserved.</footer>
 </div>
 
 <script>
@@ -572,6 +689,7 @@ function init(){
   }
 }
 document.addEventListener("DOMContentLoaded", init);
+document.getElementById('yr').textContent = new Date().getFullYear();
 </script>
 </body>
 </html>
