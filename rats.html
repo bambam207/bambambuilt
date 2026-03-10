@@ -5,75 +5,46 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>AAU 13U — Strength & Court Prep (4-Week)</title>
 
-<!-- Friendly, inviting palette (unchanged) -->
+<!-- /run-aligned theme, kid-friendly colors kept -->
 <style>
 :root{
-  --bg:#0f1220;
-  --card:#171b2d;
-  --ink:#f6f7ff;
-  --muted:#cdd2ea;
-  --border:#283152;
-  --accent:#ff8bd1;
+  --bg:#0f1115; --panel:#161922; --card:#161922; --ink:#e6e7eb; --muted:#9aa3b2;
+  --accent:#7dd3fc; --good:#86efac; --warn:#fbbf24; --bad:#fb7185; --trail:#22c55e;
+  --border:rgba(255,255,255,.07);
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --sans: system-ui, -apple-system, "SF Pro Text", Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Helvetica Neue", sans-serif;
+  /* Kid-friendly bar palette — kept */
+  --bar-warm:#ffd166; --bar-power:#c084fc; --bar-strength:#f78da7;
+  --bar-agility:#7dd3fc; --bar-cond:#6ee7b7; --bar-cool:#60a5fa; --bar-note:#9aa3b2;
   --accent-2:#93c5fd;
-  --accent-3:#a7f3d0;
-
-  /* Section bar colors (left stripes) */
-  --bar-warm:#ffd166;
-  --bar-power:#c084fc;
-  --bar-strength:#f78da7;
-  --bar-agility:#7dd3fc;
-  --bar-cond:#6ee7b7;
-  --bar-cool:#60a5fa;
-  --bar-note:#9aa3b2;
+}
+@media (prefers-color-scheme: light){
+  :root{
+    --bg:#f6f7fb; --panel:#ffffff; --card:#ffffff; --ink:#111318; --muted:#4b5563;
+    --accent:#0369a1; --warn:#f59e0b; --border:#e5e7eb;
+  }
 }
 *{box-sizing:border-box}
-body{
-  margin:0; padding:24px;
-  background: radial-gradient(1200px 800px at 20% -10%, #1a1f36 0%, var(--bg) 55%);
-  color:var(--ink);
-  font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
-}
-h1,h2,h3{margin:0 0 10px; line-height:1.15}
-h1{font-size:28px}
-h2{font-size:20px; color:var(--muted); font-weight:700}
-h3{font-size:16px; color:var(--muted); font-weight:600}
-.wrap{max-width:900px; margin:0 auto; display:grid; gap:16px}
-.card{
-  background:var(--card); border:1px solid var(--border);
-  border-radius:16px; padding:16px;
-  box-shadow:0 8px 30px rgba(0,0,0,.25)
-}
-.row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
+body{padding:28px}
+h1,h2,h3{margin:0 0 10px;line-height:1.15}
+h1{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:.2px}
+h2{font-size:clamp(18px,2.5vw,22px);color:var(--muted);font-weight:700}
+h3{font-size:16px;color:var(--muted);font-weight:600}
+.wrap{max-width:900px;margin:0 auto;display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;box-shadow:0 4px 18px rgba(0,0,0,.2)}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 .center{text-align:center}
-button{
-  background:linear-gradient(135deg, var(--accent), #ffb0df);
-  color:#231b26; border:0; border-radius:999px; padding:10px 14px;
-  font-weight:700; letter-spacing:.2px; cursor:pointer
-}
-button.ghost{
-  background:#192036; border:1px solid var(--border); color:var(--ink); font-weight:600
-}
-button.small{padding:6px 10px; font-size:13px}
-button:active{transform:translateY(1px)}
-
-.pill{display:inline-block; padding:4px 10px; border-radius:999px;
-      border:1px solid var(--border); background:#121831; color:#bfc6e4; font-size:12px}
-
-.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+button{background:transparent;color:var(--ink);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:8px 12px;cursor:pointer;font:inherit}
+button:hover{border-color:var(--accent)}
+@media (prefers-color-scheme: light){ button{border-color:#cbd5e1} .card{box-shadow:none} }
+.pill{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:transparent;color:var(--muted);font-family:var(--mono);font-size:12px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media (max-width:700px){ .grid-2{grid-template-columns:1fr} }
-
-.notice{background:#11172b; border-left:4px solid var(--bar-note);
-        padding:10px 12px; border-radius:10px}
-
-.section{
-  background:#11172b; border:1px solid #222a49; border-radius:14px; padding:12px;
-  position:relative; overflow:hidden
-}
-.section::before{
-  content:""; position:absolute; left:12px; top:12px; bottom:12px; width:6px; border-radius:6px;
-  background:var(--bar-note)
-}
-.section .inner{margin-left:20px}
+.notice{background:rgba(255,255,255,.03);border-left:4px solid var(--bar-note);padding:10px 12px;border-radius:10px}
+.section{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px;position:relative;overflow:hidden}
+.section::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;border-radius:12px 0 0 12px;background:var(--bar-note)}
+.section .inner{margin-left:18px}
 .section.yellow::before{background:var(--bar-warm)}
 .section.lilac::before{background:var(--bar-power)}
 .section.pink::before{background:var(--bar-strength)}
@@ -81,125 +52,78 @@ button:active{transform:translateY(1px)}
 .section.mint::before{background:var(--bar-cond)}
 .section.blue::before{background:var(--bar-cool)}
 .section.gray::before{background:var(--bar-note)}
-
 ul{margin:8px 0 0 22px} li{margin:4px 0}
-.small{font-size:12px; color:#aeb6d6}
-h2 .emoji{font-size:20px; margin-right:6px}
-
-/* Top controls */
+.small{font-size:12px;color:var(--muted)}
+h2 .emoji{font-size:20px;margin-right:6px}
 .controls{justify-content:center}
-.switch{display:flex; gap:6px; background:#121831; padding:6px; border-radius:999px; border:1px solid var(--border)}
-.switch button{background:#171f3b; color:#cdd2ea; border:1px solid #283152}
-.switch button.active{background:linear-gradient(135deg, var(--accent-2), #a5b4fc); color:#0f1220; border:0}
-
-/* Print-friendly */
-@media print{
-  .controls, .print-hint{display:none}
-  body{background:#fff; color:#111}
-  .card{box-shadow:none; border-color:#ddd}
-  .section{background:#fff}
-}
+.switch{display:flex;gap:4px;background:rgba(0,0,0,.3);padding:5px;border-radius:999px;border:1px solid rgba(255,255,255,.1)}
+.switch button{background:transparent;color:var(--muted);border:1px solid transparent;border-radius:999px;padding:6px 12px;font-size:13px}
+.switch button:hover:not(.active){border-color:var(--accent);color:var(--ink)}
+.switch button.active{background:var(--accent);color:#0b141c;border:0;font-weight:700}
+@media print{ .controls,.print-hint{display:none} body{background:#fff;color:#111} .card{box-shadow:none;border-color:#ddd} .section{background:#fff} }
+/* ===== Nav + Popup ===== */
+.bb-pop{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;place-items:center;padding:16px;z-index:9999}
+.bb-pop__box{max-width:640px;width:100%;background:var(--card);color:var(--ink);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:20px;box-shadow:0 16px 48px rgba(0,0,0,.6)}
+.bb-pop__title{margin:0 0 10px;font-size:19px;font-weight:700}
+.bb-pop__body{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px;max-height:40vh;overflow-y:auto;font-size:14px;line-height:1.6;color:var(--muted)}
+.bb-pop__body p{margin:0 0 8px}.bb-pop__body p:last-child{margin:0}
+.bb-pop__check{display:flex;gap:8px;align-items:flex-start;margin-top:12px;font-size:14px}
+.bb-pop__row{display:flex;gap:8px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap}
+.bb-pop__btn{background:transparent;border:1px solid rgba(255,255,255,.2);color:var(--ink);border-radius:10px;padding:10px 14px;cursor:pointer;font:inherit;font-size:14px}
+.bb-pop__btn:hover{border-color:var(--accent)}.bb-pop__btn--ok{background:var(--accent);color:#0b141c;border:0;font-weight:700}
+.bb-pop__link{color:#9ecbff}
+.bb-nav{display:flex;justify-content:space-between;align-items:center;padding:12px 0;margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.bb-nav__brand{color:var(--ink);text-decoration:none;font-weight:800;font-size:17px;letter-spacing:.2px}
+.bb-nav__brand:hover{color:var(--accent)}
+.bb-nav__r{position:relative}
+.bb-nav__ham{background:transparent;border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:5px 10px;color:var(--ink);cursor:pointer;font-size:20px;line-height:1;font-family:inherit}
+.bb-nav__ham:hover{border-color:var(--accent)}
+.bb-nav__menu{display:none;position:absolute;top:calc(100% + 8px);right:0;background:var(--card);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:6px;min-width:200px;box-shadow:0 12px 40px rgba(0,0,0,.55);z-index:8000}
+.bb-nav__menu.open{display:flex;flex-direction:column;gap:2px}
+.bb-nav__a{color:var(--ink);text-decoration:none;padding:9px 12px;border-radius:8px;font-size:14px;white-space:nowrap;display:block}
+.bb-nav__a:hover{background:rgba(255,255,255,.08);color:var(--accent)}.bb-nav__a.cur{color:var(--accent);font-weight:600}
+.bb-nav__sep{height:1px;background:rgba(255,255,255,.1);margin:4px 2px}
+@media(prefers-color-scheme:light){.bb-nav{border-bottom-color:#e5e7eb}.bb-nav__ham,.bb-pop__btn{border-color:#cbd5e1}.bb-nav__menu{border-color:#e5e7eb;background:var(--card)}}
 </style>
 </head>
-<!-- ===== BAMBAM Legal Disclaimer (drop-in) ===== -->
-<style>
-  :root{ --bb-bg:#0f1115; --bb-card:#151922; --bb-ink:#e8eaf0; --bb-muted:#aab0c0; --bb-border:#2a3345; --bb-accent:#61dafb; }
-  .bb-legal__overlay{
-    position:fixed; inset:0; background:rgba(0,0,0,.7);
-    display:none; z-index:9999;
-    /* center modal */
-    place-items:center;  /* kicks in when display becomes 'grid' */
-    padding:16px;        /* breathing room on small screens */
-  }
-  .bb-legal__modal{
-    max-width:680px; margin:0 12px;            /* was: 6vh auto */
-    background:var(--card, var(--bb-card));
-    color:var(--ink, var(--bb-ink));
-    border:1px solid var(--border, var(--bb-border));
-    border-radius:14px; padding:18px;
-    box-shadow:0 12px 40px rgba(0,0,0,.5)
-  }
-  .bb-legal__title{margin:0 0 6px;font-size:20px}
-  .bb-legal__text{
-    background:#111723; border:1px solid var(--border, var(--bb-border));
-    border-radius:10px; padding:12px; max-height:42vh; overflow:auto;
-    color:var(--bb-muted); font-size:14px
-  }
-  .bb-legal__row{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:10px}
-  .bb-legal__btn{
-    background:#111723; border:1px solid var(--border, var(--bb-border));
-    color:var(--ink, var(--bb-ink)); border-radius:10px; padding:10px 12px; cursor:pointer
-  }
-  .bb-legal__btn--primary{background:var(--accent, var(--bb-accent)); color:#0b141c; border:0; font-weight:700}
-  .bb-legal__check{display:flex;gap:8px;align-items:flex-start;margin-top:10px;color:var(--ink, var(--bb-ink));font-size:14px}
-  .bb-legal__link{color:#9ecbff;text-decoration:none}
-</style>
-
-<div id="bbLegalOverlay" class="bb-legal__overlay" role="dialog" aria-modal="true" aria-labelledby="bbLegalTitle">
-  <div class="bb-legal__modal">
-    <h2 id="bbLegalTitle" class="bb-legal__title">Safety & Terms</h2>
-    <div class="bb-legal__text" id="bbLegalText">
+<body>
+<div id="bbPop" class="bb-pop" role="dialog" aria-modal="true" aria-labelledby="bbPopTitle">
+  <div class="bb-pop__box">
+    <h2 id="bbPopTitle" class="bb-pop__title">Safety &amp; Terms</h2>
+    <div class="bb-pop__body">
       <p><strong>Not medical advice.</strong> Workouts here are general info, not personal medical or coaching advice.</p>
-      <p><strong>Talk to a doctor</strong> before starting exercise. <strong>Stop immediately</strong> if you feel pain, dizziness, or shortness of breath.</p>
+      <p><strong>Talk to a doctor</strong> before starting any exercise program. <strong>Stop immediately</strong> if you feel pain, dizziness, or shortness of breath.</p>
       <p><strong>Use at your own risk.</strong> You are responsible for your space, equipment, and how you train.</p>
-      <p><strong>Minors.</strong> If you’re under 18, use this with a parent/guardian and coach approval.</p>
+      <p><strong>Minors.</strong> If you’re under 18, get parent/guardian and coach approval first.</p>
       <p><strong>Liability.</strong> To the fullest extent allowed by law, BAMBAM Built and its owners aren’t liable for injuries, losses, or damages from using this site.</p>
-      <p><strong>Privacy & Terms:</strong> See <a class="bb-legal__link" href="/legal" target="_blank" rel="noopener">/legal.html</a>.</p>
+      <p>See full <a class="bb-pop__link" href="/legal.html" target="_blank" rel="noopener">Terms &amp; Privacy</a>.</p>
     </div>
-
-    <label class="bb-legal__check">
-      <input type="checkbox" id="bbLegalAgree">
-      <span>I’m 18+ (or have a parent/guardian) and I agree to these terms.</span>
+    <label class="bb-pop__check">
+      <input type="checkbox" id="bbPopCb">
+      <span>I’m 18+ (or have a parent/guardian) and agree to these terms.</span>
     </label>
-
-    <div class="bb-legal__row">
-      <button id="bbLegalLeave" class="bb-legal__btn" type="button">Leave</button>
-      <button id="bbLegalAccept" class="bb-legal__btn bb-legal__btn--primary" type="button" disabled>I Agree & Continue</button>
+    <div class="bb-pop__row">
+      <button id="bbPopLeave" class="bb-pop__btn" type="button">Leave</button>
+      <button id="bbPopOk" class="bb-pop__btn bb-pop__btn--ok" type="button" disabled>I Agree &amp; Continue</button>
     </div>
   </div>
 </div>
-
-<script>
-(function(){
-  const VERSION = 'bb_terms_v6'; // bump to re-prompt
-  const DAYS=1;
-  const overlay = document.getElementById('bbLegalOverlay');
-  const agree = document.getElementById('bbLegalAgree');
-  const accept = document.getElementById('bbLegalAccept');
-
-  function lockScroll(on){ document.body.style.overflow = on ? 'hidden' : ''; }
-
-  function openModal(){
-    overlay.style.display = 'grid';      // centered (was: 'block')
-    lockScroll(true);
-    overlay.addEventListener('keydown', e => { if(e.key==='Escape'){ e.preventDefault(); } }, {once:true});
-    overlay.addEventListener('click', e => {
-      const modal = e.currentTarget.querySelector('.bb-legal__modal');
-      if(!modal.contains(e.target)) e.stopPropagation();
-    });
-  }
-
-  function closeModal(){
-    overlay.style.display = 'none';
-    lockScroll(false);
-  }
-
-  if(localStorage.getItem(VERSION) !== '1'){ openModal(); }
-
-  agree.addEventListener('change', () => { accept.disabled = !agree.checked; });
-  accept.addEventListener('click', () => {
-    if(!agree.checked) return;
-    localStorage.setItem(VERSION, '1');
-    closeModal();
-  });
-  document.getElementById('bbLegalLeave').addEventListener('click', () => {
-    history.length > 1 ? history.back() : window.close();
-  });
-})();
-</script>
-<!-- ===== /BAMBAM Legal Disclaimer ===== -->
-<body>
+<script>(function(){var V=’bb_v7’,ov=document.getElementById(‘bbPop’),cb=document.getElementById(‘bbPopCb’),ok=document.getElementById(‘bbPopOk’);function show(){ov.style.display=’grid’;document.body.style.overflow=’hidden’;}function hide(){ov.style.display=’none’;document.body.style.overflow=’’;}if(!localStorage.getItem(V)){show();}cb.addEventListener(‘change’,function(){ok.disabled=!cb.checked;});ok.addEventListener(‘click’,function(){if(!cb.checked)return;localStorage.setItem(V,’1’);hide();});document.getElementById(‘bbPopLeave’).addEventListener(‘click’,function(){history.length>1?history.back():window.close();});})();</script>
 <div class="wrap">
+  <nav class="bb-nav">
+    <a class="bb-nav__brand" href="/index.html">BAMBAM Built</a>
+    <div class="bb-nav__r">
+      <button class="bb-nav__ham" id="bbHam" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+      <div class="bb-nav__menu" id="bbNavMenu">
+        <a href="/index.html" class="bb-nav__a">📅 Daily WOD</a>
+        <a href="/run.html" class="bb-nav__a">🏃 Ultra Strength</a>
+        <a href="/bell.html" class="bb-nav__a">🔔 Kettlebell</a>
+        <a href="/rats.html" class="bb-nav__a">🏀 Court Prep</a>
+        <div class="bb-nav__sep"></div>
+        <a href="/legal.html" class="bb-nav__a">⚖️ Legal</a>
+      </div>
+    </div>
+  </nav>
 
   <!-- Header -->
   <div class="card">
@@ -469,5 +393,6 @@ document.querySelectorAll("#daySwitch button").forEach(btn=>{
 renderWeek(); renderDay();
 document.getElementById("printBtn").addEventListener("click", () => window.print());
 </script>
+<script>(function(){var h=document.getElementById('bbHam'),m=document.getElementById('bbNavMenu');if(!h||!m)return;h.addEventListener('click',function(e){e.stopPropagation();var o=m.classList.toggle('open');h.setAttribute('aria-expanded',o);});document.addEventListener('click',function(){m.classList.remove('open');h.setAttribute('aria-expanded','false');});var p=location.pathname.split('/').pop()||'index.html';m.querySelectorAll('.bb-nav__a').forEach(function(a){if(a.getAttribute('href').endsWith(p))a.classList.add('cur');});})();</script>
 </body>
 </html>
