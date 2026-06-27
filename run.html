@@ -66,6 +66,7 @@
     .bar-bad:before{background:var(--bad)}
     .bar-good:before{background:var(--good)}
     .bar-trail:before{background:var(--trail)}
+    .bar-accent:before{background:var(--accent)}
     footer{margin-top:16px;color:var(--muted);font-size:12px}
     .rest-day{text-align:center;padding:40px 20px;color:var(--muted)}
     .rest-day h2{color:var(--good);margin-bottom:12px}
@@ -153,7 +154,7 @@
       <ul class="checklist" id="warmupList"></ul>
     </div>
 
-    <div class="panel bar bar-trail" id="mainPanel">
+    <div class="panel bar bar-bad" id="mainPanel">
       <div id="restDay" class="rest-day" style="display:none">
         <h2>Rest Day — Full Recovery</h2>
         <p>Adaptation happens during rest, not training. This is non-negotiable.</p>
@@ -171,7 +172,7 @@
       <div class="meta" id="mainMeta"></div>
     </div>
 
-    <div class="panel bar bar-good" id="finisherPanel">
+    <div class="panel bar bar-accent" id="finisherPanel">
       <h2>Finisher / Cooldown</h2>
       <p class="sub">Mobility and prehab work. Don't skip this.</p>
       <ul class="checklist" id="finisherList"></ul>
@@ -515,7 +516,7 @@
       mainTimer.style.display = '';
       mainMeta.style.display = '';
       warmupPanel.style.display = 'block';
-      mainPanel.className = 'panel bar bar-trail';
+      mainPanel.className = 'panel bar bar-bad';
       finisherPanel.style.display = 'block';
 
       // Main workout based on day type and week
@@ -558,7 +559,7 @@
         case 'zone2core': {
           mainTitle.textContent = 'Zone 2 + Core Stability';
           warmupType = 'mobility';
-          mainPanel.className = 'panel bar bar-trail';
+          mainPanel.className = 'panel bar bar-bad';
           // Zone 2 as a single prompt item
           exercises = [pools.zone2.base];
           // Core circuit
@@ -573,7 +574,7 @@
         case 'mobility': {
           mainTitle.textContent = isRecovery ? 'Yoga Flow & Full Restoration' : 'Mobility & Active Recovery';
           warmupType = 'mobility';
-          mainPanel.className = 'panel bar bar-good';
+          mainPanel.className = 'panel bar bar-accent';
           if (isRecovery) {
             exercises = [...finishers.flowSequence];
             subtitle = 'Yoga-inspired flow. Box breathing primer first (5 min). Full parasympathetic restoration.';
