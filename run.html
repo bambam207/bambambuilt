@@ -154,10 +154,16 @@
     </div>
 
     <div class="panel bar bar-trail" id="mainPanel">
+      <div id="restDay" class="rest-day" style="display:none">
+        <h2>Rest Day — Full Recovery</h2>
+        <p>Adaptation happens during rest, not training. This is non-negotiable.</p>
+        <p style="margin-top:12px">Options: 15–20 min walk, gentle stretching, foam rolling, or complete rest.</p>
+        <p style="margin-top:8px;font-size:13px">Target 9+ hours sleep tonight. Athletes sleeping &lt;8 hrs are 1.7× more likely to be injured.</p>
+      </div>
       <h2 id="mainTitle">Workout</h2>
       <p class="sub" id="mainSub">Complete all exercises with good form.</p>
       <ol class="checklist" id="mainList"></ol>
-      <div class="timer">
+      <div class="timer" id="mainTimer">
         <div class="btn" id="startBtn">Start 45:00 Timer</div>
         <div class="clock" id="clock">45:00</div>
         <div class="btn" id="resetBtn">Reset</div>
@@ -482,30 +488,37 @@
       const finisherPanel = document.getElementById('finisherPanel');
 
       // Handle rest days
+      const restDay = document.getElementById('restDay');
+      const mainTitle = document.getElementById('mainTitle');
+      const mainSub = document.getElementById('mainSub');
+      const mainList = document.getElementById('mainList');
+      const mainTimer = document.getElementById('mainTimer');
+      const mainMeta = document.getElementById('mainMeta');
+
       if (dayType === 'rest') {
         warmupPanel.style.display = 'none';
-        mainPanel.innerHTML = `
-          <div class="rest-day">
-            <h2>Rest Day — Full Recovery</h2>
-            <p>Adaptation happens during rest, not training. This is non-negotiable.</p>
-            <p style="margin-top:12px">Options: 15–20 min walk, gentle stretching, foam rolling, or complete rest.</p>
-            <p style="margin-top:8px;font-size:13px">Target 9+ hours sleep tonight. Athletes sleeping &lt;8 hrs are 1.7× more likely to be injured.</p>
-          </div>
-        `;
-        mainPanel.className = 'panel';
         finisherPanel.style.display = 'none';
+        mainPanel.className = 'panel';
+        restDay.style.display = '';
+        mainTitle.style.display = 'none';
+        mainSub.style.display = 'none';
+        mainList.style.display = 'none';
+        mainTimer.style.display = 'none';
+        mainMeta.style.display = 'none';
         return;
       }
 
+      restDay.style.display = 'none';
+      mainTitle.style.display = '';
+      mainSub.style.display = '';
+      mainList.style.display = '';
+      mainTimer.style.display = '';
+      mainMeta.style.display = '';
       warmupPanel.style.display = 'block';
       mainPanel.className = 'panel bar bar-trail';
       finisherPanel.style.display = 'block';
 
       // Main workout based on day type and week
-      const mainList = document.getElementById('mainList');
-      const mainTitle = document.getElementById('mainTitle');
-      const mainSub = document.getElementById('mainSub');
-      const mainMeta = document.getElementById('mainMeta');
       mainList.innerHTML = '';
 
       const phase = weekPhaseKey[weekIdx]; // base | strength | power | recovery
