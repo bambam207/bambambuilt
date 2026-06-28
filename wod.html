@@ -473,7 +473,9 @@ function amrapLong(rng){
 }
 function emomLong(rng){
   const monoPool=allowedMonoPool(); const mins=choice(rng,[24,30,36,40]);
-  const a=pickAnyAllowed(rng), b=choice(rng,allowedGymPool()), c=monoPool.length?choice(rng,monoPool):"Air Squats 20";
+  const a=pickAnyAllowed(rng), b=choice(rng,allowedGymPool());
+  const emomMono=["Run 300m","Row 200m","100 Double-unders"].filter(s=>!violatesFilters(tagText([s])));
+  const c=emomMono.length?choice(rng,emomMono):"20 Burpees";
   if(!a||!b) return amrapLong(rng);
   return {title:`EMOM ${mins} — Rotate 3`, type:"EMOM", time:String(mins),
     body:[`Every minute for ${mins} min, rotate:`,
