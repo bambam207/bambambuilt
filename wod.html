@@ -473,7 +473,7 @@ function amrapLong(rng){
 }
 function emomLong(rng){
   const monoPool=allowedMonoPool(); const mins=choice(rng,[24,30,36,40]);
-  const a=pickAnyAllowed(rng), b=choice(rng,allowedGymPool()), c=monoPool.length?choice(rng,monoPool):"Air Squats 20";
+  const a=pickAnyAllowed(rng), b=choice(rng,allowedGymPool()), c=excluded.has("row")?"Air Squats 20":"Row 200m";
   if(!a||!b) return amrapLong(rng);
   return {title:`EMOM ${mins} — Rotate 3`, type:"EMOM", time:String(mins),
     body:[`Every minute for ${mins} min, rotate:`,
