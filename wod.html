@@ -78,10 +78,13 @@ ul{margin:8px 0 0 20px} li{margin:4px 0}
 .filter-btn{background:transparent;border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:6px 10px;font-size:13px;color:var(--ink);cursor:pointer}
 .filter-btn:hover{border-color:var(--accent)}
 .filter-panel{
-  position:absolute; top:120%;
-  left:50%; transform:translateX(-50%);
-  width:280px; background:var(--card); border:1px solid var(--border); border-radius:14px;
+  position:fixed; top:auto; left:8px; right:8px;
+  width:auto; max-width:320px; margin:0 auto;
+  background:var(--card); border:1px solid var(--border); border-radius:14px;
   box-shadow:0 12px 36px rgba(0,0,0,.45); padding:12px; display:none; z-index:1000
+}
+@media(min-width:500px){
+  .filter-panel{position:absolute;top:120%;left:auto;right:0;width:280px;margin:0}
 }
 .filter-panel.show{display:block}
 .filter-panel h4{margin:0 0 8px;color:var(--ink);font-size:14px}
