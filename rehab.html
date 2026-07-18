@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Rehab — BAMBAM Built</title>
+<meta name="description" content="16-week corrective rehabilitation for right-side neuromuscular asymmetry. LPHC dysfunction, FKT preparation, adaptive pain monitoring.">
+<style>
+:root{
+  --bg:#0f1115;--panel:#161922;--ink:#e6e7eb;--muted:#9aa3b2;
+  --accent:#7dd3fc;--good:#86efac;--warn:#fbbf24;--bad:#fb7185;--trail:#22c55e;
+  --border:rgba(255,255,255,.07);
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"SF Pro Text",Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Arial,"Helvetica Neue",sans-serif;
+}
+@media(prefers-color-scheme:light){
+  :root{
+    --bg:#f6f7fb;--panel:#ffffff;--ink:#111318;--muted:#4b5563;
+    --accent:#0369a1;--good:#15803d;--warn:#f59e0b;--bad:#dc2626;--trail:#16a34a;
+    --border:#e5e7eb;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:900px;margin:0 auto;padding:28px 20px 60px}
+
+/* NAV */
+nav{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:24px}
+nav a{font-size:13px;color:var(--muted);text-decoration:none;padding:4px 10px;border-radius:8px;border:1px solid var(--border);transition:color .15s,border-color .15s;white-space:nowrap}
+nav a:hover,nav a.active{color:var(--accent);border-color:var(--accent)}
+.brand{font-weight:800;font-size:16px;color:var(--ink);text-decoration:none;margin-right:auto}
+
+/* PANELS */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:22px 20px;margin-bottom:16px}
+.panel h2{margin:0 0 4px;font-size:17px;font-weight:700;color:var(--ink)}
+.panel h3{margin:14px 0 6px;font-size:14px;font-weight:700;color:var(--ink)}
+.sub{color:var(--muted);font-size:13px;margin:0 0 14px;line-height:1.5}
+
+/* BAR SYSTEM */
+.bar{position:relative;padding-left:20px}
+.bar::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;border-radius:5px 0 0 5px}
+.bar-warn::before{background:var(--warn)}
+.bar-bad::before{background:var(--bad)}
+.bar-accent::before{background:var(--accent)}
+.bar-good::before{background:var(--good)}
+
+/* PHASE HEADER */
+.phase-header{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:20px}
+.phase-badge{display:inline-flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:10px 16px}
+.phase-num{font-weight:900;font-size:22px;color:var(--accent);line-height:1}
+.phase-info-name{font-weight:700;font-size:13px}
+.phase-info-wks{font-size:12px;color:var(--muted)}
+.week-badge{display:inline-flex;align-items:center;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:10px 16px;font-size:13px;color:var(--muted);white-space:nowrap}
+.week-badge strong{color:var(--ink);margin:0 2px}
+.prog-wrap{flex:1;min-width:120px}
+.prog-bar{height:6px;background:var(--border);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .4s}
+.prog-label{font-size:11px;color:var(--muted);margin-top:3px}
+.btn-sm{padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:12px;cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+.btn-sm:hover{color:var(--accent);border-color:var(--accent)}
+
+/* SESSION PANEL */
+.session-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.session-title{font-size:16px;font-weight:700;flex:1}
+.session-badge{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 9px;border-radius:6px}
+.sb-full{background:rgba(251,113,133,.15);color:var(--bad)}
+.sb-snack{background:rgba(125,211,252,.15);color:var(--accent)}
+.sb-rest{background:rgba(134,239,172,.15);color:var(--good)}
+.sb-done{background:rgba(134,239,172,.15);color:var(--good)}
+
+/* EXERCISE LIST */
+.ex-list{list-style:none;padding:0;margin:8px 0 0}
+.ex-item{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--border)}
+.ex-item:last-child{border-bottom:none}
+.ex-check{width:22px;height:22px;border:2px solid var(--border);border-radius:7px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .15s,background .15s;margin-top:1px}
+.ex-check:hover{border-color:var(--accent)}
+.ex-check.done{border-color:var(--good);background:var(--good)}
+.ex-check.done::after{content:'✓';color:#0f1115;font-size:13px;font-weight:900}
+.ex-body{flex:1}
+.ex-name{font-weight:600;font-size:14px}
+.ex-dose{color:var(--muted);font-size:12px;margin-top:1px}
+.ex-cue{color:var(--accent);font-size:12px;margin-top:3px;font-style:italic;line-height:1.4}
+.completion-row{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:13px;color:var(--muted)}
+.completion-bar{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.completion-fill{height:100%;background:var(--good);border-radius:2px;transition:width .3s}
+
+/* CHECKIN PANEL */
+.pain-grid{display:grid;gap:8px;margin-bottom:4px}
+.pain-row{display:grid;grid-template-columns:140px 1fr 32px;align-items:center;gap:12px;font-size:13px}
+@media(max-width:480px){.pain-row{grid-template-columns:110px 1fr 28px}}
+.pain-label{color:var(--muted);font-size:12px}
+.pain-slider{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:2px;background:var(--border);outline:none;cursor:pointer}
+.pain-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer}
+.pain-val{font-weight:700;font-size:13px;text-align:right;min-width:24px;transition:color .2s}
+.tl-row{display:flex;gap:10px;margin-top:4px}
+.tl-btn{flex:1;padding:10px 6px;border-radius:12px;border:2px solid var(--border);background:transparent;cursor:pointer;font-size:12px;font-weight:700;text-align:center;transition:all .15s;color:var(--ink);line-height:1.4}
+.tl-btn .tl-sub{font-weight:400;font-size:11px;display:block;margin-top:2px;color:var(--muted)}
+.tl-btn.green-btn{border-color:var(--good);color:var(--good)}
+.tl-btn.green-btn .tl-sub{color:var(--good);opacity:.7}
+.tl-btn.green-btn.active{background:var(--good);color:#0a150a}
+.tl-btn.amber-btn{border-color:var(--warn);color:var(--warn)}
+.tl-btn.amber-btn .tl-sub{color:var(--warn);opacity:.7}
+.tl-btn.amber-btn.active{background:var(--warn);color:#1a0f00}
+.tl-btn.red-btn{border-color:var(--bad);color:var(--bad)}
+.tl-btn.red-btn .tl-sub{color:var(--bad);opacity:.7}
+.tl-btn.red-btn.active{background:var(--bad);color:#fff}
+.checkin-msg{margin-top:12px;padding:12px 14px;border-radius:10px;font-size:13px;display:none;line-height:1.5}
+.checkin-msg.show{display:block}
+.checkin-msg.green{background:rgba(134,239,172,.1);border:1px solid var(--good);color:var(--good)}
+.checkin-msg.amber{background:rgba(251,191,36,.1);border:1px solid var(--warn);color:var(--warn)}
+.checkin-msg.red{background:rgba(251,113,133,.1);border:1px solid var(--bad);color:var(--bad)}
+
+/* ISSUE GRID */
+.issue-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+@media(max-width:560px){.issue-grid{grid-template-columns:1fr}}
+.ic{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px}
+.ic-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;gap:8px}
+.ic-name{font-weight:700;font-size:14px;flex:1}
+.ic-tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0}
+.tag-blue{background:rgba(125,211,252,.15);color:var(--accent)}
+.tag-amber{background:rgba(251,191,36,.15);color:var(--warn)}
+.tag-green{background:rgba(134,239,172,.15);color:var(--good)}
+.tag-red{background:rgba(251,113,133,.15);color:var(--bad)}
+.ic-desc{font-size:12px;color:var(--muted);margin-bottom:6px;line-height:1.4}
+.ic-target{font-size:11px;color:var(--muted);margin-bottom:8px;font-style:italic}
+.ic-progbar{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.ic-progfill{height:100%;border-radius:2px;transition:width .4s}
+
+/* METRICS TABLE */
+.metrics-table{width:100%;border-collapse:collapse;font-size:13px}
+.metrics-table th{text-align:left;color:var(--muted);font-weight:600;font-size:12px;padding:6px 0 8px;border-bottom:1px solid var(--border)}
+.metrics-table td{padding:10px 0;border-bottom:1px solid var(--border);vertical-align:top}
+.metrics-table tr:last-child td{border-bottom:none}
+.m-name{font-weight:600;font-size:13px}
+.m-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.m-target{font-size:12px;font-weight:600;color:var(--good)}
+.m-sub2{font-size:11px;color:var(--muted);margin-top:1px}
+.m-input{background:transparent;border:1px solid var(--border);border-radius:7px;color:var(--ink);padding:5px 9px;font-size:12px;width:90px;outline:none;font-family:var(--mono)}
+.m-input:focus{border-color:var(--accent)}
+
+/* RED FLAGS */
+.rf-list{list-style:none;padding:0;margin:8px 0 0}
+.rf-list li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;line-height:1.4}
+.rf-list li:last-child{border-bottom:none}
+.rf-icon{color:var(--bad);flex-shrink:0;font-size:14px;margin-top:1px}
+
+/* DISCLAIMER */
+.disclaimer{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.18);border-radius:12px;padding:14px 16px;font-size:12px;color:var(--muted);margin-bottom:20px;line-height:1.6}
+
+/* SETUP OVERLAY */
+.setup-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100;align-items:center;justify-content:center;padding:20px}
+.setup-overlay.show{display:flex}
+.setup-box{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:400px;width:100%}
+.setup-box h2{margin:0 0 8px;font-size:22px;font-weight:800}
+.setup-box p{color:var(--muted);font-size:14px;margin:0 0 22px;line-height:1.6}
+.setup-input{width:100%;padding:11px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--ink);font-size:15px;outline:none;margin-bottom:16px}
+.setup-input:focus{border-color:var(--accent)}
+.btn-primary{width:100%;padding:13px;background:var(--accent);color:#0a1520;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.btn-primary:hover{opacity:.88}
+
+footer{margin-top:32px;text-align:center;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav>
+    <a class="brand" href="/index.html">BAMBAM Built</a>
+    <a href="/wod.html">Daily WOD</a>
+    <a href="/run.html">Ultra Strength</a>
+    <a href="/bell.html">Kettlebell</a>
+    <a href="/rats.html">Court Prep</a>
+    <a href="/rehab.html" class="active">Rehab</a>
+  </nav>
+
+  <div class="disclaimer">
+    ⚠️ This tool is for personal wellness tracking only. It does not diagnose, treat, or replace medical care. Always consult a licensed PT or sports-medicine physician before beginning or modifying this program. Red flags listed below require immediate in-person evaluation.
+  </div>
+
+  <!-- PHASE HEADER -->
+  <div class="phase-header" id="phaseHeader">
+    <div class="phase-badge">
+      <span class="phase-num" id="phaseNum">1</span>
+      <div>
+        <div class="phase-info-name" id="phaseName">Activation &amp; Repositioning</div>
+        <div class="phase-info-wks" id="phaseWks">Weeks 1–4</div>
+      </div>
+    </div>
+    <div class="week-badge">Week <strong id="currentWeek">1</strong> of 16</div>
+    <div class="prog-wrap">
+      <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+      <div class="prog-label" id="progLabel">0% complete</div>
+    </div>
+    <button class="btn-sm" onclick="openSetup()">⚙ Change Start Date</button>
+  </div>
+
+  <!-- TODAY'S SESSION -->
+  <div class="panel bar bar-bad" id="sessionPanel">
+    <div class="session-controls">
+      <div class="session-title" id="sessionTitle">Today's Session</div>
+      <span class="session-badge sb-full" id="sessionBadge">Full Session</span>
+    </div>
+    <p class="sub" id="sessionDesc"></p>
+    <ul class="ex-list" id="exList"></ul>
+    <div class="completion-row" id="completionRow" style="display:none">
+      <div class="completion-bar"><div class="completion-fill" id="completionFill"></div></div>
+      <span id="completionLabel" style="white-space:nowrap"></span>
+    </div>
+  </div>
+
+  <!-- DAILY CHECK-IN -->
+  <div class="panel bar bar-accent">
+    <h2>Daily Check-In</h2>
+    <p class="sub">Rate each area right now — 0 = no pain, 10 = worst imaginable</p>
+
+    <div class="pain-grid">
+      <div class="pain-row">
+        <span class="pain-label">Right Foot / Lateral</span>
+        <input type="range" class="pain-slider" id="p-rfoot" min="0" max="10" value="0" oninput="onPain('rfoot',this.value)">
+        <span class="pain-val" id="pv-rfoot">0</span>
+      </div>
+      <div class="pain-row">
+        <span class="pain-label">Right Heel</span>
+        <input type="range" class="pain-slider" id="p-rheel" min="0" max="10" value="0" oninput="onPain('rheel',this.value)">
+        <span class="pain-val" id="pv-rheel">0</span>
+      </div>
+      <div class="pain-row">
+        <span class="pain-label">Right Knee / Hip</span>
+        <input type="range" class="pain-slider" id="p-rknee" min="0" max="10" value="0" oninput="onPain('rknee',this.value)">
+        <span class="pain-val" id="pv-rknee">0</span>
+      </div>
+      <div class="pain-row">
+        <span class="pain-label">Left Arch / Foot</span>
+        <input type="range" class="pain-slider" id="p-lfoot" min="0" max="10" value="0" oninput="onPain('lfoot',this.value)">
+        <span class="pain-val" id="pv-lfoot">0</span>
+      </div>
+      <div class="pain-row">
+        <span class="pain-label">Low Back / QL</span>
+        <input type="range" class="pain-slider" id="p-lback" min="0" max="10" value="0" oninput="onPain('lback',this.value)">
+        <span class="pain-val" id="pv-lback">0</span>
+      </div>
+    </div>
+
+    <h3>Overall Traffic Light</h3>
+    <p class="sub" style="margin-bottom:10px">How does your body feel today compared to yesterday?</p>
+    <div class="tl-row">
+      <button class="tl-btn green-btn" id="tl-green" onclick="setTL('green')">
+        🟢 Green<span class="tl-sub">Pain ≤3/10, settled overnight — proceed as planned</span>
+      </button>
+      <button class="tl-btn amber-btn" id="tl-amber" onclick="setTL('amber')">
+        🟡 Amber<span class="tl-sub">Pain 4–6 or lingering — reduce load, skip plyos</span>
+      </button>
+      <button class="tl-btn red-btn" id="tl-red" onclick="setTL('red')">
+        🔴 Red<span class="tl-sub">Pain &gt;6 or worsening — rest, reassess, see PT</span>
+      </button>
+    </div>
+    <div class="checkin-msg" id="checkinMsg"></div>
+  </div>
+
+  <!-- 4 ISSUE TRACKER -->
+  <h2 style="font-size:15px;font-weight:700;margin:4px 0 12px">Issue Tracker</h2>
+  <div class="issue-grid">
+    <div class="ic">
+      <div class="ic-top">
+        <span class="ic-name">Right Hip / Core</span>
+        <span class="ic-tag tag-blue">Primary Driver</span>
+      </div>
+      <div class="ic-desc">Gluteus medius + anterolateral core inhibition. Root cause of the whole pattern.</div>
+      <div class="ic-target">Target: hip abduction ≥90% symmetry · side-bridge L:R within 0.05</div>
+      <div class="ic-progbar"><div class="ic-progfill" id="bar-hip" style="width:0%;background:var(--accent)"></div></div>
+    </div>
+    <div class="ic">
+      <div class="ic-top">
+        <span class="ic-name">Right Foot — Running</span>
+        <span class="ic-tag tag-amber">Monitor</span>
+      </div>
+      <div class="ic-desc">Cuboid/peroneal pain + suspected lateral CECS. Mile-8 on/off pattern.</div>
+      <div class="ic-target">Target: symptom-onset distance increasing · pain ≤2/10 at mile 8+</div>
+      <div class="ic-progbar"><div class="ic-progfill" id="bar-rfoot" style="width:0%;background:var(--warn)"></div></div>
+    </div>
+    <div class="ic">
+      <div class="ic-top">
+        <span class="ic-name">Right Heel</span>
+        <span class="ic-tag tag-blue">Active</span>
+      </div>
+      <div class="ic-desc">Insertional plantar fasciopathy / Achilles. Heavy occupational loading.</div>
+      <div class="ic-target">Target: heel pain ≤3/10 during loading · settled by next morning</div>
+      <div class="ic-progbar"><div class="ic-progfill" id="bar-rheel" style="width:0%;background:var(--accent)"></div></div>
+    </div>
+    <div class="ic">
+      <div class="ic-top">
+        <span class="ic-name">Left Arch / Foot</span>
+        <span class="ic-tag tag-amber">Monitor</span>
+      </div>
+      <div class="ic-desc">Abductor hallucis strain from left-side compensation pattern + orthotic change.</div>
+      <div class="ic-target">Target: arch pain-free during short-foot · will partly resolve as hip improves</div>
+      <div class="ic-progbar"><div class="ic-progfill" id="bar-lfoot" style="width:0%;background:var(--warn)"></div></div>
+    </div>
+  </div>
+
+  <!-- MONTHLY PROGRESS METRICS -->
+  <div class="panel bar bar-warn">
+    <h2>Monthly Progress Tests</h2>
+    <p class="sub">Retest every 3–4 weeks. Log results to track your trajectory.</p>
+    <table class="metrics-table">
+      <thead>
+        <tr>
+          <th style="width:45%">Measure</th>
+          <th style="width:30%">Target</th>
+          <th>Last Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="m-name">Y-Balance Anterior Reach</div>
+            <div class="m-sub">Right vs. Left reach asymmetry (cm)</div>
+          </td>
+          <td>
+            <div class="m-target">&lt;4 cm difference</div>
+            <div class="m-sub2">≥94% composite score</div>
+          </td>
+          <td><input class="m-input" id="m-ybal" placeholder="e.g. R52 L56" onchange="saveMet('ybal',this.value)"></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="m-name">McGill Side-Bridge</div>
+            <div class="m-sub">Right hold (s) vs. Left hold (s)</div>
+          </td>
+          <td>
+            <div class="m-target">L:R within 0.05 of 1.0</div>
+            <div class="m-sub2">e.g. R45s / L47s = ratio 0.96 ✓</div>
+          </td>
+          <td><input class="m-input" id="m-mcgill" placeholder="e.g. R45/L47" onchange="saveMet('mcgill',this.value)"></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="m-name">Single-Leg Squat Valgus</div>
+            <div class="m-sub">Right knee FPPA via phone video</div>
+          </td>
+          <td>
+            <div class="m-target">≤5° valgus right</div>
+            <div class="m-sub2">R:L within 5° (use Kinovea app)</div>
+          </td>
+          <td><input class="m-input" id="m-fppa" placeholder="e.g. R8° L5°" onchange="saveMet('fppa',this.value)"></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="m-name">Single-Leg Hop Distance</div>
+            <div class="m-sub">Right vs. Left (cm) — once pain-free</div>
+          </td>
+          <td>
+            <div class="m-target">LSI ≥90%</div>
+            <div class="m-sub2">R/L × 100 ≥ 90%</div>
+          </td>
+          <td><input class="m-input" id="m-hop" placeholder="e.g. R145/L162" onchange="saveMet('hop',this.value)"></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="m-name">Symptom Onset Distance</div>
+            <div class="m-sub">Miles before right lateral foot pain</div>
+          </td>
+          <td>
+            <div class="m-target">&gt;20 miles pain-free</div>
+            <div class="m-sub2">Currently ~mile 8 threshold</div>
+          </td>
+          <td><input class="m-input" id="m-onset" placeholder="e.g. mile 8" onchange="saveMet('onset',this.value)"></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="m-name">Running Cadence</div>
+            <div class="m-sub">Steps/min from Garmin (easy run)</div>
+          </td>
+          <td>
+            <div class="m-target">+7.5–10% vs. baseline</div>
+            <div class="m-sub2">Track trend — not diagnostic</div>
+          </td>
+          <td><input class="m-input" id="m-cadence" placeholder="e.g. 172 spm" onchange="saveMet('cadence',this.value)"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- RED FLAGS -->
+  <div class="panel bar bar-bad">
+    <h2>🚨 Red Flags — Stop &amp; See PT / ER Now</h2>
+    <p class="sub">If any of these apply, stop all impact activity immediately and seek in-person evaluation. Do not train through these.</p>
+    <ul class="rf-list">
+      <li><span class="rf-icon">▲</span>Localized bone pain that <strong>worsens as a run progresses</strong> — shin, foot, metatarsal, or groin (femoral neck). Possible stress fracture.</li>
+      <li><span class="rf-icon">▲</span>Pain <strong>at rest or at night</strong> that wakes you up. X-ray often misses stress fractures — MRI is definitive.</li>
+      <li><span class="rf-icon">▲</span>Pain onset distance <strong>getting shorter in successive runs</strong> — a stress injury red flag.</li>
+      <li><span class="rf-icon">▲</span>Positive <strong>single-leg hop test</strong>: sharp, focal bone pain on ~10 hops in place.</li>
+      <li><span class="rf-icon">▲</span><strong>Limping or altering stride</strong> to offload pain during a run.</li>
+      <li><span class="rf-icon">▲</span>Cuboid/lateral foot pain <strong>not improving with taping</strong> after 2–3 weeks, or recurrent subluxation.</li>
+      <li><span class="rf-icon">▲</span><strong>Numbness, tingling, or weakness</strong> in the foot or toes during or after exercise (nerve involvement).</li>
+      <li><span class="rf-icon">▲</span>Pain <strong>&gt;6/10 not settling within 24 hours</strong> despite stopping load.</li>
+      <li><span class="rf-icon">▲</span><strong>Calf swelling, warmth, or pain at rest</strong> — possible DVT. Go to urgent care / ER.</li>
+      <li><span class="rf-icon">▲</span>Severe unrelenting pain with <strong>foot-drop, paresthesia, or pallor</strong> — possible acute compartment syndrome. <strong>Call 911.</strong></li>
+    </ul>
+  </div>
+
+  <footer>© <span id="yr"></span> bambambuilt.com &nbsp;·&nbsp; Rehab v1.0 &nbsp;·&nbsp; For personal wellness tracking only. Not medical advice.</footer>
+</div>
+
+<!-- SETUP OVERLAY -->
+<div class="setup-overlay" id="setupOverlay">
+  <div class="setup-box">
+    <h2>Set Program Start Date</h2>
+    <p>Enter the date you began (or plan to begin) this 16-week protocol. The page will auto-calculate your current phase, week, and today's session.</p>
+    <input type="date" class="setup-input" id="startDateInput">
+    <button class="btn-primary" onclick="saveStart()">Start Program</button>
+  </div>
+</div>
+
+<script>
+// ─── PHASE DATA ───────────────────────────────────────────────────────
+const PHASES = [
+  {
+    num:1, name:'Activation & Repositioning', weeks:'Weeks 1–4',
+    wkStart:1, wkEnd:4,
+    schedule:['full','snack','full','snack','full','snack','rest'],
+    fullTitle:'Full Corrective Session',
+    fullDesc:'Right core activation · hip abductor strengthening · foot rehab',
+    snackTitle:'Activation Snack (~10 min)',
+    snackDesc:'Daily maintenance: breathing reset + glute activation + short-foot',
+    restTitle:'Recovery Day',
+    restDesc:'Active recovery, mobility, and breathing work only',
+    full:[
+      {n:'90/90 Diaphragmatic Breathing',d:'3 sets × 5 breaths',c:'Full exhale, ribs down, pause 2s before inhale. Cue: feel right ribcage expand sideways.'},
+      {n:'Dead Bug — Bent Knee March',d:'3 × 10 each side',c:'Low back stays pressed to floor the whole time. Right-side oblique emphasis.'},
+      {n:'Right Side Plank (knees)',d:'3 × 20–30s',c:'Right side facing up. Stiff as a board — no hip sag. Progress to feet-stacked.'},
+      {n:'Pallof Press — Tall Kneeling',d:'3 × 10 each side',c:'Lock ribcage to pelvis. Resist rotation through core, not shoulders. Slow and controlled.'},
+      {n:'Side-Lying Hip Abduction — Right',d:'3 × 15 reps',c:'Slight hip flexion. Slow, controlled lift. No hip hiking at the top.'},
+      {n:'Clamshell — Right',d:'3 × 15 reps',c:'Feet stacked, hips stacked. Only the top hip rotates. Feel the glute med, not the hip flexor.'},
+      {n:'Single-Leg Glute Bridge — Right',d:'3 × 12 reps',c:'Drive through the right heel. Keep the pelvis level — left side must not drop.'},
+      {n:'Short-Foot Exercise — Both Feet',d:'3 × 10 × 5s holds',c:'Dome the arch without curling toes. Seated first, then progress to standing.'},
+      {n:'Low-Dye Tape / Cuboid Pad',d:'As needed pre-run',c:'Apply before any run longer than 3 miles. Right lateral column support.'},
+    ],
+    snack:[
+      {n:'90/90 Diaphragmatic Breathing',d:'2 × 5 breaths',c:'Full exhale, rib flare down. This is the reset cue — do it before any run too.'},
+      {n:'Clamshell — Right',d:'2 × 15 reps',c:'Glute med activation before running or long periods of sitting.'},
+      {n:'Short-Foot Exercise',d:'2 × 10 × 3s holds each foot',c:'Seated arch doming. Progress to standing when consistent.'},
+    ],
+    rest:[
+      {n:'90/90 Diaphragmatic Breathing',d:'5 breaths × 3',c:'Full system reset. Exhale completely, ribs down, pause.'},
+      {n:'Left QL Side-Bend Stretch',d:'2 × 45s',c:'Left arm overhead, lean right. Add slight forward reach to maximize left QL lengthening.'},
+      {n:'½-Kneeling Hip Flexor Stretch — Both',d:'2 × 60s each',c:'Posterior pelvic tilt first, then shift forward gently. Right hip flexor is tight — prioritize.'},
+      {n:'Short-Foot — Maintenance',d:'2 × 10 × 3s each foot',c:'Light daily maintenance even on rest days.'},
+    ]
+  },
+  {
+    num:2, name:'Integrated Unilateral Strength', weeks:'Weeks 5–9',
+    wkStart:5, wkEnd:9,
+    schedule:['full','snack','full','snack','full','snack','rest'],
+    fullTitle:'Full Strength Session',
+    fullDesc:'Split squats · step-downs · single-leg loading with valgus control',
+    snackTitle:'Activation Snack (~10 min)',
+    snackDesc:'Pre-run or daily activation: breathing + glute + foot',
+    restTitle:'Recovery Day',
+    restDesc:'Active recovery, stretching, and breathing only',
+    full:[
+      {n:'90/90 Breathing + Hip Lift',d:'2 × 5 breaths',c:'Feet on wall. Posterior pelvic tilt. Down-regulate tight left QL.'},
+      {n:'Split Squat (rear foot elevated)',d:'3 × 10 each leg',c:'Right side: knee tracks over 2nd toe. Film from front. Zero valgus tolerance.'},
+      {n:'Step-Down — Right',d:'3 × 12 reps',c:'4-count controlled lowering. Left toe barely touches. Watch right knee in mirror.'},
+      {n:'Single-Leg RDL — Right',d:'3 × 10 reps',c:'Hip hinge. Level hips throughout. 3-count eccentric. Feel right glute and hamstring load.'},
+      {n:'Banded Lateral Walk',d:'3 × 15 steps each direction',c:'Band above knees. Stay low and wide. Knees must not cave. Right glute fires the whole time.'},
+      {n:'Suitcase Carry — Right Hand',d:'3 × 30m walks',c:'Left lateral trunk must resist hiking. Tall posture, ribs stacked over pelvis.'},
+      {n:'Right Side Plank — Full (feet stacked)',d:'3 × 35–45s',c:'Top-leg abduction when solid. Use this hold as your McGill side-bridge test too.'},
+      {n:'Pallof Press — Standing',d:'3 × 10 each side',c:'Progress from kneeling last phase. Add split stance when ready.'},
+      {n:'Short-Foot — Single-Leg Stance',d:'3 × 30s each foot',c:'Maintain arch dome while balancing. No wobble, no grip.'},
+    ],
+    snack:[
+      {n:'90/90 Breathing',d:'1 × 5 breaths',c:'Full exhale, ribs down. Quick reset before any run.'},
+      {n:'Clamshell — Right',d:'2 × 15',c:'Glute med activation before loading.'},
+      {n:'Short-Foot — Single-Leg',d:'2 × 30s each foot',c:'Progress from seated. Balance on each foot with arch domed.'},
+    ],
+    rest:[
+      {n:'90/90 Diaphragmatic Breathing',d:'5 breaths × 3',c:'Recovery reset.'},
+      {n:'Left QL Side-Bend Stretch',d:'2 × 45s',c:'Left arm overhead, lean right. Lengthen, don\'t just stretch.'},
+      {n:'½-Kneeling Hip Flexor Stretch',d:'2 × 60s each',c:'Posterior tilt, then shift. Feel the right hip flexor release.'},
+      {n:'Short-Foot — Maintenance',d:'2 × 10 each foot',c:'Keep the foot gains between sessions.'},
+    ]
+  },
+  {
+    num:3, name:'Loaded/Eccentric + Gait Retraining', weeks:'Weeks 10–13',
+    wkStart:10, wkEnd:13,
+    schedule:['full','snack','full','snack','full','rest','rest'],
+    fullTitle:'Full Eccentric Session',
+    fullDesc:'Heavy eccentric hip loading · cadence retraining · uneven surface work',
+    snackTitle:'Pre-Run Activation',
+    snackDesc:'Quick activation + cadence cue before runs',
+    restTitle:'Recovery Day',
+    restDesc:'Two rest days per week this phase. Quality over quantity.',
+    full:[
+      {n:'Eccentric Hip Abduction — Right',d:'3 × 15 (4s lowering)',c:'Cable or heavy band. 4-count eccentric lowering. Highest-evidence move for reducing knee valgus.'},
+      {n:'Single-Leg Squat — Video Form Check',d:'3 × 10 right',c:'Film every set from front. Target ≤5° valgus. Stop set if form breaks down.'},
+      {n:'Heavy Split Squat (loaded)',d:'3 × 8 each',c:'Add dumbbells. Right side: perfect knee track. Slow 3-count eccentric.'},
+      {n:'Eccentric Single-Leg RDL',d:'3 × 10',c:'3-count lowering, 1-count return. Posterior chain under full eccentric load.'},
+      {n:'Lateral Step-Down off Box',d:'3 × 12 right',c:'Step laterally off 8" box. Control the valgus through the entire landing.'},
+      {n:'Uneven Surface Balance — Right',d:'3 × 45s',c:'Balance disc or folded mat. Eyes open first, then closed. Trail simulation.'},
+      {n:'Cadence Retraining Run',d:'15–20 min easy run',c:'Target +7.5–10% above your normal cadence. Use watch metronome or app. Cue: quicker, lighter steps.'},
+      {n:'Short-Foot — Dynamic (during heel raise)',d:'2 × 20 reps each',c:'Maintain arch dome through the heel raise. Progress to single-leg heel raise.'},
+    ],
+    snack:[
+      {n:'90/90 Breathing',d:'1 × 5 breaths',c:'Reset before runs.'},
+      {n:'Banded Lateral Walk',d:'2 × 15 each direction',c:'Glute med activation within 10 min before running.'},
+      {n:'Cadence Reminder',d:'Every easy run',c:'Target +7.5–10% above preferred. Gradually withdraw the metronome cue over the phase.'},
+    ],
+    rest:[
+      {n:'90/90 Diaphragmatic Breathing',d:'5 breaths × 3',c:'Deeper recovery. Take the two rest days seriously this phase.'},
+      {n:'Left QL Foam Roller',d:'2 min each side',c:'Stay off the spine. If nerve/shooting pain: stop immediately.'},
+      {n:'Hip Flexor Stretch',d:'2 × 60s each',c:'Posterior pelvic tilt first, then shift. Right hip flexor is still tight.'},
+      {n:'Short-Foot Maintenance',d:'2 × 10 each',c:'Light maintenance only on rest days.'},
+    ]
+  },
+  {
+    num:4, name:'Plyometric & Trail-Specific', weeks:'Weeks 14–16',
+    wkStart:14, wkEnd:16,
+    schedule:['full','snack','full','rest','full','rest','rest'],
+    fullTitle:'Plyometric / Trail Session',
+    fullDesc:'Low-level plyometrics · trail specificity · strength taper',
+    snackTitle:'Maintenance Activation',
+    snackDesc:'Taper volume — keep the pattern, reduce the load',
+    restTitle:'Recovery Day',
+    restDesc:'Three rest days per week this phase. Preserve the gains.',
+    full:[
+      {n:'Single-Leg Hops — Right',d:'3 × 10 hops',c:'ONLY if frontal-plane control is clean and legs are fully fresh. Soft, quiet landings.'},
+      {n:'Lateral Bounds',d:'3 × 8 each direction',c:'Stick each landing with hip and knee control. Zero valgus on landing.'},
+      {n:'Trail Single-Leg Balance',d:'3 × 45s each',c:'Rocky surface or uneven ground. Simulate trail terrain and slight downhill if available.'},
+      {n:'Reactive Step-Down',d:'3 × 10 right',c:'Faster tempo than before. Maintain valgus control at speed — this is the test.'},
+      {n:'Split Squat — Maintenance',d:'2 × 8 each',c:'Reduced volume (taper). Keep technique sharp. Do not increase loading this phase.'},
+      {n:'Short-Foot During Running',d:'All easy runs',c:'Maintain arch awareness. Light, quick, midfoot-biased footstrike.'},
+    ],
+    snack:[
+      {n:'90/90 Breathing',d:'1 × 5 breaths',c:'Stay connected to breathing pattern during taper.'},
+      {n:'Clamshell — Right',d:'1 × 15',c:'Maintenance only. Keep the pattern firing.'},
+      {n:'Short-Foot',d:'1 × 10 × 3s each foot',c:'Taper volume. Hold the gains.'},
+    ],
+    rest:[
+      {n:'90/90 Diaphragmatic Breathing',d:'5 breaths × 3',c:'Taper rest is important. Let the adaptations consolidate.'},
+      {n:'Hip Flexor Stretch',d:'2 × 60s each',c:'Light mobility maintenance only.'},
+      {n:'Short-Foot',d:'1 × 10 each foot',c:'Minimum maintenance.'},
+    ]
+  }
+];
+
+// ─── STATE ────────────────────────────────────────────────────────────
+const KEY = 'bb_rehab_v1';
+let S = {startDate:null, tl:null, pain:{}, checked:{}, metrics:{}, checkedDay:-1};
+
+function load(){
+  try{ const d=localStorage.getItem(KEY); if(d) S=Object.assign(S,JSON.parse(d)); }catch(e){}
+}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
+
+// ─── DATE HELPERS ─────────────────────────────────────────────────────
+function todayLocal(){
+  const d=new Date();
+  return new Date(d.getFullYear(),d.getMonth(),d.getDate());
+}
+function daysSince(s){
+  const start=new Date(s+'T00:00:00');
+  return Math.floor((todayLocal()-start)/86400000);
+}
+function weekNum(days){ return Math.min(16,Math.floor(days/7)+1); }
+function getPhase(wk){ return wk<=4?PHASES[0]:wk<=9?PHASES[1]:wk<=13?PHASES[2]:PHASES[3]; }
+
+// ─── SETUP ────────────────────────────────────────────────────────────
+function openSetup(){
+  document.getElementById('setupOverlay').classList.add('show');
+  const inp=document.getElementById('startDateInput');
+  if(S.startDate) inp.value=S.startDate;
+  else inp.value=todayLocal().toISOString().split('T')[0];
+}
+function saveStart(){
+  const v=document.getElementById('startDateInput').value;
+  if(!v) return;
+  S.startDate=v; S.checked={}; S.tl=null; S.pain={};
+  save();
+  document.getElementById('setupOverlay').classList.remove('show');
+  render();
+}
+
+// ─── PAIN SLIDERS ─────────────────────────────────────────────────────
+function onPain(id,val){
+  const v=parseInt(val);
+  S.pain[id]=v; save();
+  const el=document.getElementById('pv-'+id);
+  el.textContent=v;
+  el.style.color=v<=3?'var(--good)':v<=6?'var(--warn)':'var(--bad)';
+}
+
+// ─── TRAFFIC LIGHT ────────────────────────────────────────────────────
+const TL_MSGS={
+  green:'✅ Green Light — Proceed with today\'s full session. Your body is recovered. Stick to the plan.',
+  amber:'⚠️ Amber — Reduce today\'s load by 20–30%. Skip plyometrics. Focus on activation and technique. No new PRs today.',
+  red:'🛑 Red — Do not train today. Rest, ice if helpful, and reassess tomorrow morning. If any red flags apply (below), see your PT or sports-med doc.'
+};
+function setTL(color){
+  S.tl=color; save();
+  ['green','amber','red'].forEach(c=>document.getElementById('tl-'+c).classList.toggle('active',c===color));
+  const m=document.getElementById('checkinMsg');
+  m.className='checkin-msg show '+color;
+  m.textContent=TL_MSGS[color];
+}
+
+// ─── EXERCISE CHECKBOXES ──────────────────────────────────────────────
+function toggleEx(key){
+  S.checked[key]=!S.checked[key]; save();
+  const el=document.getElementById('ck-'+key);
+  if(el) el.classList.toggle('done',S.checked[key]);
+  updateCompletion();
+}
+function updateCompletion(){
+  const items=document.querySelectorAll('[id^="ck-"]');
+  if(!items.length){ document.getElementById('completionRow').style.display='none'; return; }
+  const done=[...items].filter(el=>el.classList.contains('done')).length;
+  const pct=Math.round(done/items.length*100);
+  document.getElementById('completionFill').style.width=pct+'%';
+  document.getElementById('completionLabel').textContent=`${done}/${items.length} done`;
+  document.getElementById('completionRow').style.display='flex';
+  if(pct===100){
+    document.getElementById('sessionBadge').className='session-badge sb-done';
+    document.getElementById('sessionBadge').textContent='Session Complete ✓';
+  }
+}
+
+// ─── METRICS ──────────────────────────────────────────────────────────
+function saveMet(k,v){ S.metrics[k]=v; save(); }
+function loadMetrics(){
+  Object.entries(S.metrics).forEach(([k,v])=>{
+    const el=document.getElementById('m-'+k);
+    if(el) el.value=v;
+  });
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────
+function render(){
+  document.getElementById('yr').textContent=new Date().getFullYear();
+
+  if(!S.startDate){ openSetup(); return; }
+
+  const days=daysSince(S.startDate);
+  if(days<0){
+    document.getElementById('sessionTitle').textContent='Program Hasn\'t Started Yet';
+    document.getElementById('sessionDesc').textContent=`Your program begins in ${Math.abs(days)} day(s). Come back on your start date!`;
+    document.getElementById('exList').innerHTML='';
+    return;
+  }
+
+  const wk=weekNum(days);
+  const ph=getPhase(wk);
+  const dow=days%7;
+  const sessionType=ph.schedule[dow];
+  const dayNames=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+  // Phase header
+  document.getElementById('phaseNum').textContent=ph.num;
+  document.getElementById('phaseName').textContent=ph.name;
+  document.getElementById('phaseWks').textContent=ph.weeks;
+  document.getElementById('currentWeek').textContent=wk;
+  const pct=Math.min(100,Math.round(days/112*100));
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progLabel').textContent=pct+'% of 16 weeks complete';
+
+  // Issue bars (phase progress within each track)
+  const issuePct=Math.min(100,Math.round((wk/16)*100));
+  ['hip','rfoot','rheel','lfoot'].forEach(id=>{
+    const el=document.getElementById('bar-'+id);
+    if(el) el.style.width=issuePct+'%';
+  });
+
+  // Determine exercises and session metadata
+  let exs, title, desc, badgeClass, badgeText;
+  if(sessionType==='rest'){
+    exs=ph.rest; title=dayNames[dow]+' — '+ph.restTitle;
+    desc=ph.restDesc; badgeClass='sb-rest'; badgeText='Recovery Day';
+  } else if(sessionType==='snack'){
+    exs=ph.snack; title=dayNames[dow]+' — '+ph.snackTitle;
+    desc=ph.snackDesc; badgeClass='sb-snack'; badgeText='Activation Snack';
+  } else {
+    exs=ph.full; title=dayNames[dow]+' — '+ph.fullTitle;
+    desc=ph.fullDesc; badgeClass='sb-full'; badgeText='Full Session';
+  }
+
+  document.getElementById('sessionTitle').textContent=title;
+  document.getElementById('sessionDesc').textContent=desc;
+  const badge=document.getElementById('sessionBadge');
+  badge.className='session-badge '+badgeClass;
+  badge.textContent=badgeText;
+
+  // Render exercises
+  const todayKey='d'+days+'_';
+  document.getElementById('exList').innerHTML=exs.map((ex,i)=>{
+    const k=todayKey+i;
+    const done=!!S.checked[k];
+    return `<li class="ex-item">
+      <div class="ex-check${done?' done':''}" id="ck-${k}" onclick="toggleEx('${k}')"></div>
+      <div class="ex-body">
+        <div class="ex-name">${ex.n}</div>
+        <div class="ex-dose">${ex.d}</div>
+        ${ex.c?`<div class="ex-cue">${ex.c}</div>`:''}
+      </div>
+    </li>`;
+  }).join('');
+
+  updateCompletion();
+
+  // Restore traffic light
+  if(S.tl) setTL(S.tl);
+
+  // Restore pain sliders
+  const painIds=['rfoot','rheel','rknee','lfoot','lback'];
+  painIds.forEach(id=>{
+    if(S.pain[id]!==undefined){
+      const sl=document.getElementById('p-'+id);
+      if(sl){ sl.value=S.pain[id]; onPain(id,S.pain[id]); }
+    }
+  });
+
+  loadMetrics();
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────
+load();
+render();
+</script>
+</body>
+</html>
