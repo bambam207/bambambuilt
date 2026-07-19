@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Rehab — BAMBAM Built</title>
-<meta name="description" content="Adaptive PT for right-side instability, peroneal tendon pain, and left abductor hallucis.">
+<meta name="description" content="Adaptive PT — right peroneal fatigue resistance, right hip/core, left abductor hallucis.">
 <style>
 :root{
   --bg:#0f1115;--panel:#161922;--ink:#e6e7eb;--muted:#9aa3b2;
@@ -24,48 +24,66 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:v
 .nav-links a{font-size:13px;color:var(--muted);text-decoration:none;transition:color .15s}
 .nav-links a:hover,.nav-links a.active{color:var(--ink)}
 .wrap{max-width:680px;margin:0 auto;padding:32px 20px 80px}
-.bar{border-left:4px solid var(--muted);padding:12px 16px;background:var(--panel);border-radius:0 10px 10px 0;margin-bottom:16px;font-size:14px}
+/* bars */
+.bar{border-left:4px solid var(--muted);padding:12px 16px;background:var(--panel);border-radius:0 10px 10px 0;margin-bottom:14px;font-size:14px}
 .bar-warn{border-color:var(--warn)}.bar-bad{border-color:var(--bad)}.bar-good{border-color:var(--good)}.bar-accent{border-color:var(--accent)}
 .bar-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
-.session-head{margin-bottom:22px}
+/* strategy card */
+.blueprint{background:var(--panel);border:1px solid var(--border);border-radius:14px;margin-bottom:24px;overflow:hidden}
+.blueprint-toggle{width:100%;text-align:left;background:none;border:none;padding:14px 18px;font-size:14px;font-weight:600;color:var(--ink);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.blueprint-toggle:hover{background:rgba(255,255,255,.03)}
+.blueprint-body{padding:0 18px 16px;font-size:13px;color:var(--muted);line-height:1.65;display:none}
+.blueprint-body.open{display:block}
+.blueprint-body p{margin:0 0 10px}
+.blueprint-body p:last-child{margin:0}
+.blueprint-body strong{color:var(--ink)}
+.blueprint-body .bp-section{margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+/* session header */
+.session-head{margin-bottom:20px}
 .session-head h1{font-size:26px;font-weight:900;margin:0 0 4px}
 .session-head .sub{color:var(--muted);font-size:14px}
-.phase-bar{margin-bottom:28px}
+/* phase progress */
+.phase-bar{margin-bottom:26px}
 .phase-bar-label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px}
 .phase-track{height:4px;background:var(--border);border-radius:4px;overflow:hidden}
 .phase-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .5s}
+/* tracks */
 .track{margin-bottom:32px}
 .track-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .track-icon{font-size:20px}
 .track-title{font-size:16px;font-weight:700;margin-bottom:1px}
 .track-sub{font-size:12px;color:var(--muted)}
+/* exercise cards */
 .ex-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px 18px 14px;margin-bottom:12px}
 .ex-card.adapted-reg{border-color:var(--warn)}
 .ex-card.adapted-prog{border-color:var(--accent)}
 .ex-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:4px}
 .ex-name{font-size:15px;font-weight:700}
-.ex-meta{font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap;padding-top:2px}
+.ex-meta{font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap;padding-top:2px;text-align:right}
 .ex-badge{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
-.badge-reg{color:var(--warn)}.badge-prog{color:var(--accent)}
-.ex-cue{font-size:13px;color:var(--muted);margin-bottom:12px}
+.badge-reg{color:var(--warn)}.badge-prog{color:var(--accent)}.badge-2x{color:var(--accent)}
+.ex-cue{font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6}
 .ex-cue ol{margin:0;padding-left:18px}
 .ex-cue li{margin-bottom:3px}
-.ex-tip{font-size:12px;color:var(--accent);background:rgba(125,211,252,.07);border-radius:8px;padding:8px 10px;margin-bottom:10px}
+.ex-tip{font-size:12px;color:var(--accent);background:rgba(125,211,252,.07);border-radius:8px;padding:8px 10px;margin-bottom:10px;line-height:1.5}
 .feedback-row{display:flex;gap:6px}
 .fb-btn{flex:1;padding:8px 2px;border:1px solid var(--border);border-radius:10px;background:transparent;color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;text-align:center;line-height:1.3}
 .fb-btn:hover{border-color:var(--ink);color:var(--ink)}
 .sel-pain{background:rgba(251,113,133,.12);border-color:var(--bad)!important;color:var(--bad)!important}
 .sel-nofeeling{background:rgba(251,191,36,.10);border-color:var(--warn)!important;color:var(--warn)!important}
 .sel-good{background:rgba(134,239,172,.10);border-color:var(--good)!important;color:var(--good)!important}
+/* rest */
 .rest-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:28px;text-align:center}
 .rest-card h2{margin:0 0 10px;font-size:20px}
 .rest-card p{color:var(--muted);font-size:14px;margin:0;line-height:1.6}
+/* complete */
 .complete-btn{display:block;width:100%;padding:14px;background:var(--accent);color:#0f1115;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;margin-top:16px;transition:opacity .15s}
 .complete-btn:hover{opacity:.9}
 .complete-btn:disabled{opacity:.5;cursor:default}
 .complete-btn.done{background:var(--good)}
-.foot-note{font-size:12px;color:var(--muted);text-align:center;margin-top:16px;line-height:1.6}
+.foot-note{font-size:12px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.6}
 .reset-link{display:block;text-align:center;margin-top:20px;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline}
+/* setup */
 .setup{text-align:center;padding:40px 0}
 .setup h1{font-size:28px;font-weight:900;margin:0 0 10px}
 .setup p{color:var(--muted);font-size:15px;margin:0 0 24px;line-height:1.6}
@@ -92,122 +110,316 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:v
 <script>
 const KEY='bb_rehab_v2';
 
+// ─── Exercise Library ─────────────────────────────────────────────────────────
+
 const EXLIB={
-  diaphragm_breath:{id:'diaphragm_breath',name:'Diaphragmatic Breathing',track:'hip',sets:3,reps:'5 slow breaths',
-    cue:['Lie on back, knees bent, feet flat.','One hand on chest, one on belly.','Breathe IN: belly rises, chest stays completely still.','Breathe OUT: exhale fully — on the exhale feel abs lightly engage.','On each exhale, brace gently for 2 seconds then fully release.'],
-    regression_id:'crocodile_breath',progression_tip:'Add a TA brace on exhale: hiss air out and hold 5s while keeping low back pressed to floor.'},
+
+  // ── HIP / CORE (Proximal driver — root cause) ──────────────────────────────
+
+  diaphragm_breath:{id:'diaphragm_breath',name:'Diaphragmatic Breathing + TA Brace',track:'hip',sets:3,reps:'5 slow breaths',
+    cue:['Lie on back, knees bent, feet flat. One hand on chest, one on belly.',
+         'Breathe IN: belly rises — chest stays completely still.',
+         'Breathe OUT: exhale fully. On the exhale, gently brace the deep abs — like bracing for a gentle poke.',
+         'Hold the brace 2 seconds, then fully release before the next inhale.',
+         'This resets the right anterolateral core — the key stabilizer that\'s currently inhibited.'],
+    regression_id:'crocodile_breath',
+    progression_tip:'Add a full TA brace on exhale: hiss air out and hold 5s while pressing low back to floor.'},
   crocodile_breath:{id:'crocodile_breath',name:'Crocodile Breathing (Prone)',track:'hip',sets:3,reps:'5 slow breaths',
-    cue:['Lie face-down, forehead on folded hands.','Breathe into your lower back — feel it expand sideways.','Each exhale: slight draw-in, hold 2 seconds. Easier to feel the pattern here.']},
-  side_lying_abduction:{id:'side_lying_abduction',name:'Side-Lying Hip Abduction',track:'hip',sets:3,reps:'12 (3s lower)',
-    cue:['Lie on your LEFT side — you are working the RIGHT glute med.','Bottom leg slightly bent for stability.','Top leg (right): straight, foot neutral — not turned out.','Lift to 30-40°. Pause 1 second at top.','Lower SLOWLY over 3 full seconds.','Critical: pelvis stays stacked. Do not let the hip roll backward.'],
-    regression_id:'clamshell',progression_tip:'Add a light ankle weight (1-2 lbs) or resistance band just above knees.'},
+    cue:['Lie face-down, forehead on folded hands.','Breathe into your lower back — feel it expand sideways.','Each exhale: gentle draw-in, hold 2 seconds. Easier to feel the pattern here.']},
+
+  left_ql_stretch:{id:'left_ql_stretch',name:'Left QL / Lateral Trunk Lengthening',track:'hip',sets:3,reps:'45-second hold',
+    cue:['Lie on back, knees bent. Drop both knees to the RIGHT side (left hip opens).',
+         'Extend your left arm overhead — reach long through the left side of your torso.',
+         'You should feel a stretch from your left ribcage to your left hip.',
+         'Breathe INTO the left side. Let the ribs expand laterally on each inhale.',
+         'Target: the ~1.5" hip-to-ribcage shortening on your left. This directly addresses the left hip-hike that forces your right peroneals to overwork.',
+         'Hold 45 seconds. Breathe. Do not force it — let gravity do the work.'],
+    regression_id:'left_ql_seated',
+    progression_tip:'Add a slight forward reach with the left arm — this increases the diagonal stretch into QL.'},
+  left_ql_seated:{id:'left_ql_seated',name:'Left QL Stretch (Seated)',track:'hip',sets:3,reps:'30-second hold',
+    cue:['Sit in chair. Reach left arm up and over to the right.','Lean your torso to the right — feel the left side open.','Hold 30 seconds. Easier entry point than floor version.']},
+
+  side_lying_abduction:{id:'side_lying_abduction',name:'Side-Lying Hip Abduction (Right)',track:'hip',sets:3,reps:'12 (3s lower)',
+    cue:['Lie on your LEFT side — you are working the RIGHT glute med (the proximal driver).',
+         'Bottom leg slightly bent for stability. Top leg (right) straight, foot neutral — not turned out.',
+         'Lift to 30-40°. Pause 1 second at the top.',
+         'Lower SLOWLY over 3 full seconds.',
+         'Keep pelvis stacked — do not let the hip roll backward or hitch up.',
+         'The glute med is your #1 target. Every rep counts.'],
+    regression_id:'clamshell',
+    progression_tip:'Add a light ankle weight (1-2 lbs) or resistance band just above knees.'},
   clamshell:{id:'clamshell',name:'Clamshell',track:'hip',sets:3,reps:'15',
-    cue:['Lie on left side, hips stacked, knees bent ~45°, feet together.','Rotate top knee upward 30-40° like a clamshell opening. Keep feet together.','Pause 1s at top. Lower slowly. Hips stay stacked throughout.','You should feel the work on the right side of your glute.']},
+    cue:['Lie on left side, hips stacked, knees bent ~45°, feet together.',
+         'Rotate top knee upward 30-40° like a clamshell. Keep feet together.',
+         'Pause 1s. Lower slowly. Hips stay stacked throughout.',
+         'Feel the work in the right side of your glute.']},
+
   glute_bridge:{id:'glute_bridge',name:'Glute Bridge',track:'hip',sets:3,reps:'10 (3s hold)',
-    cue:['Lie on back, feet flat hip-width, knees bent.','Drive through heels — not toes.','Squeeze glutes hard at the top. Hold 3 seconds.','Stop when hips are level — no hyperextension.','Lower slowly over 2-3 seconds. Full reset each rep.'],
-    regression_id:'glute_bridge_partial',progression_tip:'Elevate feet on a bench for more glute demand. Or add resistance band above knees — track knees over toes.'},
+    cue:['Lie on back, feet flat hip-width, knees bent.',
+         'Drive through heels — not toes. Squeeze glutes hard at the top.',
+         'Hold 3 seconds. No hyperextension — stop when hips are level.',
+         'Lower slowly over 2-3 seconds. Full reset each rep.'],
+    regression_id:'glute_bridge_partial',
+    progression_tip:'Elevate feet on a bench for more glute demand. Or add resistance band above knees, tracking knees over toes.'},
   glute_bridge_partial:{id:'glute_bridge_partial',name:'Glute Bridge (Partial Range)',track:'hip',sets:3,reps:'10 (2s hold)',
-    cue:['Same as glute bridge — only lift to your comfortable range.','Focus on glute activation, not height.','Hold 2 seconds at your pain-free end range.']},
+    cue:['Same as glute bridge — only lift to a comfortable range.','Focus on glute activation, not height.','Hold 2 seconds at your comfortable end range.']},
+
   dead_bug:{id:'dead_bug',name:'Dead Bug',track:'hip',sets:3,reps:'6/side',
-    cue:['Lie on back, arms straight up, hips and knees at 90°.','Press low back FIRMLY into the floor — this stays the entire time.','Slowly lower opposite arm + leg (4 seconds). Do not let back arch.','Return and switch sides. If back arches: stop and use the arms-only version.','This trains your anterolateral core — the key stabilizer missing on your right side.'],
-    regression_id:'dead_bug_arms',progression_tip:'Add a light resistance band looped around the moving foot.'},
+    cue:['Lie on back, arms straight up, hips and knees at 90°.',
+         'Press low back FIRMLY into floor — this must stay the entire time.',
+         'Slowly lower opposite arm + leg over 4 seconds. Do not let back arch.',
+         'Return and switch sides. If back arches: stop and regress to arms-only.',
+         'This trains your RIGHT anterolateral core — the inhibited stabilizer that makes the peroneals overwork.'],
+    regression_id:'dead_bug_arms',
+    progression_tip:'Add a light resistance band looped around the moving foot.'},
   dead_bug_arms:{id:'dead_bug_arms',name:'Dead Bug (Arms Only)',track:'hip',sets:3,reps:'8/side',
-    cue:['Same start: back flat, legs in 90/90.','Keep legs completely still — do not move them.','Only lower one arm toward the floor and return.','Easier to maintain spinal position. Build from here.']},
+    cue:['Same start: back flat, legs in 90/90. Keep legs completely still.',
+         'Only lower one arm toward the floor and return.',
+         'Easier to maintain spinal position. Build from here.']},
+
   bird_dog:{id:'bird_dog',name:'Bird Dog',track:'hip',sets:3,reps:'8/side (3s hold)',
-    cue:['Hands under shoulders, knees under hips.','Brace core — imagine someone bumping your hips sideways; resist it.','Extend opposite arm + leg simultaneously. Hold 3 seconds.','No hip rotation. Spine neutral throughout.','Think "reach long," not "lift high."'],
-    regression_id:'quadruped_leg_lift',progression_tip:'Add band around wrist and ankle. Or pause 5 seconds at the top.'},
+    cue:['Hands under shoulders, knees under hips.',
+         'Brace core — imagine someone bumping your hips sideways; resist it.',
+         'Extend opposite arm + leg simultaneously. Hold 3 seconds.',
+         'No hip rotation. Spine neutral throughout.',
+         'Think "reach long," not "lift high."'],
+    regression_id:'quadruped_leg_lift',
+    progression_tip:'Add band around wrist and ankle for resistance. Or pause 5 seconds at the top.'},
   quadruped_leg_lift:{id:'quadruped_leg_lift',name:'Quadruped Leg Lift',track:'hip',sets:3,reps:'10/side',
-    cue:['Hands and knees, same as bird dog.','Lift ONE leg only — no opposite arm.','Hip stays level: do not rotate.','Hold 2 seconds. Lower slowly.']},
+    cue:['Hands and knees, same as bird dog.','Lift ONE leg only — no arm.','Hip stays level. Hold 2 seconds. Lower slowly.']},
+
   lateral_band_walk:{id:'lateral_band_walk',name:'Lateral Band Walk',track:'hip',sets:3,reps:'15 steps each direction',
-    cue:['Band just above knees.','Slight squat: hips back, knees soft.','Step sideways — lead foot steps out, trail foot follows. Keep band tension.','Do not let knees cave inward. Torso upright.','15 steps right, 15 steps left = 1 set.'],
-    regression_id:'standing_hip_abduction_band',progression_tip:'Move band to ankles (longer lever). Add slight forward lean for more glute med demand.'},
+    cue:['Band just above knees. Slight squat: hips back, knees soft.',
+         'Step sideways — lead foot steps out, trail foot follows. Keep band tension throughout.',
+         'Do not let knees cave inward. Torso upright.',
+         '15 steps right, 15 steps left = 1 set.',
+         'This is glute med endurance work — same principle as peroneal endurance.'],
+    regression_id:'standing_hip_abduction_band',
+    progression_tip:'Move band to ankles for longer lever. Add a slight forward lean for more glute med demand.'},
   standing_hip_abduction_band:{id:'standing_hip_abduction_band',name:'Standing Hip Abduction (Band)',track:'hip',sets:3,reps:'12/side',
-    cue:['Band just above knees. Stand on one foot (hold wall if needed).','Lift free leg out to side against band resistance.','Hold 2 seconds. Return slowly. Do not lean.','This is stationary — much easier than walking.']},
+    cue:['Band just above knees. Stand on one foot (hold wall if needed).',
+         'Lift free leg out to side against band resistance.',
+         'Hold 2 seconds. Return slowly. Do not lean.',
+         'Stationary — much easier than walking.']},
+
+  side_plank_abduction:{id:'side_plank_abduction',name:'Side Plank + Hip Abduction',track:'hip',sets:3,reps:'8/side',
+    cue:['Start in RIGHT side plank: right forearm on floor, hips stacked.',
+         'Hold the plank — do not let hips sag.',
+         'Lift the TOP left leg up and lower slowly. Keep hips stacked.',
+         'This challenges right glute med AND right anterolateral core together.',
+         'If hips sag immediately: regress to hold-only side plank.'],
+    regression_id:'side_plank',
+    progression_tip:'Progress to high side plank (straight arm). Or add ankle weight to top leg.'},
+  side_plank:{id:'side_plank',name:'Side Plank (Hold)',track:'hip',sets:3,reps:'20-30 seconds/side',
+    cue:['Right forearm on floor, hips stacked.','Hold. Do not let hips sag.','Progress to the abduction version when you can hold 30s cleanly.']},
+
+  single_leg_squat:{id:'single_leg_squat',name:'Single-Leg Squat (Right, Knee Tracking)',track:'hip',sets:3,reps:'8',
+    cue:['Stand on right leg. Arms forward for balance.',
+         'Lower slowly to ~60° knee bend.',
+         'WATCH: keep knee tracking over 2nd toe — do not let it cave inward.',
+         'Knee caving = glute med failing. This is the test of everything you\'ve been training.',
+         'Rise back up with control. No push-off with the other foot.',
+         'Use a mirror or phone to watch your knee — real-time feedback matters here.'],
+    regression_id:'single_leg_stance',
+    progression_tip:'Increase squat depth. Add a light goblet hold for counterbalance.'},
+
   single_leg_stance:{id:'single_leg_stance',name:'Single-Leg Stance (Right)',track:'hip',sets:3,reps:'30 seconds',
-    cue:['Stand on RIGHT leg. Slight knee bend — never locked.','Watch: keep your LEFT hip level — do not let it drop.','That drop is the Trendelenburg sign of glute med weakness. Fight it.','Fix eyes on a point ahead. Arms out for balance.','Progress to eyes closed once stable.'],
-    regression_id:'single_leg_touch',progression_tip:'Perform on a folded towel or foam pad for unstable surface challenge.'},
+    cue:['Stand on RIGHT leg. Slight knee bend — never locked.',
+         'Watch: keep your LEFT hip LEVEL — do not let it drop.',
+         'That drop (Trendelenburg sign) is glute med weakness. Fight it.',
+         'Fix eyes ahead. Arms out if needed.',
+         'Progress: eyes closed once stable.'],
+    regression_id:'single_leg_touch',
+    progression_tip:'Perform on folded towel or foam pad for unstable surface challenge.'},
   single_leg_touch:{id:'single_leg_touch',name:'Single-Leg Stance (Fingertip Touch)',track:'hip',sets:3,reps:'30 seconds',
-    cue:['Same as single-leg stance — allow one fingertip to lightly touch a wall.','Do not lean on it. It is a safety net only.','Focus: left hip stays level throughout.']},
+    cue:['Same as single-leg stance. Allow one fingertip to lightly touch a wall.','Do not lean on it. Safety net only.','Focus: left hip stays level throughout.']},
+
+  // ── PERONEAL ENDURANCE (Fatigue-resistance — not just strength) ────────────
+
+  eversion_nores:{id:'eversion_nores',name:'Eversion Endurance Hold (Band-Free)',track:'peroneal',sets:3,reps:'20 holds × 5 seconds',
+    cue:['Sit. Right foot off the floor, ankle in SLIGHT PLANTARFLEXION — foot just slightly pointed downward.',
+         'This position biases the PERONEUS LONGUS — the muscle that wraps under your cuboid as a sling.',
+         'Without any band: evert (roll foot outward) and hold 5 seconds.',
+         'Return, repeat 20 times. This is endurance training, not strength training.',
+         'You should feel the outside of your lower leg working — mild fatigue only, no pain.',
+         'Your peroneus longus fires ~1,000+ times per running mile. This starts building that capacity.'],
+    regression_id:'eversion_isometric',
+    progression_tip:'Add a light resistance band once 3×20 (5s) feels controlled. Keep the plantarflexed position.'},
   eversion_isometric:{id:'eversion_isometric',name:'Isometric Eversion Hold',track:'peroneal',sets:5,reps:'30-second holds',
-    cue:['Sit in chair. Right foot flat, ankle in neutral.','Press the OUTER EDGE of your right foot against a wall, table leg, or your other foot.','Push hard — but DO NOT move the foot. Pure isometric contraction.','You should feel the muscle fire along the outside of your lower leg.','Zero pain tolerance. Any pain at all: reduce to 50% effort or stop.','This is Phase 1. No movement yet. Isometrics rebuild the tendon first.'],
-    regression_id:'eversion_light_iso',progression_tip:'Build to 5×45s. When those feel easy with no pain, progress to band eversion.'},
-  eversion_light_iso:{id:'eversion_light_iso',name:'Light Isometric Eversion (50%)',track:'peroneal',sets:5,reps:'20-second holds',
-    cue:['Same position as isometric eversion.','Press at only 50% of maximum effort.','Very gentle stimulus. Any pain at all — stop completely.']},
-  eversion_concentric:{id:'eversion_concentric',name:'Resisted Eversion (Band)',track:'peroneal',sets:3,reps:'15 (2s out, 2s return)',
-    cue:['Sit in chair. Anchor band to your left (wrap around left leg or a furniture leg).','Loop band around the outer edge of your right foot.','Foot in neutral to slightly dorsiflexed — targets peroneal brevis.','Evert (roll foot outward) against resistance: 2 seconds.','Return slowly: 2 seconds. Full control.','Outside of lower leg should feel a mild burn. No sharp pain.'],
-    regression_id:'towel_scrunch',progression_tip:'Try in plantarflexed (pointed) foot position — this specifically loads peroneal LONGUS, your primary issue at the cuboid joint.'},
-  towel_scrunch:{id:'towel_scrunch',name:'Towel Scrunch (Intrinsic)',track:'peroneal',sets:3,reps:'20 scrunches',
-    cue:['Small towel flat on floor under right foot.','Scrunch it toward you with only toes.','No peroneal stress. Pure intrinsic foot activation.','Use this as a reset when peroneal is too sensitive for band work.']},
+    cue:['Sit. Right foot flat, ankle neutral.',
+         'Press the outer edge of your foot against a wall, table leg, or your other foot.',
+         'Push hard — but DO NOT move. Pure isometric.',
+         'Feel the muscle fire along the outside of your lower leg.',
+         'Zero pain tolerance. Any pain: reduce to 50% effort or stop.']},
+
+  eversion_highvol:{id:'eversion_highvol',name:'Peroneal Endurance — 10×15 Protocol',track:'peroneal',sets:10,reps:'15 reps (light band)',
+    cue:['Sit. Light resistance band anchored to your left (wrap around left leg or furniture).',
+         'Right foot in SLIGHT PLANTARFLEXION — targets peroneus longus specifically (your cuboid issue).',
+         'Evert against band: 2 seconds out, 2 seconds return. Controlled.',
+         '10 sets × 15 reps. Rest 30-60 seconds between sets.',
+         'Use the lightest band that creates mild burn. This is endurance, not max effort.',
+         '10 sets seems like a lot — but your peroneal fires hundreds of times per flat mile. This is the specific training for that demand. (Protocol: Kim et al., 2024 RCT)'],
+    regression_id:'eversion_nores',
+    progression_tip:'Progress to the next heavier band color. Or try the 2×100 protocol.'},
+
+  eversion_100:{id:'eversion_100',name:'Peroneal Endurance — 100-Rep Protocol',track:'peroneal',sets:2,reps:'100 reps (~1 per 2 seconds)',
+    cue:['Very light band. Right foot in slight plantarflexion (peroneus longus bias).',
+         'Pace: evert and return every 2 seconds — about 3.5 minutes per set.',
+         'This is the fatigue-resistance protocol that most directly matches running demand.',
+         'If form breaks or sharp pain occurs: stop and rest. Do not push through.',
+         'Rest 3-5 minutes between sets.',
+         'Goal: build the endurance that currently fails at mile 8 on flat terrain.'],
+    regression_id:'eversion_highvol',
+    progression_tip:'Progress to next heavier band. Add 10-15 reps per week.'},
+
   eversion_eccentric:{id:'eversion_eccentric',name:'Eccentric Eversion (Slow Lower)',track:'peroneal',sets:3,reps:'10 (4s eccentric)',
-    cue:['Sit with band anchored to your left.','Evert foot against resistance — concentric phase, 2 seconds.','Now: lower VERY SLOWLY back to neutral. 4 full seconds.','Control every millimeter of return. The slow lowering IS the therapy.','This is tendon-loading rehab for your peroneal longus at the cuboid joint.','Allow 4+ days before your next peroneal session. Non-negotiable for tendon healing.'],
-    regression_id:'eversion_concentric',progression_tip:'Build to 6-second eccentric. Or add a light ankle weight for more load.'},
+    cue:['Sit. Band anchored to left side, looped around outer right foot.',
+         'Foot in slight plantarflexion (peroneus longus position).',
+         'Evert against resistance — concentric phase, 2 seconds.',
+         'Now: lower back to neutral VERY SLOWLY. 4 full seconds.',
+         'Control every millimeter of the return. The slow lowering IS the therapy.',
+         'Allow at least 4 days between eccentric peroneal sessions — eccentric damage peaks at 24-72h. Do not rush this.'],
+    regression_id:'eversion_concentric',
+    progression_tip:'Build to 6-second eccentric. Or add a light ankle weight.'},
+  eversion_concentric:{id:'eversion_concentric',name:'Resisted Eversion (Concentric Only)',track:'peroneal',sets:3,reps:'15 (2s out, 2s return)',
+    cue:['Sit. Light band anchored to left. Foot in plantarflexion.',
+         'Evert foot against band: 2 seconds. Return: 2 seconds. No eccentric emphasis.',
+         'Good stepping stone before the slow-eccentric protocol.']},
+  towel_scrunch:{id:'towel_scrunch',name:'Towel Scrunch (Intrinsic Reset)',track:'peroneal',sets:3,reps:'20 scrunches',
+    cue:['Small towel flat on floor under right foot.','Scrunch toward you with toes only.','No peroneal stress. Use when the peroneal is too sensitive for band work.']},
+
   balance_flat:{id:'balance_flat',name:'Single-Leg Balance (Right, Flat)',track:'peroneal',sets:3,reps:'30 seconds',
-    cue:['Stand on RIGHT foot. Slight knee bend.','Feel the outer edge of your foot actively grip the floor.','That grip is your peroneal working isometrically to prevent ankle roll.','Eyes fixed ahead. Do not let ankle roll inward.'],
-    regression_id:'tandem_stance',progression_tip:'Progress to foam pad or folded towel. Then eyes closed on flat surface.'},
+    cue:['Stand on RIGHT foot. Slight knee bend — never locked.',
+         'Feel the outer edge of your foot actively gripping the floor.',
+         'That grip is your peroneal working isometrically to prevent ankle roll.',
+         'Eyes fixed ahead. Do not let ankle roll inward.',
+         'This is also proprioception training — the peroneal\'s reflex speed is what fails late in a flat run.'],
+    regression_id:'tandem_stance',
+    progression_tip:'Progress to foam pad or folded towel under foot. Then eyes closed on flat surface.'},
   tandem_stance:{id:'tandem_stance',name:'Tandem Stance (Heel-to-Toe)',track:'peroneal',sets:3,reps:'30 seconds',
-    cue:['Stand heel-to-toe on both feet. Right foot in front or behind.','Hold wall if needed. More stable than single-leg.','Still challenges lateral ankle stability.']},
-  balance_unstable:{id:'balance_unstable',name:'Balance on Unstable Surface (Right)',track:'peroneal',sets:3,reps:'30 seconds',
-    cue:['Stand on RIGHT foot on a folded towel or thin foam pad.','Constant peroneal activation required to prevent lateral roll.','Slight knee bend. Stay relaxed — let the ankle micro-correct.','Add eyes closed when flat-surface balance feels solid.','Do NOT do this if peroneal is actively inflamed or rated painful recently.'],
-    regression_id:'balance_flat',progression_tip:'Eyes closed on the unstable surface. Or add a light ball toss against wall while balancing.'},
-  toe_spread:{id:'toe_spread',name:'Toe Spread Out (Left)',track:'abh',sets:3,reps:'10 (3s hold)',
-    cue:['Bare left foot on the floor.','Spread ALL toes as wide as possible.','Especially: push the BIG TOE outward, away from the other toes.','Hold 3 seconds. Feel a pull on the inner arch.','Relax fully between reps.','This directly activates the abductor hallucis muscle.'],
-    regression_id:'assisted_toe_spread',progression_tip:'Add resistance: gently press big toe inward with your finger while actively abducting it outward.'},
+    cue:['Stand heel-to-toe on both feet. Right foot in front or behind.','Hold wall if needed. More stable than single-leg.','Still challenges lateral ankle.']},
+
+  balance_unstable:{id:'balance_unstable',name:'Balance — Unstable Surface (Right)',track:'peroneal',sets:3,reps:'30 seconds',
+    cue:['Stand on RIGHT foot on a folded towel or thin foam pad.',
+         'Constant peroneal activation required to prevent lateral roll.',
+         'Slight knee bend. Stay relaxed — let the ankle micro-correct.',
+         'Eyes closed when flat-surface balance feels solid.',
+         'Do NOT do this if peroneal is actively inflamed or if pain was rated recently.'],
+    regression_id:'balance_flat',
+    progression_tip:'Eyes closed on unstable surface. Add a light ball toss against wall while balancing.'},
+
+  // ── LEFT ABDUCTOR HALLUCIS (Separate issue — twice daily) ─────────────────
+
+  toe_spread:{id:'toe_spread',name:'Toe Spread Out (Left)',track:'abh',sets:3,reps:'10 (3s hold)',twiceDaily:true,
+    cue:['Bare left foot on the floor.',
+         'Spread ALL toes as wide as possible.',
+         'Especially: push the BIG TOE outward — away from the other toes.',
+         'Hold 3 seconds. Feel the pull on the inner arch.',
+         'Relax fully between reps.',
+         'This directly activates the abductor hallucis muscle at its attachment on the medial calcaneal tuberosity.'],
+    regression_id:'assisted_toe_spread',
+    progression_tip:'Add resistance: gently press big toe inward with finger while actively spreading it outward.'},
   assisted_toe_spread:{id:'assisted_toe_spread',name:'Assisted Toe Spread',track:'abh',sets:3,reps:'10',
-    cue:['Use your hand to gently help the big toe spread outward.','Passive-to-active: use the assist to find the position, then try to hold it independently.','Good starting point if you cannot yet activate AbH voluntarily.']},
-  short_foot_seated:{id:'short_foot_seated',name:'Short-Foot Exercise (Seated)',track:'abh',sets:3,reps:'10 (5s hold)',
-    cue:['Sit. Left foot flat, bare, on the floor.','WITHOUT curling your toes: draw the ball of your big toe toward your heel.','The arch should lift. Toes stay long and flat on the floor.','Hold 5 seconds. You should feel the inner arch and AbH working.','Fully relax between reps. This is harder than it looks.','If your arch collapses when standing, this is your daily foundation.'],
-    regression_id:'toe_spread',progression_tip:'Progress to standing version when 3×10 (5s holds) feels controlled and easy.'},
-  short_foot_standing:{id:'short_foot_standing',name:'Short-Foot Exercise (Standing)',track:'abh',sets:3,reps:'10 (5s hold)',
-    cue:['Stand, weight on both feet. Shift slightly more to your left.','Maintain short-foot: arch lifted, toes flat on the floor.','Do NOT let the arch collapse under your bodyweight.','Big toe stays on the ground — do not let it lift.','Hold 5 seconds per rep.'],
-    regression_id:'short_foot_seated',progression_tip:'Shift all weight to the left foot only — single-leg short-foot is the next level.'},
-  short_foot_single:{id:'short_foot_single',name:'Short-Foot (Single-Leg, Left)',track:'abh',sets:3,reps:'10 (5s hold)',
-    cue:['Balance on LEFT foot only.','Maintain the active short-foot arch throughout — do NOT let it collapse.','If arch collapses immediately: step back to bilateral standing version.','Hold 5 seconds per rep.','Eyes closed when balance feels solid.','This is the most demanding AbH exercise in the program.'],
-    regression_id:'short_foot_standing',progression_tip:'Maintain arch while doing a small 20° knee dip — dynamic AbH loading.'}
+    cue:['Use your hand to gently help the big toe spread outward.','Passive to active: use assist to find the position, then hold independently.','Starting point if AbH is not yet firing voluntarily.']},
+
+  short_foot_seated:{id:'short_foot_seated',name:'Short-Foot Exercise (Seated)',track:'abh',sets:'3-5',reps:'5 (5s hold)',twiceDaily:true,
+    cue:['Sit. Left foot flat, bare, on the floor.',
+         'WITHOUT curling toes: draw the ball of your big toe toward your heel.',
+         'The arch should lift. Toes stay long and flat on the floor.',
+         'Hold 5 seconds. You should feel the inner arch and AbH working.',
+         'Fully relax between reps.',
+         'Do this TWICE daily — research dosing is 3-5 sets × 5 reps, twice daily, 8 weeks (RCT). Morning and evening.',
+         'If your arch collapses when you stand: this exercise is your daily foundation.'],
+    regression_id:'toe_spread',
+    progression_tip:'Progress to standing version when 5 sets × 5 reps (5s holds) feels controlled and easy.'},
+
+  short_foot_standing:{id:'short_foot_standing',name:'Short-Foot Exercise (Standing)',track:'abh',sets:'3-5',reps:'5 (5s hold)',twiceDaily:true,
+    cue:['Stand, weight on both feet. Shift slightly more to your left.',
+         'Maintain short-foot: arch lifted, toes flat on the floor.',
+         'Do NOT let the arch collapse under your body weight.',
+         'Big toe stays on the ground — do not let it lift.',
+         'Hold 5 seconds per rep. Do this TWICE daily.',
+         'Gravity makes this significantly harder than seated.'],
+    regression_id:'short_foot_seated',
+    progression_tip:'Shift all weight to left foot only — single-leg short-foot is the next level.'},
+
+  short_foot_single:{id:'short_foot_single',name:'Short-Foot (Single-Leg, Left)',track:'abh',sets:3,reps:'5 (5s hold)',twiceDaily:true,
+    cue:['Balance on LEFT foot only.',
+         'Maintain active short-foot arch throughout — do NOT let it collapse.',
+         'If arch collapses immediately: return to bilateral standing version.',
+         'Hold 5 seconds per rep.',
+         'Eyes closed when balance feels solid.',
+         'This is the most demanding AbH exercise — the functional test of 8 weeks of short-foot work.'],
+    regression_id:'short_foot_standing',
+    progression_tip:'Maintain arch while doing a small 20° knee dip — dynamic AbH loading under compression.'}
 };
+
+// ─── Program Structure ────────────────────────────────────────────────────────
+
+// Phase 1: Days 1-28  (Wks 1-4)  — Foundation & Deload flat terrain
+// Phase 2: Days 29-70 (Wks 5-10) — Endurance Capacity & Flat Terrain Reintroduction
+// Phase 3: Days 71-112 (Wks 11-16) — Integration & FKT Prep
 
 const WEEK_SCHEDULE={
   1:['full','hip_abh','rest','full','hip_abh','light','rest'],
   2:['full','hip_abh','rest','full','hip_abh','light','rest'],
   3:['full','hip_abh','hip','hip_abh','full','light','rest'],
-  4:['full','hip_abh','hip','hip_abh','full','light','rest'],
 };
+
 const SESSION_TEMPLATES={
   1:{
-    full:   {hip:['diaphragm_breath','side_lying_abduction','glute_bridge'],peroneal:['eversion_isometric'],abh:['toe_spread','short_foot_seated']},
-    hip_abh:{hip:['diaphragm_breath','glute_bridge'],abh:['toe_spread','short_foot_seated']},
+    full:   {hip:['diaphragm_breath','left_ql_stretch','side_lying_abduction','glute_bridge'],
+             peroneal:['eversion_nores','balance_flat'],
+             abh:['toe_spread','short_foot_seated']},
+    hip_abh:{hip:['diaphragm_breath','left_ql_stretch','glute_bridge'],
+             abh:['toe_spread','short_foot_seated']},
     light:  {hip:['diaphragm_breath'],abh:['short_foot_seated']},
   },
   2:{
-    full:   {hip:['diaphragm_breath','side_lying_abduction','dead_bug','glute_bridge'],peroneal:['eversion_concentric','balance_flat'],abh:['toe_spread','short_foot_standing']},
-    hip_abh:{hip:['diaphragm_breath','bird_dog','lateral_band_walk'],abh:['toe_spread','short_foot_standing']},
-    light:  {hip:['diaphragm_breath'],abh:['short_foot_standing']},
-  },
-  3:{
-    full:   {hip:['diaphragm_breath','dead_bug','bird_dog','lateral_band_walk','single_leg_stance'],peroneal:['eversion_eccentric','balance_unstable'],abh:['toe_spread','short_foot_single']},
-    hip_abh:{hip:['diaphragm_breath','bird_dog','lateral_band_walk'],abh:['toe_spread','short_foot_standing','short_foot_single']},
+    full:   {hip:['diaphragm_breath','left_ql_stretch','dead_bug','lateral_band_walk','side_plank_abduction'],
+             peroneal:['eversion_highvol','eversion_eccentric','balance_flat'],
+             abh:['toe_spread','short_foot_standing']},
+    hip_abh:{hip:['diaphragm_breath','left_ql_stretch','bird_dog','lateral_band_walk'],
+             peroneal:['balance_flat'],
+             abh:['toe_spread','short_foot_standing']},
     hip:    {hip:['dead_bug','lateral_band_walk','single_leg_stance']},
     light:  {hip:['diaphragm_breath'],abh:['short_foot_standing']},
   },
-  4:{
-    full:   {hip:['side_lying_abduction','dead_bug','lateral_band_walk','single_leg_stance'],peroneal:['eversion_eccentric','balance_unstable'],abh:['short_foot_single','toe_spread']},
-    hip_abh:{hip:['bird_dog','lateral_band_walk','single_leg_stance'],abh:['short_foot_single','toe_spread']},
-    hip:    {hip:['dead_bug','bird_dog','lateral_band_walk','single_leg_stance']},
+  3:{
+    full:   {hip:['left_ql_stretch','lateral_band_walk','side_plank_abduction','single_leg_squat'],
+             peroneal:['eversion_100','eversion_eccentric','balance_unstable'],
+             abh:['toe_spread','short_foot_single']},
+    hip_abh:{hip:['diaphragm_breath','left_ql_stretch','lateral_band_walk','single_leg_stance'],
+             abh:['toe_spread','short_foot_standing','short_foot_single']},
+    hip:    {hip:['dead_bug','lateral_band_walk','single_leg_squat','single_leg_stance']},
     light:  {hip:['diaphragm_breath'],abh:['short_foot_standing']},
   },
 };
+
 const TRACK_META={
-  hip:     {icon:'🔴',title:'Right Hip & Core',sub:'Glute med · anterolateral core · proximal stability'},
-  peroneal:{icon:'🟠',title:'Right Peroneal / Cuboid',sub:'Peroneal longus tendon · lateral column control'},
-  abh:     {icon:'🟡',title:'Left Abductor Hallucis',sub:'Medial arch · short foot · big toe abduction'},
+  hip:     {icon:'🔴',title:'Right Hip & Core',sub:'Root cause — proximal weakness forces peroneal overload'},
+  peroneal:{icon:'🟠',title:'Right Peroneal Endurance',sub:'Fatigue-resistance training — the direct fix for mile-8 failure'},
+  abh:     {icon:'🟡',title:'Left Abductor Hallucis',sub:'Separate issue — do this TWICE daily'},
 };
+
+// ─── State ────────────────────────────────────────────────────────────────────
 
 function loadState(){try{return JSON.parse(localStorage.getItem(KEY))||{};}catch{return{};}}
 function saveState(s){localStorage.setItem(KEY,JSON.stringify(s));}
 function todayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function daysBetween(a,b){return Math.round((new Date(b)-new Date(a))/86400000);}
 
-function getPhase(n){if(n<=28)return 1;if(n<=56)return 2;if(n<=84)return 3;return 4;}
+// ─── Engine ───────────────────────────────────────────────────────────────────
+
+function getPhase(n){if(n<=28)return 1;if(n<=70)return 2;return 3;}
 function getScheduledType(n,phase){return WEEK_SCHEDULE[phase][(n-1)%7];}
+
+function phaseInfo(totalDays,phase){
+  const starts=[0,1,29,71],lengths=[0,28,42,42];
+  const within=totalDays-starts[phase]+1;
+  return{pct:Math.min(100,Math.round((within/lengths[phase])*100)),week:Math.ceil(within/7),totalWeeks:lengths[phase]/7};
+}
+
 function getLastRatings(state){
   const today=todayStr(),sess=state.sessions||{};
   const past=Object.keys(sess).filter(d=>d<today).sort();
@@ -218,18 +430,19 @@ function getIntensity(lr){
   const pain=Object.values(lr).filter(v=>v==='pain').length;
   if(pain>=3)return'red';if(pain>=1)return'amber';return'green';
 }
+
 function buildSession(state){
   const today=todayStr();
   const totalDays=Math.max(1,daysBetween(state.startDate,today)+1);
-  const phase=Math.min(4,getPhase(totalDays));
+  const phase=Math.min(3,getPhase(totalDays));
   const lastRatings=getLastRatings(state);
   const intensity=getIntensity(lastRatings);
   let stype=getScheduledType(totalDays,phase);
   if(intensity==='red'&&stype!=='rest')stype='light';
-  const template=SESSION_TEMPLATES[phase][stype]||SESSION_TEMPLATES[phase]['full']||{};
+  const tmpl=SESSION_TEMPLATES[phase][stype]||SESSION_TEMPLATES[phase]['full']||{};
   const adaptations=[];
   const tracks={};
-  for(const[track,ids]of Object.entries(template)){
+  for(const[track,ids]of Object.entries(tmpl)){
     tracks[track]=ids.map(id=>{
       const ex=EXLIB[id];if(!ex)return null;
       const r=lastRatings[id];
@@ -242,61 +455,112 @@ function buildSession(state){
       return ex;
     }).filter(Boolean);
   }
-  return{totalDays,phase,stype,intensity,tracks,adaptations,lastRatings};
+  return{totalDays,phase,stype,intensity,tracks,adaptations,lastRatings,phaseInfo:phaseInfo(totalDays,phase)};
 }
 
-function phaseLabel(p){return['','Phase 1: Foundation (Wks 1-4)','Phase 2: Load Introduction (Wks 5-8)','Phase 3: Eccentric Loading (Wks 9-12)','Phase 4: Integration (Wks 13-16)'][p];}
+// ─── Render ───────────────────────────────────────────────────────────────────
+
+function phaseLabel(p){return['','Phase 1: Foundation & Flat-Terrain Deload (Wks 1-4)','Phase 2: Endurance Capacity & Reintroduction (Wks 5-10)','Phase 3: Integration & FKT Prep (Wks 11-16)'][p];}
 function stypeLabel(t){return{full:'Full Session',hip_abh:'Hip & AbH Focus',hip:'Hip Only',light:'Light Recovery',rest:'Rest Day'}[t]||t;}
 
 function renderBanners(intensity,adaptations){
   let h='';
-  if(intensity==='red')h+=`<div class="bar bar-bad"><div class="bar-label">High Load Warning</div>3+ exercises caused pain last session. Scaled to activation-only today. No eccentric work.</div>`;
-  else if(intensity==='amber')h+=`<div class="bar bar-warn"><div class="bar-label">Pain Flagged Last Session</div>Reduce each exercise ~25% today (e.g. 12 reps → 9). No new progressions.</div>`;
+  if(intensity==='red')
+    h+=`<div class="bar bar-bad"><div class="bar-label">High Load — Scaled Today</div>3+ exercises caused pain last session. Today is activation-only. No eccentric work. Let the peroneals recover.</div>`;
+  else if(intensity==='amber')
+    h+=`<div class="bar bar-warn"><div class="bar-label">Pain Flagged Last Session</div>Reduce each exercise ~25% today (e.g. 12 reps → 9). No new progressions. Monitor.</div>`;
   if(adaptations.length){
-    const items=adaptations.map(a=>`<li><strong>${a.from}</strong> → <strong>${a.to}</strong> (pain reported — easier version loaded)</li>`).join('');
+    const items=adaptations.map(a=>`<li><strong>${a.from}</strong> → <strong>${a.to}</strong> (pain reported — easier version loaded today)</li>`).join('');
     h+=`<div class="bar bar-accent"><div class="bar-label">Today's Adjustments</div><ul style="margin:4px 0 0;padding-left:18px;font-size:13px">${items}</ul></div>`;
   }
   return h;
 }
+
 function renderEx(ex,ratings){
   const r=ratings[ex.id]||null;
   const aclass=ex.adapted==='regressed'?'adapted-reg':ex.adapted==='progress'?'adapted-prog':'';
-  const badge=ex.adapted==='regressed'
-    ?`<div class="ex-badge badge-reg">↓ Regressed from: ${ex.originalName}</div>`
-    :ex.adapted==='progress'?`<div class="ex-badge badge-prog">↑ Progression available</div>`:'';
+  let badges='';
+  if(ex.adapted==='regressed')badges+=`<div class="ex-badge badge-reg">↓ Regressed from: ${ex.originalName}</div>`;
+  if(ex.adapted==='progress')badges+=`<div class="ex-badge badge-prog">↑ Ready to progress</div>`;
+  if(ex.twiceDaily)badges+=`<div class="ex-badge badge-2x">🔁 Do this twice today — now and before bed</div>`;
   const tip=ex.showTip?`<div class="ex-tip"><strong>Next level:</strong> ${ex.showTip}</div>`:'';
   const cueHTML=Array.isArray(ex.cue)?`<ol>${ex.cue.map(c=>`<li>${c}</li>`).join('')}</ol>`:ex.cue;
   const ps=r==='pain'?' sel-pain':'',ns=r==='nofeeling'?' sel-nofeeling':'',gs=r==='good'?' sel-good':'';
   return`<div class="ex-card ${aclass}" data-exid="${ex.id}">
-<div class="ex-top"><div class="ex-name">${ex.name}</div><div class="ex-meta">${ex.sets} × ${ex.reps}</div></div>
-${badge}<div class="ex-cue">${cueHTML}</div>${tip}
+<div class="ex-top"><div class="ex-name">${ex.name}</div><div class="ex-meta">${ex.sets} sets<br>${ex.reps}</div></div>
+${badges}<div class="ex-cue">${cueHTML}</div>${tip}
 <div class="feedback-row">
 <button class="fb-btn${ps}" data-rating="pain" data-exid="${ex.id}">🔴 Causes Pain</button>
 <button class="fb-btn${ns}" data-rating="nofeeling" data-exid="${ex.id}">🟡 Not Feeling It</button>
 <button class="fb-btn${gs}" data-rating="good" data-exid="${ex.id}">🟢 Feels Right</button>
 </div></div>`;
 }
+
+function renderBlueprint(isFirstVisit){
+  const open=isFirstVisit?' open':'';
+  const caret=isFirstVisit?'▴':'▾';
+  return`<div class="blueprint">
+<button class="blueprint-toggle" id="bp-toggle">📋 Your Injury Blueprint <span id="bp-caret">${caret}</span></button>
+<div class="blueprint-body${open}" id="bp-body">
+<p><strong>Why technical trail doesn't hurt you:</strong> Your right peroneals fatigue on flat terrain because your right hip isn't stabilizing properly. On every flat stride, the same peroneal motor units fire in near-identical sequence until they hit their endurance limit — your mile-8 point. Technical trail forces constant foot placement changes, distributing that load. That's why you can run 10 hard miles symptom-free but hit a wall at mile 8 on the road.</p>
+<p><strong>The occupational piece:</strong> Your 14-hour workday triggers the same mechanism — same muscle, same repetitive flat-surface loading. This confirms the peroneals themselves (not just the tendon) are the fatiguing structure.</p>
+<div class="bp-section">
+<p><strong>Terrain strategy:</strong><br>
+Technical trail = symptom-free zone. Use it freely.<br>
+Flat terrain = a dose to titrate. Stay meaningfully below mile 8 now, expand it deliberately.<br>
+Target 20-30% of weekly running on varied surfaces permanently.<br>
+Primary metric: <em>how many flat miles before pain onset?</em> That number should rise over weeks.</p>
+</div>
+<div class="bp-section">
+<p><strong>Occupational management:</strong><br>
+Vary your stance and position every 30-60 minutes.<br>
+Anti-fatigue mat at stationary work stations (induces micro-movement variability).<br>
+Right work boot: lateral-column support or cuboid pad — NOT aggressive medial arch.<br>
+Pace the heaviest lifting — don't concentrate it in the first few hours.<br>
+Rest break BEFORE symptoms start, not after.</p>
+</div>
+<div class="bp-section">
+<p><strong>Orthotic note:</strong><br>
+Right foot → lateral/cuboid support (NOT aggressive medial arch — that pushes load laterally).<br>
+Left foot → REDUCE medial arch support (the bilateral insole likely aggravated the AbH).<br>
+Your two feet have opposite needs. A single bilateral device is probably making one worse.</p>
+</div>
+<div class="bp-section">
+<p><strong>If progress stalls:</strong> If flat-terrain onset mileage isn't rising after 8-12 weeks of consistent work, consider formal intracompartmental pressure testing. Lateral CECS remains on the differential and can mimic this exact fatigue pattern. Lateral compartment must be measured at both 1 AND 5 minutes post-exercise (5-minute reading is the sensitive window for this compartment).</p>
+</div>
+</div>
+</div>`;
+}
+
 function renderSession(sess,state){
   const today=todayStr();
   const todaySess=state.sessions?.[today]||{};
   const ratings=todaySess.ratings||{};
   const completed=todaySess.completed||false;
-  const weekInPhase=((sess.totalDays-1)%28)+1;
-  const pct=Math.round((weekInPhase/28)*100);
+  const pi=sess.phaseInfo;
+  const isFirstVisit=Object.keys(state.sessions||{}).length===0;
+
   let h=`<div class="session-head">
 <h1>${stypeLabel(sess.stype)}</h1>
 <div class="sub">Day ${sess.totalDays} &nbsp;·&nbsp; Week ${Math.ceil(sess.totalDays/7)} of 16 &nbsp;·&nbsp; ${phaseLabel(sess.phase)}</div>
 </div>
 <div class="phase-bar">
-<div class="phase-bar-label"><span>${phaseLabel(sess.phase)}</span><span>Week ${Math.ceil(weekInPhase/7)} of 4</span></div>
-<div class="phase-track"><div class="phase-fill" style="width:${pct}%"></div></div>
+<div class="phase-bar-label"><span>${phaseLabel(sess.phase)}</span><span>Week ${pi.week} of ${pi.totalWeeks}</span></div>
+<div class="phase-track"><div class="phase-fill" style="width:${pi.pct}%"></div></div>
 </div>`;
+
+  h+=renderBlueprint(isFirstVisit);
   h+=renderBanners(sess.intensity,sess.adaptations);
+
   if(sess.stype==='rest'){
-    h+=`<div class="rest-card"><h2>Rest Day</h2><p>No structured exercise today. An easy 20-minute walk is fine if you want gentle movement.<br><br>The peroneal tendon heals during recovery — rest days are part of the treatment, not a skip.</p></div>`;
+    h+=`<div class="rest-card"><h2>Rest Day</h2>
+<p>No structured exercise today. An easy 20-minute walk on varied terrain is fine.<br><br>
+For the peroneal tendon: rest days are treatment, not skipped sessions. Recovery is when the tissue remodels.<br><br>
+If today follows an eccentric or big vertical day: this buffer is especially important — eccentric muscle swelling peaks 24-72h and resolves around 96h (4 days). Don't rush back.</p></div>`;
     h+=`<span class="reset-link" id="reset-link">Reset program</span>`;
     return h;
   }
+
   const order=['hip','peroneal','abh'];
   for(const track of order){
     const exs=sess.tracks[track];
@@ -306,30 +570,81 @@ function renderSession(sess,state){
     exs.forEach(ex=>{h+=renderEx(ex,ratings);});
     h+=`</div>`;
   }
+
   h+=`<button class="complete-btn${completed?' done':''}" id="complete-btn"${completed?' disabled':''}>${completed?'✓ Session Logged':'Log Session Complete'}</button>`;
-  h+=`<div class="foot-note">Rate each exercise — your ratings adapt tomorrow's session automatically.</div>`;
+  h+=`<div class="foot-note">Rate each exercise after you do it — ratings adapt tomorrow's session automatically.<br>🔁 AbH exercises: do them again before bed tonight.</div>`;
   h+=`<span class="reset-link" id="reset-link">Reset program</span>`;
   return h;
 }
+
 function renderSetup(){
   return`<div class="setup">
 <h1>Adaptive Rehab Program</h1>
-<p>A 16-week corrective program built from your research.<br>Three issues — adapted daily based on how your body responds.</p>
+<p>A 16-week corrective program built from your research.<br>Three issues addressed daily — adapted based on how your body responds.</p>
 <ul class="issues-list">
-<li>🔴 <strong>Right hip/core instability</strong> — gluteus medius &amp; anterolateral core</li>
-<li>🟠 <strong>Right peroneal longus strain</strong> — cuboid joint tendon pain</li>
-<li>🟡 <strong>Left abductor hallucis strain</strong> — medial arch</li>
+<li>🔴 <strong>Right hip/core instability</strong> — the root cause (proximal driver)</li>
+<li>🟠 <strong>Right peroneal fatigue failure</strong> — mile-8 lateral pain on flat terrain</li>
+<li>🟡 <strong>Left abductor hallucis strain</strong> — separate, likely orthotic-aggravated</li>
 </ul>
 <div class="setup-box">
-<label for="start-date">When did you start (or want to start) the program?</label>
+<label for="start-date">When did you start (or want to start)?</label>
 <input type="date" id="start-date" value="${todayStr()}" max="${todayStr()}"/>
 <button id="start-btn">Begin Program</button>
 </div>
 </div>`;
 }
 
+// ─── Init ─────────────────────────────────────────────────────────────────────
+
 const root=document.getElementById('root');
 let state=loadState();
+
+function attachEvents(){
+  // Blueprint toggle
+  const bpt=document.getElementById('bp-toggle');
+  const bpb=document.getElementById('bp-body');
+  const bpc=document.getElementById('bp-caret');
+  if(bpt){
+    bpt.addEventListener('click',()=>{
+      bpb.classList.toggle('open');
+      bpc.textContent=bpb.classList.contains('open')?'▴':'▾';
+    });
+  }
+  // Feedback buttons
+  root.querySelectorAll('.fb-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const exid=btn.dataset.exid,rating=btn.dataset.rating,today=todayStr();
+      if(!state.sessions)state.sessions={};
+      if(!state.sessions[today])state.sessions[today]={ratings:{}};
+      state.sessions[today].ratings[exid]=rating;
+      saveState(state);
+      btn.closest('.ex-card').querySelectorAll('.fb-btn').forEach(b=>{b.className='fb-btn';});
+      btn.classList.add('sel-'+rating);
+    });
+  });
+  // Complete
+  const cb=document.getElementById('complete-btn');
+  if(cb){
+    cb.addEventListener('click',()=>{
+      const today=todayStr();
+      if(!state.sessions)state.sessions={};
+      if(!state.sessions[today])state.sessions[today]={ratings:{}};
+      state.sessions[today].completed=true;
+      saveState(state);
+      cb.textContent='✓ Session Logged';cb.classList.add('done');cb.disabled=true;
+    });
+  }
+  // Reset
+  const rl=document.getElementById('reset-link');
+  if(rl){
+    rl.addEventListener('click',()=>{
+      if(confirm('Reset the program? This clears all history and ratings.')){
+        localStorage.removeItem(KEY);state={};render();
+      }
+    });
+  }
+}
+
 function render(){
   if(!state.startDate){
     root.innerHTML=renderSetup();
@@ -342,37 +657,7 @@ function render(){
   }
   const sess=buildSession(state);
   root.innerHTML=renderSession(sess,state);
-  root.querySelectorAll('.fb-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const exid=btn.dataset.exid,rating=btn.dataset.rating,today=todayStr();
-      if(!state.sessions)state.sessions={};
-      if(!state.sessions[today])state.sessions[today]={ratings:{}};
-      state.sessions[today].ratings[exid]=rating;
-      saveState(state);
-      const card=btn.closest('.ex-card');
-      card.querySelectorAll('.fb-btn').forEach(b=>{b.className='fb-btn';});
-      btn.classList.add('sel-'+rating);
-    });
-  });
-  const cb=document.getElementById('complete-btn');
-  if(cb){
-    cb.addEventListener('click',()=>{
-      const today=todayStr();
-      if(!state.sessions)state.sessions={};
-      if(!state.sessions[today])state.sessions[today]={ratings:{}};
-      state.sessions[today].completed=true;
-      saveState(state);
-      cb.textContent='✓ Session Logged';cb.classList.add('done');cb.disabled=true;
-    });
-  }
-  const rl=document.getElementById('reset-link');
-  if(rl){
-    rl.addEventListener('click',()=>{
-      if(confirm('Reset the program? This clears all history and ratings.')){
-        localStorage.removeItem(KEY);state={};render();
-      }
-    });
-  }
+  attachEvents();
 }
 render();
 </script>
