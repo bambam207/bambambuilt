@@ -4,725 +4,376 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Rehab — BAMBAM Built</title>
-<meta name="description" content="16-week corrective rehabilitation for right-side neuromuscular asymmetry. LPHC dysfunction, FKT preparation, adaptive pain monitoring.">
+<meta name="description" content="Adaptive PT for right-side instability, peroneal tendon pain, and left abductor hallucis.">
 <style>
 :root{
   --bg:#0f1115;--panel:#161922;--ink:#e6e7eb;--muted:#9aa3b2;
-  --accent:#7dd3fc;--good:#86efac;--warn:#fbbf24;--bad:#fb7185;--trail:#22c55e;
+  --accent:#7dd3fc;--good:#86efac;--warn:#fbbf24;--bad:#fb7185;
   --border:rgba(255,255,255,.07);
-  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
   --sans:system-ui,-apple-system,"SF Pro Text",Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Arial,"Helvetica Neue",sans-serif;
 }
 @media(prefers-color-scheme:light){
-  :root{
-    --bg:#f6f7fb;--panel:#ffffff;--ink:#111318;--muted:#4b5563;
-    --accent:#0369a1;--good:#15803d;--warn:#f59e0b;--bad:#dc2626;--trail:#16a34a;
-    --border:#e5e7eb;
-  }
+  :root{--bg:#f6f7fb;--panel:#ffffff;--ink:#111318;--muted:#4b5563;
+    --accent:#0369a1;--good:#15803d;--warn:#d97706;--bad:#dc2626;--border:#e5e7eb}
 }
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
-.wrap{max-width:900px;margin:0 auto;padding:28px 20px 60px}
-
-/* NAV */
-nav{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:24px}
-nav a{font-size:13px;color:var(--muted);text-decoration:none;padding:4px 10px;border-radius:8px;border:1px solid var(--border);transition:color .15s,border-color .15s;white-space:nowrap}
-nav a:hover,nav a.active{color:var(--accent);border-color:var(--accent)}
-.brand{font-weight:800;font-size:16px;color:var(--ink);text-decoration:none;margin-right:auto}
-
-/* PANELS */
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:22px 20px;margin-bottom:16px}
-.panel h2{margin:0 0 4px;font-size:17px;font-weight:700;color:var(--ink)}
-.panel h3{margin:14px 0 6px;font-size:14px;font-weight:700;color:var(--ink)}
-.sub{color:var(--muted);font-size:13px;margin:0 0 14px;line-height:1.5}
-
-/* BAR SYSTEM */
-.bar{position:relative;padding-left:20px}
-.bar::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;border-radius:5px 0 0 5px}
-.bar-warn::before{background:var(--warn)}
-.bar-bad::before{background:var(--bad)}
-.bar-accent::before{background:var(--accent)}
-.bar-good::before{background:var(--good)}
-
-/* PHASE HEADER */
-.phase-header{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:20px}
-.phase-badge{display:inline-flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:10px 16px}
-.phase-num{font-weight:900;font-size:22px;color:var(--accent);line-height:1}
-.phase-info-name{font-weight:700;font-size:13px}
-.phase-info-wks{font-size:12px;color:var(--muted)}
-.week-badge{display:inline-flex;align-items:center;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:10px 16px;font-size:13px;color:var(--muted);white-space:nowrap}
-.week-badge strong{color:var(--ink);margin:0 2px}
-.prog-wrap{flex:1;min-width:120px}
-.prog-bar{height:6px;background:var(--border);border-radius:4px;overflow:hidden}
-.prog-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .4s}
-.prog-label{font-size:11px;color:var(--muted);margin-top:3px}
-.btn-sm{padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:12px;cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
-.btn-sm:hover{color:var(--accent);border-color:var(--accent)}
-
-/* SESSION PANEL */
-.session-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
-.session-title{font-size:16px;font-weight:700;flex:1}
-.session-badge{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 9px;border-radius:6px}
-.sb-full{background:rgba(251,113,133,.15);color:var(--bad)}
-.sb-snack{background:rgba(125,211,252,.15);color:var(--accent)}
-.sb-rest{background:rgba(134,239,172,.15);color:var(--good)}
-.sb-done{background:rgba(134,239,172,.15);color:var(--good)}
-
-/* EXERCISE LIST */
-.ex-list{list-style:none;padding:0;margin:8px 0 0}
-.ex-item{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--border)}
-.ex-item:last-child{border-bottom:none}
-.ex-check{width:22px;height:22px;border:2px solid var(--border);border-radius:7px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .15s,background .15s;margin-top:1px}
-.ex-check:hover{border-color:var(--accent)}
-.ex-check.done{border-color:var(--good);background:var(--good)}
-.ex-check.done::after{content:'✓';color:#0f1115;font-size:13px;font-weight:900}
-.ex-body{flex:1}
-.ex-name{font-weight:600;font-size:14px}
-.ex-dose{color:var(--muted);font-size:12px;margin-top:1px}
-.ex-cue{color:var(--accent);font-size:12px;margin-top:3px;font-style:italic;line-height:1.4}
-.completion-row{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:13px;color:var(--muted)}
-.completion-bar{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
-.completion-fill{height:100%;background:var(--good);border-radius:2px;transition:width .3s}
-
-/* CHECKIN PANEL */
-.pain-grid{display:grid;gap:8px;margin-bottom:4px}
-.pain-row{display:grid;grid-template-columns:140px 1fr 32px;align-items:center;gap:12px;font-size:13px}
-@media(max-width:480px){.pain-row{grid-template-columns:110px 1fr 28px}}
-.pain-label{color:var(--muted);font-size:12px}
-.pain-slider{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:2px;background:var(--border);outline:none;cursor:pointer}
-.pain-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer}
-.pain-val{font-weight:700;font-size:13px;text-align:right;min-width:24px;transition:color .2s}
-.tl-row{display:flex;gap:10px;margin-top:4px}
-.tl-btn{flex:1;padding:10px 6px;border-radius:12px;border:2px solid var(--border);background:transparent;cursor:pointer;font-size:12px;font-weight:700;text-align:center;transition:all .15s;color:var(--ink);line-height:1.4}
-.tl-btn .tl-sub{font-weight:400;font-size:11px;display:block;margin-top:2px;color:var(--muted)}
-.tl-btn.green-btn{border-color:var(--good);color:var(--good)}
-.tl-btn.green-btn .tl-sub{color:var(--good);opacity:.7}
-.tl-btn.green-btn.active{background:var(--good);color:#0a150a}
-.tl-btn.amber-btn{border-color:var(--warn);color:var(--warn)}
-.tl-btn.amber-btn .tl-sub{color:var(--warn);opacity:.7}
-.tl-btn.amber-btn.active{background:var(--warn);color:#1a0f00}
-.tl-btn.red-btn{border-color:var(--bad);color:var(--bad)}
-.tl-btn.red-btn .tl-sub{color:var(--bad);opacity:.7}
-.tl-btn.red-btn.active{background:var(--bad);color:#fff}
-.checkin-msg{margin-top:12px;padding:12px 14px;border-radius:10px;font-size:13px;display:none;line-height:1.5}
-.checkin-msg.show{display:block}
-.checkin-msg.green{background:rgba(134,239,172,.1);border:1px solid var(--good);color:var(--good)}
-.checkin-msg.amber{background:rgba(251,191,36,.1);border:1px solid var(--warn);color:var(--warn)}
-.checkin-msg.red{background:rgba(251,113,133,.1);border:1px solid var(--bad);color:var(--bad)}
-
-/* ISSUE GRID */
-.issue-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-@media(max-width:560px){.issue-grid{grid-template-columns:1fr}}
-.ic{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px}
-.ic-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;gap:8px}
-.ic-name{font-weight:700;font-size:14px;flex:1}
-.ic-tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0}
-.tag-blue{background:rgba(125,211,252,.15);color:var(--accent)}
-.tag-amber{background:rgba(251,191,36,.15);color:var(--warn)}
-.tag-green{background:rgba(134,239,172,.15);color:var(--good)}
-.tag-red{background:rgba(251,113,133,.15);color:var(--bad)}
-.ic-desc{font-size:12px;color:var(--muted);margin-bottom:6px;line-height:1.4}
-.ic-target{font-size:11px;color:var(--muted);margin-bottom:8px;font-style:italic}
-.ic-progbar{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
-.ic-progfill{height:100%;border-radius:2px;transition:width .4s}
-
-/* METRICS TABLE */
-.metrics-table{width:100%;border-collapse:collapse;font-size:13px}
-.metrics-table th{text-align:left;color:var(--muted);font-weight:600;font-size:12px;padding:6px 0 8px;border-bottom:1px solid var(--border)}
-.metrics-table td{padding:10px 0;border-bottom:1px solid var(--border);vertical-align:top}
-.metrics-table tr:last-child td{border-bottom:none}
-.m-name{font-weight:600;font-size:13px}
-.m-sub{font-size:11px;color:var(--muted);margin-top:1px}
-.m-target{font-size:12px;font-weight:600;color:var(--good)}
-.m-sub2{font-size:11px;color:var(--muted);margin-top:1px}
-.m-input{background:transparent;border:1px solid var(--border);border-radius:7px;color:var(--ink);padding:5px 9px;font-size:12px;width:90px;outline:none;font-family:var(--mono)}
-.m-input:focus{border-color:var(--accent)}
-
-/* RED FLAGS */
-.rf-list{list-style:none;padding:0;margin:8px 0 0}
-.rf-list li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;line-height:1.4}
-.rf-list li:last-child{border-bottom:none}
-.rf-icon{color:var(--bad);flex-shrink:0;font-size:14px;margin-top:1px}
-
-/* DISCLAIMER */
-.disclaimer{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.18);border-radius:12px;padding:14px 16px;font-size:12px;color:var(--muted);margin-bottom:20px;line-height:1.6}
-
-/* SETUP OVERLAY */
-.setup-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100;align-items:center;justify-content:center;padding:20px}
-.setup-overlay.show{display:flex}
-.setup-box{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:400px;width:100%}
-.setup-box h2{margin:0 0 8px;font-size:22px;font-weight:800}
-.setup-box p{color:var(--muted);font-size:14px;margin:0 0 22px;line-height:1.6}
-.setup-input{width:100%;padding:11px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--ink);font-size:15px;outline:none;margin-bottom:16px}
-.setup-input:focus{border-color:var(--accent)}
-.btn-primary{width:100%;padding:13px;background:var(--accent);color:#0a1520;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s}
-.btn-primary:hover{opacity:.88}
-
-footer{margin-top:32px;text-align:center;color:var(--muted);font-size:12px}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
+.nav-brand{font-weight:900;font-size:18px;text-decoration:none;color:var(--ink)}
+.nav-links{display:flex;gap:16px;flex-wrap:wrap}
+.nav-links a{font-size:13px;color:var(--muted);text-decoration:none;transition:color .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--ink)}
+.wrap{max-width:680px;margin:0 auto;padding:32px 20px 80px}
+.bar{border-left:4px solid var(--muted);padding:12px 16px;background:var(--panel);border-radius:0 10px 10px 0;margin-bottom:16px;font-size:14px}
+.bar-warn{border-color:var(--warn)}.bar-bad{border-color:var(--bad)}.bar-good{border-color:var(--good)}.bar-accent{border-color:var(--accent)}
+.bar-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.session-head{margin-bottom:22px}
+.session-head h1{font-size:26px;font-weight:900;margin:0 0 4px}
+.session-head .sub{color:var(--muted);font-size:14px}
+.phase-bar{margin-bottom:28px}
+.phase-bar-label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px}
+.phase-track{height:4px;background:var(--border);border-radius:4px;overflow:hidden}
+.phase-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .5s}
+.track{margin-bottom:32px}
+.track-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.track-icon{font-size:20px}
+.track-title{font-size:16px;font-weight:700;margin-bottom:1px}
+.track-sub{font-size:12px;color:var(--muted)}
+.ex-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px 18px 14px;margin-bottom:12px}
+.ex-card.adapted-reg{border-color:var(--warn)}
+.ex-card.adapted-prog{border-color:var(--accent)}
+.ex-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:4px}
+.ex-name{font-size:15px;font-weight:700}
+.ex-meta{font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap;padding-top:2px}
+.ex-badge{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+.badge-reg{color:var(--warn)}.badge-prog{color:var(--accent)}
+.ex-cue{font-size:13px;color:var(--muted);margin-bottom:12px}
+.ex-cue ol{margin:0;padding-left:18px}
+.ex-cue li{margin-bottom:3px}
+.ex-tip{font-size:12px;color:var(--accent);background:rgba(125,211,252,.07);border-radius:8px;padding:8px 10px;margin-bottom:10px}
+.feedback-row{display:flex;gap:6px}
+.fb-btn{flex:1;padding:8px 2px;border:1px solid var(--border);border-radius:10px;background:transparent;color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;text-align:center;line-height:1.3}
+.fb-btn:hover{border-color:var(--ink);color:var(--ink)}
+.sel-pain{background:rgba(251,113,133,.12);border-color:var(--bad)!important;color:var(--bad)!important}
+.sel-nofeeling{background:rgba(251,191,36,.10);border-color:var(--warn)!important;color:var(--warn)!important}
+.sel-good{background:rgba(134,239,172,.10);border-color:var(--good)!important;color:var(--good)!important}
+.rest-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:28px;text-align:center}
+.rest-card h2{margin:0 0 10px;font-size:20px}
+.rest-card p{color:var(--muted);font-size:14px;margin:0;line-height:1.6}
+.complete-btn{display:block;width:100%;padding:14px;background:var(--accent);color:#0f1115;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;margin-top:16px;transition:opacity .15s}
+.complete-btn:hover{opacity:.9}
+.complete-btn:disabled{opacity:.5;cursor:default}
+.complete-btn.done{background:var(--good)}
+.foot-note{font-size:12px;color:var(--muted);text-align:center;margin-top:16px;line-height:1.6}
+.reset-link{display:block;text-align:center;margin-top:20px;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline}
+.setup{text-align:center;padding:40px 0}
+.setup h1{font-size:28px;font-weight:900;margin:0 0 10px}
+.setup p{color:var(--muted);font-size:15px;margin:0 0 24px;line-height:1.6}
+.setup-box{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:28px;text-align:left;max-width:400px;margin:0 auto}
+.setup-box label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.setup-box input[type=date]{width:100%;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--ink);font-size:15px;margin-bottom:16px;font-family:var(--sans)}
+.setup-box button{width:100%;padding:12px;background:var(--accent);color:#0f1115;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer}
+.issues-list{list-style:none;padding:0;margin:0 0 24px;display:flex;flex-direction:column;gap:8px;text-align:left;max-width:420px;margin-left:auto;margin-right:auto}
+.issues-list li{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:14px}
 </style>
 </head>
 <body>
-<div class="wrap">
-
-  <nav>
-    <a class="brand" href="/index.html">BAMBAM Built</a>
-    <a href="/wod.html">Daily WOD</a>
-    <a href="/run.html">Ultra Strength</a>
-    <a href="/bell.html">Kettlebell</a>
-    <a href="/rats.html">Court Prep</a>
+<nav class="nav">
+  <a href="/index.html" class="nav-brand">BAMBAM Built</a>
+  <div class="nav-links">
+    <a href="/wod.html">WOD</a>
+    <a href="/run.html">Ultra</a>
+    <a href="/bell.html">KB</a>
+    <a href="/rats.html">Court</a>
     <a href="/rehab.html" class="active">Rehab</a>
-  </nav>
-
-  <div class="disclaimer">
-    ⚠️ This tool is for personal wellness tracking only. It does not diagnose, treat, or replace medical care. Always consult a licensed PT or sports-medicine physician before beginning or modifying this program. Red flags listed below require immediate in-person evaluation.
   </div>
-
-  <!-- PHASE HEADER -->
-  <div class="phase-header" id="phaseHeader">
-    <div class="phase-badge">
-      <span class="phase-num" id="phaseNum">1</span>
-      <div>
-        <div class="phase-info-name" id="phaseName">Activation &amp; Repositioning</div>
-        <div class="phase-info-wks" id="phaseWks">Weeks 1–4</div>
-      </div>
-    </div>
-    <div class="week-badge">Week <strong id="currentWeek">1</strong> of 16</div>
-    <div class="prog-wrap">
-      <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
-      <div class="prog-label" id="progLabel">0% complete</div>
-    </div>
-    <button class="btn-sm" onclick="openSetup()">⚙ Change Start Date</button>
-  </div>
-
-  <!-- TODAY'S SESSION -->
-  <div class="panel bar bar-bad" id="sessionPanel">
-    <div class="session-controls">
-      <div class="session-title" id="sessionTitle">Today's Session</div>
-      <span class="session-badge sb-full" id="sessionBadge">Full Session</span>
-    </div>
-    <p class="sub" id="sessionDesc"></p>
-    <ul class="ex-list" id="exList"></ul>
-    <div class="completion-row" id="completionRow" style="display:none">
-      <div class="completion-bar"><div class="completion-fill" id="completionFill"></div></div>
-      <span id="completionLabel" style="white-space:nowrap"></span>
-    </div>
-  </div>
-
-  <!-- DAILY CHECK-IN -->
-  <div class="panel bar bar-accent">
-    <h2>Daily Check-In</h2>
-    <p class="sub">Rate each area right now — 0 = no pain, 10 = worst imaginable</p>
-
-    <div class="pain-grid">
-      <div class="pain-row">
-        <span class="pain-label">Right Foot / Lateral</span>
-        <input type="range" class="pain-slider" id="p-rfoot" min="0" max="10" value="0" oninput="onPain('rfoot',this.value)">
-        <span class="pain-val" id="pv-rfoot">0</span>
-      </div>
-      <div class="pain-row">
-        <span class="pain-label">Right Heel</span>
-        <input type="range" class="pain-slider" id="p-rheel" min="0" max="10" value="0" oninput="onPain('rheel',this.value)">
-        <span class="pain-val" id="pv-rheel">0</span>
-      </div>
-      <div class="pain-row">
-        <span class="pain-label">Right Knee / Hip</span>
-        <input type="range" class="pain-slider" id="p-rknee" min="0" max="10" value="0" oninput="onPain('rknee',this.value)">
-        <span class="pain-val" id="pv-rknee">0</span>
-      </div>
-      <div class="pain-row">
-        <span class="pain-label">Left Arch / Foot</span>
-        <input type="range" class="pain-slider" id="p-lfoot" min="0" max="10" value="0" oninput="onPain('lfoot',this.value)">
-        <span class="pain-val" id="pv-lfoot">0</span>
-      </div>
-      <div class="pain-row">
-        <span class="pain-label">Low Back / QL</span>
-        <input type="range" class="pain-slider" id="p-lback" min="0" max="10" value="0" oninput="onPain('lback',this.value)">
-        <span class="pain-val" id="pv-lback">0</span>
-      </div>
-    </div>
-
-    <h3>Overall Traffic Light</h3>
-    <p class="sub" style="margin-bottom:10px">How does your body feel today compared to yesterday?</p>
-    <div class="tl-row">
-      <button class="tl-btn green-btn" id="tl-green" onclick="setTL('green')">
-        🟢 Green<span class="tl-sub">Pain ≤3/10, settled overnight — proceed as planned</span>
-      </button>
-      <button class="tl-btn amber-btn" id="tl-amber" onclick="setTL('amber')">
-        🟡 Amber<span class="tl-sub">Pain 4–6 or lingering — reduce load, skip plyos</span>
-      </button>
-      <button class="tl-btn red-btn" id="tl-red" onclick="setTL('red')">
-        🔴 Red<span class="tl-sub">Pain &gt;6 or worsening — rest, reassess, see PT</span>
-      </button>
-    </div>
-    <div class="checkin-msg" id="checkinMsg"></div>
-  </div>
-
-  <!-- 4 ISSUE TRACKER -->
-  <h2 style="font-size:15px;font-weight:700;margin:4px 0 12px">Issue Tracker</h2>
-  <div class="issue-grid">
-    <div class="ic">
-      <div class="ic-top">
-        <span class="ic-name">Right Hip / Core</span>
-        <span class="ic-tag tag-blue">Primary Driver</span>
-      </div>
-      <div class="ic-desc">Gluteus medius + anterolateral core inhibition. Root cause of the whole pattern.</div>
-      <div class="ic-target">Target: hip abduction ≥90% symmetry · side-bridge L:R within 0.05</div>
-      <div class="ic-progbar"><div class="ic-progfill" id="bar-hip" style="width:0%;background:var(--accent)"></div></div>
-    </div>
-    <div class="ic">
-      <div class="ic-top">
-        <span class="ic-name">Right Foot — Running</span>
-        <span class="ic-tag tag-amber">Monitor</span>
-      </div>
-      <div class="ic-desc">Cuboid/peroneal pain + suspected lateral CECS. Mile-8 on/off pattern.</div>
-      <div class="ic-target">Target: symptom-onset distance increasing · pain ≤2/10 at mile 8+</div>
-      <div class="ic-progbar"><div class="ic-progfill" id="bar-rfoot" style="width:0%;background:var(--warn)"></div></div>
-    </div>
-    <div class="ic">
-      <div class="ic-top">
-        <span class="ic-name">Right Heel</span>
-        <span class="ic-tag tag-blue">Active</span>
-      </div>
-      <div class="ic-desc">Insertional plantar fasciopathy / Achilles. Heavy occupational loading.</div>
-      <div class="ic-target">Target: heel pain ≤3/10 during loading · settled by next morning</div>
-      <div class="ic-progbar"><div class="ic-progfill" id="bar-rheel" style="width:0%;background:var(--accent)"></div></div>
-    </div>
-    <div class="ic">
-      <div class="ic-top">
-        <span class="ic-name">Left Arch / Foot</span>
-        <span class="ic-tag tag-amber">Monitor</span>
-      </div>
-      <div class="ic-desc">Abductor hallucis strain from left-side compensation pattern + orthotic change.</div>
-      <div class="ic-target">Target: arch pain-free during short-foot · will partly resolve as hip improves</div>
-      <div class="ic-progbar"><div class="ic-progfill" id="bar-lfoot" style="width:0%;background:var(--warn)"></div></div>
-    </div>
-  </div>
-
-  <!-- MONTHLY PROGRESS METRICS -->
-  <div class="panel bar bar-warn">
-    <h2>Monthly Progress Tests</h2>
-    <p class="sub">Retest every 3–4 weeks. Log results to track your trajectory.</p>
-    <table class="metrics-table">
-      <thead>
-        <tr>
-          <th style="width:45%">Measure</th>
-          <th style="width:30%">Target</th>
-          <th>Last Result</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-            <div class="m-name">Y-Balance Anterior Reach</div>
-            <div class="m-sub">Right vs. Left reach asymmetry (cm)</div>
-          </td>
-          <td>
-            <div class="m-target">&lt;4 cm difference</div>
-            <div class="m-sub2">≥94% composite score</div>
-          </td>
-          <td><input class="m-input" id="m-ybal" placeholder="e.g. R52 L56" onchange="saveMet('ybal',this.value)"></td>
-        </tr>
-        <tr>
-          <td>
-            <div class="m-name">McGill Side-Bridge</div>
-            <div class="m-sub">Right hold (s) vs. Left hold (s)</div>
-          </td>
-          <td>
-            <div class="m-target">L:R within 0.05 of 1.0</div>
-            <div class="m-sub2">e.g. R45s / L47s = ratio 0.96 ✓</div>
-          </td>
-          <td><input class="m-input" id="m-mcgill" placeholder="e.g. R45/L47" onchange="saveMet('mcgill',this.value)"></td>
-        </tr>
-        <tr>
-          <td>
-            <div class="m-name">Single-Leg Squat Valgus</div>
-            <div class="m-sub">Right knee FPPA via phone video</div>
-          </td>
-          <td>
-            <div class="m-target">≤5° valgus right</div>
-            <div class="m-sub2">R:L within 5° (use Kinovea app)</div>
-          </td>
-          <td><input class="m-input" id="m-fppa" placeholder="e.g. R8° L5°" onchange="saveMet('fppa',this.value)"></td>
-        </tr>
-        <tr>
-          <td>
-            <div class="m-name">Single-Leg Hop Distance</div>
-            <div class="m-sub">Right vs. Left (cm) — once pain-free</div>
-          </td>
-          <td>
-            <div class="m-target">LSI ≥90%</div>
-            <div class="m-sub2">R/L × 100 ≥ 90%</div>
-          </td>
-          <td><input class="m-input" id="m-hop" placeholder="e.g. R145/L162" onchange="saveMet('hop',this.value)"></td>
-        </tr>
-        <tr>
-          <td>
-            <div class="m-name">Symptom Onset Distance</div>
-            <div class="m-sub">Miles before right lateral foot pain</div>
-          </td>
-          <td>
-            <div class="m-target">&gt;20 miles pain-free</div>
-            <div class="m-sub2">Currently ~mile 8 threshold</div>
-          </td>
-          <td><input class="m-input" id="m-onset" placeholder="e.g. mile 8" onchange="saveMet('onset',this.value)"></td>
-        </tr>
-        <tr>
-          <td>
-            <div class="m-name">Running Cadence</div>
-            <div class="m-sub">Steps/min from Garmin (easy run)</div>
-          </td>
-          <td>
-            <div class="m-target">+7.5–10% vs. baseline</div>
-            <div class="m-sub2">Track trend — not diagnostic</div>
-          </td>
-          <td><input class="m-input" id="m-cadence" placeholder="e.g. 172 spm" onchange="saveMet('cadence',this.value)"></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- RED FLAGS -->
-  <div class="panel bar bar-bad">
-    <h2>🚨 Red Flags — Stop &amp; See PT / ER Now</h2>
-    <p class="sub">If any of these apply, stop all impact activity immediately and seek in-person evaluation. Do not train through these.</p>
-    <ul class="rf-list">
-      <li><span class="rf-icon">▲</span>Localized bone pain that <strong>worsens as a run progresses</strong> — shin, foot, metatarsal, or groin (femoral neck). Possible stress fracture.</li>
-      <li><span class="rf-icon">▲</span>Pain <strong>at rest or at night</strong> that wakes you up. X-ray often misses stress fractures — MRI is definitive.</li>
-      <li><span class="rf-icon">▲</span>Pain onset distance <strong>getting shorter in successive runs</strong> — a stress injury red flag.</li>
-      <li><span class="rf-icon">▲</span>Positive <strong>single-leg hop test</strong>: sharp, focal bone pain on ~10 hops in place.</li>
-      <li><span class="rf-icon">▲</span><strong>Limping or altering stride</strong> to offload pain during a run.</li>
-      <li><span class="rf-icon">▲</span>Cuboid/lateral foot pain <strong>not improving with taping</strong> after 2–3 weeks, or recurrent subluxation.</li>
-      <li><span class="rf-icon">▲</span><strong>Numbness, tingling, or weakness</strong> in the foot or toes during or after exercise (nerve involvement).</li>
-      <li><span class="rf-icon">▲</span>Pain <strong>&gt;6/10 not settling within 24 hours</strong> despite stopping load.</li>
-      <li><span class="rf-icon">▲</span><strong>Calf swelling, warmth, or pain at rest</strong> — possible DVT. Go to urgent care / ER.</li>
-      <li><span class="rf-icon">▲</span>Severe unrelenting pain with <strong>foot-drop, paresthesia, or pallor</strong> — possible acute compartment syndrome. <strong>Call 911.</strong></li>
-    </ul>
-  </div>
-
-  <footer>© <span id="yr"></span> bambambuilt.com &nbsp;·&nbsp; Rehab v1.0 &nbsp;·&nbsp; For personal wellness tracking only. Not medical advice.</footer>
-</div>
-
-<!-- SETUP OVERLAY -->
-<div class="setup-overlay" id="setupOverlay">
-  <div class="setup-box">
-    <h2>Set Program Start Date</h2>
-    <p>Enter the date you began (or plan to begin) this 16-week protocol. The page will auto-calculate your current phase, week, and today's session.</p>
-    <input type="date" class="setup-input" id="startDateInput">
-    <button class="btn-primary" onclick="saveStart()">Start Program</button>
-  </div>
-</div>
-
+</nav>
+<div class="wrap" id="root"></div>
 <script>
-// ─── PHASE DATA ───────────────────────────────────────────────────────
-const PHASES = [
-  {
-    num:1, name:'Activation & Repositioning', weeks:'Weeks 1–4',
-    wkStart:1, wkEnd:4,
-    schedule:['full','snack','full','snack','full','snack','rest'],
-    fullTitle:'Full Corrective Session',
-    fullDesc:'Right core activation · hip abductor strengthening · foot rehab',
-    snackTitle:'Activation Snack (~10 min)',
-    snackDesc:'Daily maintenance: breathing reset + glute activation + short-foot',
-    restTitle:'Recovery Day',
-    restDesc:'Active recovery, mobility, and breathing work only',
-    full:[
-      {n:'90/90 Diaphragmatic Breathing',d:'3 sets × 5 breaths',c:'Full exhale, ribs down, pause 2s before inhale. Cue: feel right ribcage expand sideways.'},
-      {n:'Dead Bug — Bent Knee March',d:'3 × 10 each side',c:'Low back stays pressed to floor the whole time. Right-side oblique emphasis.'},
-      {n:'Right Side Plank (knees)',d:'3 × 20–30s',c:'Right side facing up. Stiff as a board — no hip sag. Progress to feet-stacked.'},
-      {n:'Pallof Press — Tall Kneeling',d:'3 × 10 each side',c:'Lock ribcage to pelvis. Resist rotation through core, not shoulders. Slow and controlled.'},
-      {n:'Side-Lying Hip Abduction — Right',d:'3 × 15 reps',c:'Slight hip flexion. Slow, controlled lift. No hip hiking at the top.'},
-      {n:'Clamshell — Right',d:'3 × 15 reps',c:'Feet stacked, hips stacked. Only the top hip rotates. Feel the glute med, not the hip flexor.'},
-      {n:'Single-Leg Glute Bridge — Right',d:'3 × 12 reps',c:'Drive through the right heel. Keep the pelvis level — left side must not drop.'},
-      {n:'Short-Foot Exercise — Both Feet',d:'3 × 10 × 5s holds',c:'Dome the arch without curling toes. Seated first, then progress to standing.'},
-      {n:'Low-Dye Tape / Cuboid Pad',d:'As needed pre-run',c:'Apply before any run longer than 3 miles. Right lateral column support.'},
-    ],
-    snack:[
-      {n:'90/90 Diaphragmatic Breathing',d:'2 × 5 breaths',c:'Full exhale, rib flare down. This is the reset cue — do it before any run too.'},
-      {n:'Clamshell — Right',d:'2 × 15 reps',c:'Glute med activation before running or long periods of sitting.'},
-      {n:'Short-Foot Exercise',d:'2 × 10 × 3s holds each foot',c:'Seated arch doming. Progress to standing when consistent.'},
-    ],
-    rest:[
-      {n:'90/90 Diaphragmatic Breathing',d:'5 breaths × 3',c:'Full system reset. Exhale completely, ribs down, pause.'},
-      {n:'Left QL Side-Bend Stretch',d:'2 × 45s',c:'Left arm overhead, lean right. Add slight forward reach to maximize left QL lengthening.'},
-      {n:'½-Kneeling Hip Flexor Stretch — Both',d:'2 × 60s each',c:'Posterior pelvic tilt first, then shift forward gently. Right hip flexor is tight — prioritize.'},
-      {n:'Short-Foot — Maintenance',d:'2 × 10 × 3s each foot',c:'Light daily maintenance even on rest days.'},
-    ]
-  },
-  {
-    num:2, name:'Integrated Unilateral Strength', weeks:'Weeks 5–9',
-    wkStart:5, wkEnd:9,
-    schedule:['full','snack','full','snack','full','snack','rest'],
-    fullTitle:'Full Strength Session',
-    fullDesc:'Split squats · step-downs · single-leg loading with valgus control',
-    snackTitle:'Activation Snack (~10 min)',
-    snackDesc:'Pre-run or daily activation: breathing + glute + foot',
-    restTitle:'Recovery Day',
-    restDesc:'Active recovery, stretching, and breathing only',
-    full:[
-      {n:'90/90 Breathing + Hip Lift',d:'2 × 5 breaths',c:'Feet on wall. Posterior pelvic tilt. Down-regulate tight left QL.'},
-      {n:'Split Squat (rear foot elevated)',d:'3 × 10 each leg',c:'Right side: knee tracks over 2nd toe. Film from front. Zero valgus tolerance.'},
-      {n:'Step-Down — Right',d:'3 × 12 reps',c:'4-count controlled lowering. Left toe barely touches. Watch right knee in mirror.'},
-      {n:'Single-Leg RDL — Right',d:'3 × 10 reps',c:'Hip hinge. Level hips throughout. 3-count eccentric. Feel right glute and hamstring load.'},
-      {n:'Banded Lateral Walk',d:'3 × 15 steps each direction',c:'Band above knees. Stay low and wide. Knees must not cave. Right glute fires the whole time.'},
-      {n:'Suitcase Carry — Right Hand',d:'3 × 30m walks',c:'Left lateral trunk must resist hiking. Tall posture, ribs stacked over pelvis.'},
-      {n:'Right Side Plank — Full (feet stacked)',d:'3 × 35–45s',c:'Top-leg abduction when solid. Use this hold as your McGill side-bridge test too.'},
-      {n:'Pallof Press — Standing',d:'3 × 10 each side',c:'Progress from kneeling last phase. Add split stance when ready.'},
-      {n:'Short-Foot — Single-Leg Stance',d:'3 × 30s each foot',c:'Maintain arch dome while balancing. No wobble, no grip.'},
-    ],
-    snack:[
-      {n:'90/90 Breathing',d:'1 × 5 breaths',c:'Full exhale, ribs down. Quick reset before any run.'},
-      {n:'Clamshell — Right',d:'2 × 15',c:'Glute med activation before loading.'},
-      {n:'Short-Foot — Single-Leg',d:'2 × 30s each foot',c:'Progress from seated. Balance on each foot with arch domed.'},
-    ],
-    rest:[
-      {n:'90/90 Diaphragmatic Breathing',d:'5 breaths × 3',c:'Recovery reset.'},
-      {n:'Left QL Side-Bend Stretch',d:'2 × 45s',c:'Left arm overhead, lean right. Lengthen, don\'t just stretch.'},
-      {n:'½-Kneeling Hip Flexor Stretch',d:'2 × 60s each',c:'Posterior tilt, then shift. Feel the right hip flexor release.'},
-      {n:'Short-Foot — Maintenance',d:'2 × 10 each foot',c:'Keep the foot gains between sessions.'},
-    ]
-  },
-  {
-    num:3, name:'Loaded/Eccentric + Gait Retraining', weeks:'Weeks 10–13',
-    wkStart:10, wkEnd:13,
-    schedule:['full','snack','full','snack','full','rest','rest'],
-    fullTitle:'Full Eccentric Session',
-    fullDesc:'Heavy eccentric hip loading · cadence retraining · uneven surface work',
-    snackTitle:'Pre-Run Activation',
-    snackDesc:'Quick activation + cadence cue before runs',
-    restTitle:'Recovery Day',
-    restDesc:'Two rest days per week this phase. Quality over quantity.',
-    full:[
-      {n:'Eccentric Hip Abduction — Right',d:'3 × 15 (4s lowering)',c:'Cable or heavy band. 4-count eccentric lowering. Highest-evidence move for reducing knee valgus.'},
-      {n:'Single-Leg Squat — Video Form Check',d:'3 × 10 right',c:'Film every set from front. Target ≤5° valgus. Stop set if form breaks down.'},
-      {n:'Heavy Split Squat (loaded)',d:'3 × 8 each',c:'Add dumbbells. Right side: perfect knee track. Slow 3-count eccentric.'},
-      {n:'Eccentric Single-Leg RDL',d:'3 × 10',c:'3-count lowering, 1-count return. Posterior chain under full eccentric load.'},
-      {n:'Lateral Step-Down off Box',d:'3 × 12 right',c:'Step laterally off 8" box. Control the valgus through the entire landing.'},
-      {n:'Uneven Surface Balance — Right',d:'3 × 45s',c:'Balance disc or folded mat. Eyes open first, then closed. Trail simulation.'},
-      {n:'Cadence Retraining Run',d:'15–20 min easy run',c:'Target +7.5–10% above your normal cadence. Use watch metronome or app. Cue: quicker, lighter steps.'},
-      {n:'Short-Foot — Dynamic (during heel raise)',d:'2 × 20 reps each',c:'Maintain arch dome through the heel raise. Progress to single-leg heel raise.'},
-    ],
-    snack:[
-      {n:'90/90 Breathing',d:'1 × 5 breaths',c:'Reset before runs.'},
-      {n:'Banded Lateral Walk',d:'2 × 15 each direction',c:'Glute med activation within 10 min before running.'},
-      {n:'Cadence Reminder',d:'Every easy run',c:'Target +7.5–10% above preferred. Gradually withdraw the metronome cue over the phase.'},
-    ],
-    rest:[
-      {n:'90/90 Diaphragmatic Breathing',d:'5 breaths × 3',c:'Deeper recovery. Take the two rest days seriously this phase.'},
-      {n:'Left QL Foam Roller',d:'2 min each side',c:'Stay off the spine. If nerve/shooting pain: stop immediately.'},
-      {n:'Hip Flexor Stretch',d:'2 × 60s each',c:'Posterior pelvic tilt first, then shift. Right hip flexor is still tight.'},
-      {n:'Short-Foot Maintenance',d:'2 × 10 each',c:'Light maintenance only on rest days.'},
-    ]
-  },
-  {
-    num:4, name:'Plyometric & Trail-Specific', weeks:'Weeks 14–16',
-    wkStart:14, wkEnd:16,
-    schedule:['full','snack','full','rest','full','rest','rest'],
-    fullTitle:'Plyometric / Trail Session',
-    fullDesc:'Low-level plyometrics · trail specificity · strength taper',
-    snackTitle:'Maintenance Activation',
-    snackDesc:'Taper volume — keep the pattern, reduce the load',
-    restTitle:'Recovery Day',
-    restDesc:'Three rest days per week this phase. Preserve the gains.',
-    full:[
-      {n:'Single-Leg Hops — Right',d:'3 × 10 hops',c:'ONLY if frontal-plane control is clean and legs are fully fresh. Soft, quiet landings.'},
-      {n:'Lateral Bounds',d:'3 × 8 each direction',c:'Stick each landing with hip and knee control. Zero valgus on landing.'},
-      {n:'Trail Single-Leg Balance',d:'3 × 45s each',c:'Rocky surface or uneven ground. Simulate trail terrain and slight downhill if available.'},
-      {n:'Reactive Step-Down',d:'3 × 10 right',c:'Faster tempo than before. Maintain valgus control at speed — this is the test.'},
-      {n:'Split Squat — Maintenance',d:'2 × 8 each',c:'Reduced volume (taper). Keep technique sharp. Do not increase loading this phase.'},
-      {n:'Short-Foot During Running',d:'All easy runs',c:'Maintain arch awareness. Light, quick, midfoot-biased footstrike.'},
-    ],
-    snack:[
-      {n:'90/90 Breathing',d:'1 × 5 breaths',c:'Stay connected to breathing pattern during taper.'},
-      {n:'Clamshell — Right',d:'1 × 15',c:'Maintenance only. Keep the pattern firing.'},
-      {n:'Short-Foot',d:'1 × 10 × 3s each foot',c:'Taper volume. Hold the gains.'},
-    ],
-    rest:[
-      {n:'90/90 Diaphragmatic Breathing',d:'5 breaths × 3',c:'Taper rest is important. Let the adaptations consolidate.'},
-      {n:'Hip Flexor Stretch',d:'2 × 60s each',c:'Light mobility maintenance only.'},
-      {n:'Short-Foot',d:'1 × 10 each foot',c:'Minimum maintenance.'},
-    ]
-  }
-];
+const KEY='bb_rehab_v2';
 
-// ─── STATE ────────────────────────────────────────────────────────────
-const KEY = 'bb_rehab_v1';
-let S = {startDate:null, tl:null, pain:{}, checked:{}, metrics:{}, checkedDay:-1};
-
-function load(){
-  try{ const d=localStorage.getItem(KEY); if(d) S=Object.assign(S,JSON.parse(d)); }catch(e){}
-}
-function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
-
-// ─── DATE HELPERS ─────────────────────────────────────────────────────
-function todayLocal(){
-  const d=new Date();
-  return new Date(d.getFullYear(),d.getMonth(),d.getDate());
-}
-function daysSince(s){
-  const start=new Date(s+'T00:00:00');
-  return Math.floor((todayLocal()-start)/86400000);
-}
-function weekNum(days){ return Math.min(16,Math.floor(days/7)+1); }
-function getPhase(wk){ return wk<=4?PHASES[0]:wk<=9?PHASES[1]:wk<=13?PHASES[2]:PHASES[3]; }
-
-// ─── SETUP ────────────────────────────────────────────────────────────
-function openSetup(){
-  document.getElementById('setupOverlay').classList.add('show');
-  const inp=document.getElementById('startDateInput');
-  if(S.startDate) inp.value=S.startDate;
-  else inp.value=todayLocal().toISOString().split('T')[0];
-}
-function saveStart(){
-  const v=document.getElementById('startDateInput').value;
-  if(!v) return;
-  S.startDate=v; S.checked={}; S.tl=null; S.pain={};
-  save();
-  document.getElementById('setupOverlay').classList.remove('show');
-  render();
-}
-
-// ─── PAIN SLIDERS ─────────────────────────────────────────────────────
-function onPain(id,val){
-  const v=parseInt(val);
-  S.pain[id]=v; save();
-  const el=document.getElementById('pv-'+id);
-  el.textContent=v;
-  el.style.color=v<=3?'var(--good)':v<=6?'var(--warn)':'var(--bad)';
-}
-
-// ─── TRAFFIC LIGHT ────────────────────────────────────────────────────
-const TL_MSGS={
-  green:'✅ Green Light — Proceed with today\'s full session. Your body is recovered. Stick to the plan.',
-  amber:'⚠️ Amber — Reduce today\'s load by 20–30%. Skip plyometrics. Focus on activation and technique. No new PRs today.',
-  red:'🛑 Red — Do not train today. Rest, ice if helpful, and reassess tomorrow morning. If any red flags apply (below), see your PT or sports-med doc.'
+const EXLIB={
+  diaphragm_breath:{id:'diaphragm_breath',name:'Diaphragmatic Breathing',track:'hip',sets:3,reps:'5 slow breaths',
+    cue:['Lie on back, knees bent, feet flat.','One hand on chest, one on belly.','Breathe IN: belly rises, chest stays completely still.','Breathe OUT: exhale fully — on the exhale feel abs lightly engage.','On each exhale, brace gently for 2 seconds then fully release.'],
+    regression_id:'crocodile_breath',progression_tip:'Add a TA brace on exhale: hiss air out and hold 5s while keeping low back pressed to floor.'},
+  crocodile_breath:{id:'crocodile_breath',name:'Crocodile Breathing (Prone)',track:'hip',sets:3,reps:'5 slow breaths',
+    cue:['Lie face-down, forehead on folded hands.','Breathe into your lower back — feel it expand sideways.','Each exhale: slight draw-in, hold 2 seconds. Easier to feel the pattern here.']},
+  side_lying_abduction:{id:'side_lying_abduction',name:'Side-Lying Hip Abduction',track:'hip',sets:3,reps:'12 (3s lower)',
+    cue:['Lie on your LEFT side — you are working the RIGHT glute med.','Bottom leg slightly bent for stability.','Top leg (right): straight, foot neutral — not turned out.','Lift to 30-40°. Pause 1 second at top.','Lower SLOWLY over 3 full seconds.','Critical: pelvis stays stacked. Do not let the hip roll backward.'],
+    regression_id:'clamshell',progression_tip:'Add a light ankle weight (1-2 lbs) or resistance band just above knees.'},
+  clamshell:{id:'clamshell',name:'Clamshell',track:'hip',sets:3,reps:'15',
+    cue:['Lie on left side, hips stacked, knees bent ~45°, feet together.','Rotate top knee upward 30-40° like a clamshell opening. Keep feet together.','Pause 1s at top. Lower slowly. Hips stay stacked throughout.','You should feel the work on the right side of your glute.']},
+  glute_bridge:{id:'glute_bridge',name:'Glute Bridge',track:'hip',sets:3,reps:'10 (3s hold)',
+    cue:['Lie on back, feet flat hip-width, knees bent.','Drive through heels — not toes.','Squeeze glutes hard at the top. Hold 3 seconds.','Stop when hips are level — no hyperextension.','Lower slowly over 2-3 seconds. Full reset each rep.'],
+    regression_id:'glute_bridge_partial',progression_tip:'Elevate feet on a bench for more glute demand. Or add resistance band above knees — track knees over toes.'},
+  glute_bridge_partial:{id:'glute_bridge_partial',name:'Glute Bridge (Partial Range)',track:'hip',sets:3,reps:'10 (2s hold)',
+    cue:['Same as glute bridge — only lift to your comfortable range.','Focus on glute activation, not height.','Hold 2 seconds at your pain-free end range.']},
+  dead_bug:{id:'dead_bug',name:'Dead Bug',track:'hip',sets:3,reps:'6/side',
+    cue:['Lie on back, arms straight up, hips and knees at 90°.','Press low back FIRMLY into the floor — this stays the entire time.','Slowly lower opposite arm + leg (4 seconds). Do not let back arch.','Return and switch sides. If back arches: stop and use the arms-only version.','This trains your anterolateral core — the key stabilizer missing on your right side.'],
+    regression_id:'dead_bug_arms',progression_tip:'Add a light resistance band looped around the moving foot.'},
+  dead_bug_arms:{id:'dead_bug_arms',name:'Dead Bug (Arms Only)',track:'hip',sets:3,reps:'8/side',
+    cue:['Same start: back flat, legs in 90/90.','Keep legs completely still — do not move them.','Only lower one arm toward the floor and return.','Easier to maintain spinal position. Build from here.']},
+  bird_dog:{id:'bird_dog',name:'Bird Dog',track:'hip',sets:3,reps:'8/side (3s hold)',
+    cue:['Hands under shoulders, knees under hips.','Brace core — imagine someone bumping your hips sideways; resist it.','Extend opposite arm + leg simultaneously. Hold 3 seconds.','No hip rotation. Spine neutral throughout.','Think "reach long," not "lift high."'],
+    regression_id:'quadruped_leg_lift',progression_tip:'Add band around wrist and ankle. Or pause 5 seconds at the top.'},
+  quadruped_leg_lift:{id:'quadruped_leg_lift',name:'Quadruped Leg Lift',track:'hip',sets:3,reps:'10/side',
+    cue:['Hands and knees, same as bird dog.','Lift ONE leg only — no opposite arm.','Hip stays level: do not rotate.','Hold 2 seconds. Lower slowly.']},
+  lateral_band_walk:{id:'lateral_band_walk',name:'Lateral Band Walk',track:'hip',sets:3,reps:'15 steps each direction',
+    cue:['Band just above knees.','Slight squat: hips back, knees soft.','Step sideways — lead foot steps out, trail foot follows. Keep band tension.','Do not let knees cave inward. Torso upright.','15 steps right, 15 steps left = 1 set.'],
+    regression_id:'standing_hip_abduction_band',progression_tip:'Move band to ankles (longer lever). Add slight forward lean for more glute med demand.'},
+  standing_hip_abduction_band:{id:'standing_hip_abduction_band',name:'Standing Hip Abduction (Band)',track:'hip',sets:3,reps:'12/side',
+    cue:['Band just above knees. Stand on one foot (hold wall if needed).','Lift free leg out to side against band resistance.','Hold 2 seconds. Return slowly. Do not lean.','This is stationary — much easier than walking.']},
+  single_leg_stance:{id:'single_leg_stance',name:'Single-Leg Stance (Right)',track:'hip',sets:3,reps:'30 seconds',
+    cue:['Stand on RIGHT leg. Slight knee bend — never locked.','Watch: keep your LEFT hip level — do not let it drop.','That drop is the Trendelenburg sign of glute med weakness. Fight it.','Fix eyes on a point ahead. Arms out for balance.','Progress to eyes closed once stable.'],
+    regression_id:'single_leg_touch',progression_tip:'Perform on a folded towel or foam pad for unstable surface challenge.'},
+  single_leg_touch:{id:'single_leg_touch',name:'Single-Leg Stance (Fingertip Touch)',track:'hip',sets:3,reps:'30 seconds',
+    cue:['Same as single-leg stance — allow one fingertip to lightly touch a wall.','Do not lean on it. It is a safety net only.','Focus: left hip stays level throughout.']},
+  eversion_isometric:{id:'eversion_isometric',name:'Isometric Eversion Hold',track:'peroneal',sets:5,reps:'30-second holds',
+    cue:['Sit in chair. Right foot flat, ankle in neutral.','Press the OUTER EDGE of your right foot against a wall, table leg, or your other foot.','Push hard — but DO NOT move the foot. Pure isometric contraction.','You should feel the muscle fire along the outside of your lower leg.','Zero pain tolerance. Any pain at all: reduce to 50% effort or stop.','This is Phase 1. No movement yet. Isometrics rebuild the tendon first.'],
+    regression_id:'eversion_light_iso',progression_tip:'Build to 5×45s. When those feel easy with no pain, progress to band eversion.'},
+  eversion_light_iso:{id:'eversion_light_iso',name:'Light Isometric Eversion (50%)',track:'peroneal',sets:5,reps:'20-second holds',
+    cue:['Same position as isometric eversion.','Press at only 50% of maximum effort.','Very gentle stimulus. Any pain at all — stop completely.']},
+  eversion_concentric:{id:'eversion_concentric',name:'Resisted Eversion (Band)',track:'peroneal',sets:3,reps:'15 (2s out, 2s return)',
+    cue:['Sit in chair. Anchor band to your left (wrap around left leg or a furniture leg).','Loop band around the outer edge of your right foot.','Foot in neutral to slightly dorsiflexed — targets peroneal brevis.','Evert (roll foot outward) against resistance: 2 seconds.','Return slowly: 2 seconds. Full control.','Outside of lower leg should feel a mild burn. No sharp pain.'],
+    regression_id:'towel_scrunch',progression_tip:'Try in plantarflexed (pointed) foot position — this specifically loads peroneal LONGUS, your primary issue at the cuboid joint.'},
+  towel_scrunch:{id:'towel_scrunch',name:'Towel Scrunch (Intrinsic)',track:'peroneal',sets:3,reps:'20 scrunches',
+    cue:['Small towel flat on floor under right foot.','Scrunch it toward you with only toes.','No peroneal stress. Pure intrinsic foot activation.','Use this as a reset when peroneal is too sensitive for band work.']},
+  eversion_eccentric:{id:'eversion_eccentric',name:'Eccentric Eversion (Slow Lower)',track:'peroneal',sets:3,reps:'10 (4s eccentric)',
+    cue:['Sit with band anchored to your left.','Evert foot against resistance — concentric phase, 2 seconds.','Now: lower VERY SLOWLY back to neutral. 4 full seconds.','Control every millimeter of return. The slow lowering IS the therapy.','This is tendon-loading rehab for your peroneal longus at the cuboid joint.','Allow 4+ days before your next peroneal session. Non-negotiable for tendon healing.'],
+    regression_id:'eversion_concentric',progression_tip:'Build to 6-second eccentric. Or add a light ankle weight for more load.'},
+  balance_flat:{id:'balance_flat',name:'Single-Leg Balance (Right, Flat)',track:'peroneal',sets:3,reps:'30 seconds',
+    cue:['Stand on RIGHT foot. Slight knee bend.','Feel the outer edge of your foot actively grip the floor.','That grip is your peroneal working isometrically to prevent ankle roll.','Eyes fixed ahead. Do not let ankle roll inward.'],
+    regression_id:'tandem_stance',progression_tip:'Progress to foam pad or folded towel. Then eyes closed on flat surface.'},
+  tandem_stance:{id:'tandem_stance',name:'Tandem Stance (Heel-to-Toe)',track:'peroneal',sets:3,reps:'30 seconds',
+    cue:['Stand heel-to-toe on both feet. Right foot in front or behind.','Hold wall if needed. More stable than single-leg.','Still challenges lateral ankle stability.']},
+  balance_unstable:{id:'balance_unstable',name:'Balance on Unstable Surface (Right)',track:'peroneal',sets:3,reps:'30 seconds',
+    cue:['Stand on RIGHT foot on a folded towel or thin foam pad.','Constant peroneal activation required to prevent lateral roll.','Slight knee bend. Stay relaxed — let the ankle micro-correct.','Add eyes closed when flat-surface balance feels solid.','Do NOT do this if peroneal is actively inflamed or rated painful recently.'],
+    regression_id:'balance_flat',progression_tip:'Eyes closed on the unstable surface. Or add a light ball toss against wall while balancing.'},
+  toe_spread:{id:'toe_spread',name:'Toe Spread Out (Left)',track:'abh',sets:3,reps:'10 (3s hold)',
+    cue:['Bare left foot on the floor.','Spread ALL toes as wide as possible.','Especially: push the BIG TOE outward, away from the other toes.','Hold 3 seconds. Feel a pull on the inner arch.','Relax fully between reps.','This directly activates the abductor hallucis muscle.'],
+    regression_id:'assisted_toe_spread',progression_tip:'Add resistance: gently press big toe inward with your finger while actively abducting it outward.'},
+  assisted_toe_spread:{id:'assisted_toe_spread',name:'Assisted Toe Spread',track:'abh',sets:3,reps:'10',
+    cue:['Use your hand to gently help the big toe spread outward.','Passive-to-active: use the assist to find the position, then try to hold it independently.','Good starting point if you cannot yet activate AbH voluntarily.']},
+  short_foot_seated:{id:'short_foot_seated',name:'Short-Foot Exercise (Seated)',track:'abh',sets:3,reps:'10 (5s hold)',
+    cue:['Sit. Left foot flat, bare, on the floor.','WITHOUT curling your toes: draw the ball of your big toe toward your heel.','The arch should lift. Toes stay long and flat on the floor.','Hold 5 seconds. You should feel the inner arch and AbH working.','Fully relax between reps. This is harder than it looks.','If your arch collapses when standing, this is your daily foundation.'],
+    regression_id:'toe_spread',progression_tip:'Progress to standing version when 3×10 (5s holds) feels controlled and easy.'},
+  short_foot_standing:{id:'short_foot_standing',name:'Short-Foot Exercise (Standing)',track:'abh',sets:3,reps:'10 (5s hold)',
+    cue:['Stand, weight on both feet. Shift slightly more to your left.','Maintain short-foot: arch lifted, toes flat on the floor.','Do NOT let the arch collapse under your bodyweight.','Big toe stays on the ground — do not let it lift.','Hold 5 seconds per rep.'],
+    regression_id:'short_foot_seated',progression_tip:'Shift all weight to the left foot only — single-leg short-foot is the next level.'},
+  short_foot_single:{id:'short_foot_single',name:'Short-Foot (Single-Leg, Left)',track:'abh',sets:3,reps:'10 (5s hold)',
+    cue:['Balance on LEFT foot only.','Maintain the active short-foot arch throughout — do NOT let it collapse.','If arch collapses immediately: step back to bilateral standing version.','Hold 5 seconds per rep.','Eyes closed when balance feels solid.','This is the most demanding AbH exercise in the program.'],
+    regression_id:'short_foot_standing',progression_tip:'Maintain arch while doing a small 20° knee dip — dynamic AbH loading.'}
 };
-function setTL(color){
-  S.tl=color; save();
-  ['green','amber','red'].forEach(c=>document.getElementById('tl-'+c).classList.toggle('active',c===color));
-  const m=document.getElementById('checkinMsg');
-  m.className='checkin-msg show '+color;
-  m.textContent=TL_MSGS[color];
-}
 
-// ─── EXERCISE CHECKBOXES ──────────────────────────────────────────────
-function toggleEx(key){
-  S.checked[key]=!S.checked[key]; save();
-  const el=document.getElementById('ck-'+key);
-  if(el) el.classList.toggle('done',S.checked[key]);
-  updateCompletion();
+const WEEK_SCHEDULE={
+  1:['full','hip_abh','rest','full','hip_abh','light','rest'],
+  2:['full','hip_abh','rest','full','hip_abh','light','rest'],
+  3:['full','hip_abh','hip','hip_abh','full','light','rest'],
+  4:['full','hip_abh','hip','hip_abh','full','light','rest'],
+};
+const SESSION_TEMPLATES={
+  1:{
+    full:   {hip:['diaphragm_breath','side_lying_abduction','glute_bridge'],peroneal:['eversion_isometric'],abh:['toe_spread','short_foot_seated']},
+    hip_abh:{hip:['diaphragm_breath','glute_bridge'],abh:['toe_spread','short_foot_seated']},
+    light:  {hip:['diaphragm_breath'],abh:['short_foot_seated']},
+  },
+  2:{
+    full:   {hip:['diaphragm_breath','side_lying_abduction','dead_bug','glute_bridge'],peroneal:['eversion_concentric','balance_flat'],abh:['toe_spread','short_foot_standing']},
+    hip_abh:{hip:['diaphragm_breath','bird_dog','lateral_band_walk'],abh:['toe_spread','short_foot_standing']},
+    light:  {hip:['diaphragm_breath'],abh:['short_foot_standing']},
+  },
+  3:{
+    full:   {hip:['diaphragm_breath','dead_bug','bird_dog','lateral_band_walk','single_leg_stance'],peroneal:['eversion_eccentric','balance_unstable'],abh:['toe_spread','short_foot_single']},
+    hip_abh:{hip:['diaphragm_breath','bird_dog','lateral_band_walk'],abh:['toe_spread','short_foot_standing','short_foot_single']},
+    hip:    {hip:['dead_bug','lateral_band_walk','single_leg_stance']},
+    light:  {hip:['diaphragm_breath'],abh:['short_foot_standing']},
+  },
+  4:{
+    full:   {hip:['side_lying_abduction','dead_bug','lateral_band_walk','single_leg_stance'],peroneal:['eversion_eccentric','balance_unstable'],abh:['short_foot_single','toe_spread']},
+    hip_abh:{hip:['bird_dog','lateral_band_walk','single_leg_stance'],abh:['short_foot_single','toe_spread']},
+    hip:    {hip:['dead_bug','bird_dog','lateral_band_walk','single_leg_stance']},
+    light:  {hip:['diaphragm_breath'],abh:['short_foot_standing']},
+  },
+};
+const TRACK_META={
+  hip:     {icon:'🔴',title:'Right Hip & Core',sub:'Glute med · anterolateral core · proximal stability'},
+  peroneal:{icon:'🟠',title:'Right Peroneal / Cuboid',sub:'Peroneal longus tendon · lateral column control'},
+  abh:     {icon:'🟡',title:'Left Abductor Hallucis',sub:'Medial arch · short foot · big toe abduction'},
+};
+
+function loadState(){try{return JSON.parse(localStorage.getItem(KEY))||{};}catch{return{};}}
+function saveState(s){localStorage.setItem(KEY,JSON.stringify(s));}
+function todayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function daysBetween(a,b){return Math.round((new Date(b)-new Date(a))/86400000);}
+
+function getPhase(n){if(n<=28)return 1;if(n<=56)return 2;if(n<=84)return 3;return 4;}
+function getScheduledType(n,phase){return WEEK_SCHEDULE[phase][(n-1)%7];}
+function getLastRatings(state){
+  const today=todayStr(),sess=state.sessions||{};
+  const past=Object.keys(sess).filter(d=>d<today).sort();
+  if(!past.length)return{};
+  return sess[past[past.length-1]]?.ratings||{};
 }
-function updateCompletion(){
-  const items=document.querySelectorAll('[id^="ck-"]');
-  if(!items.length){ document.getElementById('completionRow').style.display='none'; return; }
-  const done=[...items].filter(el=>el.classList.contains('done')).length;
-  const pct=Math.round(done/items.length*100);
-  document.getElementById('completionFill').style.width=pct+'%';
-  document.getElementById('completionLabel').textContent=`${done}/${items.length} done`;
-  document.getElementById('completionRow').style.display='flex';
-  if(pct===100){
-    document.getElementById('sessionBadge').className='session-badge sb-done';
-    document.getElementById('sessionBadge').textContent='Session Complete ✓';
+function getIntensity(lr){
+  const pain=Object.values(lr).filter(v=>v==='pain').length;
+  if(pain>=3)return'red';if(pain>=1)return'amber';return'green';
+}
+function buildSession(state){
+  const today=todayStr();
+  const totalDays=Math.max(1,daysBetween(state.startDate,today)+1);
+  const phase=Math.min(4,getPhase(totalDays));
+  const lastRatings=getLastRatings(state);
+  const intensity=getIntensity(lastRatings);
+  let stype=getScheduledType(totalDays,phase);
+  if(intensity==='red'&&stype!=='rest')stype='light';
+  const template=SESSION_TEMPLATES[phase][stype]||SESSION_TEMPLATES[phase]['full']||{};
+  const adaptations=[];
+  const tracks={};
+  for(const[track,ids]of Object.entries(template)){
+    tracks[track]=ids.map(id=>{
+      const ex=EXLIB[id];if(!ex)return null;
+      const r=lastRatings[id];
+      if(r==='pain'&&ex.regression_id&&EXLIB[ex.regression_id]){
+        const reg=EXLIB[ex.regression_id];
+        adaptations.push({from:ex.name,to:reg.name});
+        return{...reg,adapted:'regressed',originalName:ex.name};
+      }
+      if(r==='nofeeling'&&ex.progression_tip)return{...ex,adapted:'progress',showTip:ex.progression_tip};
+      return ex;
+    }).filter(Boolean);
   }
+  return{totalDays,phase,stype,intensity,tracks,adaptations,lastRatings};
 }
 
-// ─── METRICS ──────────────────────────────────────────────────────────
-function saveMet(k,v){ S.metrics[k]=v; save(); }
-function loadMetrics(){
-  Object.entries(S.metrics).forEach(([k,v])=>{
-    const el=document.getElementById('m-'+k);
-    if(el) el.value=v;
-  });
+function phaseLabel(p){return['','Phase 1: Foundation (Wks 1-4)','Phase 2: Load Introduction (Wks 5-8)','Phase 3: Eccentric Loading (Wks 9-12)','Phase 4: Integration (Wks 13-16)'][p];}
+function stypeLabel(t){return{full:'Full Session',hip_abh:'Hip & AbH Focus',hip:'Hip Only',light:'Light Recovery',rest:'Rest Day'}[t]||t;}
+
+function renderBanners(intensity,adaptations){
+  let h='';
+  if(intensity==='red')h+=`<div class="bar bar-bad"><div class="bar-label">High Load Warning</div>3+ exercises caused pain last session. Scaled to activation-only today. No eccentric work.</div>`;
+  else if(intensity==='amber')h+=`<div class="bar bar-warn"><div class="bar-label">Pain Flagged Last Session</div>Reduce each exercise ~25% today (e.g. 12 reps → 9). No new progressions.</div>`;
+  if(adaptations.length){
+    const items=adaptations.map(a=>`<li><strong>${a.from}</strong> → <strong>${a.to}</strong> (pain reported — easier version loaded)</li>`).join('');
+    h+=`<div class="bar bar-accent"><div class="bar-label">Today's Adjustments</div><ul style="margin:4px 0 0;padding-left:18px;font-size:13px">${items}</ul></div>`;
+  }
+  return h;
+}
+function renderEx(ex,ratings){
+  const r=ratings[ex.id]||null;
+  const aclass=ex.adapted==='regressed'?'adapted-reg':ex.adapted==='progress'?'adapted-prog':'';
+  const badge=ex.adapted==='regressed'
+    ?`<div class="ex-badge badge-reg">↓ Regressed from: ${ex.originalName}</div>`
+    :ex.adapted==='progress'?`<div class="ex-badge badge-prog">↑ Progression available</div>`:'';
+  const tip=ex.showTip?`<div class="ex-tip"><strong>Next level:</strong> ${ex.showTip}</div>`:'';
+  const cueHTML=Array.isArray(ex.cue)?`<ol>${ex.cue.map(c=>`<li>${c}</li>`).join('')}</ol>`:ex.cue;
+  const ps=r==='pain'?' sel-pain':'',ns=r==='nofeeling'?' sel-nofeeling':'',gs=r==='good'?' sel-good':'';
+  return`<div class="ex-card ${aclass}" data-exid="${ex.id}">
+<div class="ex-top"><div class="ex-name">${ex.name}</div><div class="ex-meta">${ex.sets} × ${ex.reps}</div></div>
+${badge}<div class="ex-cue">${cueHTML}</div>${tip}
+<div class="feedback-row">
+<button class="fb-btn${ps}" data-rating="pain" data-exid="${ex.id}">🔴 Causes Pain</button>
+<button class="fb-btn${ns}" data-rating="nofeeling" data-exid="${ex.id}">🟡 Not Feeling It</button>
+<button class="fb-btn${gs}" data-rating="good" data-exid="${ex.id}">🟢 Feels Right</button>
+</div></div>`;
+}
+function renderSession(sess,state){
+  const today=todayStr();
+  const todaySess=state.sessions?.[today]||{};
+  const ratings=todaySess.ratings||{};
+  const completed=todaySess.completed||false;
+  const weekInPhase=((sess.totalDays-1)%28)+1;
+  const pct=Math.round((weekInPhase/28)*100);
+  let h=`<div class="session-head">
+<h1>${stypeLabel(sess.stype)}</h1>
+<div class="sub">Day ${sess.totalDays} &nbsp;·&nbsp; Week ${Math.ceil(sess.totalDays/7)} of 16 &nbsp;·&nbsp; ${phaseLabel(sess.phase)}</div>
+</div>
+<div class="phase-bar">
+<div class="phase-bar-label"><span>${phaseLabel(sess.phase)}</span><span>Week ${Math.ceil(weekInPhase/7)} of 4</span></div>
+<div class="phase-track"><div class="phase-fill" style="width:${pct}%"></div></div>
+</div>`;
+  h+=renderBanners(sess.intensity,sess.adaptations);
+  if(sess.stype==='rest'){
+    h+=`<div class="rest-card"><h2>Rest Day</h2><p>No structured exercise today. An easy 20-minute walk is fine if you want gentle movement.<br><br>The peroneal tendon heals during recovery — rest days are part of the treatment, not a skip.</p></div>`;
+    h+=`<span class="reset-link" id="reset-link">Reset program</span>`;
+    return h;
+  }
+  const order=['hip','peroneal','abh'];
+  for(const track of order){
+    const exs=sess.tracks[track];
+    if(!exs||!exs.length)continue;
+    const m=TRACK_META[track];
+    h+=`<div class="track"><div class="track-header"><div class="track-icon">${m.icon}</div><div><div class="track-title">${m.title}</div><div class="track-sub">${m.sub}</div></div></div>`;
+    exs.forEach(ex=>{h+=renderEx(ex,ratings);});
+    h+=`</div>`;
+  }
+  h+=`<button class="complete-btn${completed?' done':''}" id="complete-btn"${completed?' disabled':''}>${completed?'✓ Session Logged':'Log Session Complete'}</button>`;
+  h+=`<div class="foot-note">Rate each exercise — your ratings adapt tomorrow's session automatically.</div>`;
+  h+=`<span class="reset-link" id="reset-link">Reset program</span>`;
+  return h;
+}
+function renderSetup(){
+  return`<div class="setup">
+<h1>Adaptive Rehab Program</h1>
+<p>A 16-week corrective program built from your research.<br>Three issues — adapted daily based on how your body responds.</p>
+<ul class="issues-list">
+<li>🔴 <strong>Right hip/core instability</strong> — gluteus medius &amp; anterolateral core</li>
+<li>🟠 <strong>Right peroneal longus strain</strong> — cuboid joint tendon pain</li>
+<li>🟡 <strong>Left abductor hallucis strain</strong> — medial arch</li>
+</ul>
+<div class="setup-box">
+<label for="start-date">When did you start (or want to start) the program?</label>
+<input type="date" id="start-date" value="${todayStr()}" max="${todayStr()}"/>
+<button id="start-btn">Begin Program</button>
+</div>
+</div>`;
 }
 
-// ─── RENDER ───────────────────────────────────────────────────────────
+const root=document.getElementById('root');
+let state=loadState();
 function render(){
-  document.getElementById('yr').textContent=new Date().getFullYear();
-
-  if(!S.startDate){ openSetup(); return; }
-
-  const days=daysSince(S.startDate);
-  if(days<0){
-    document.getElementById('sessionTitle').textContent='Program Hasn\'t Started Yet';
-    document.getElementById('sessionDesc').textContent=`Your program begins in ${Math.abs(days)} day(s). Come back on your start date!`;
-    document.getElementById('exList').innerHTML='';
+  if(!state.startDate){
+    root.innerHTML=renderSetup();
+    document.getElementById('start-btn').addEventListener('click',()=>{
+      const v=document.getElementById('start-date').value;
+      if(!v)return;
+      state.startDate=v;saveState(state);render();
+    });
     return;
   }
-
-  const wk=weekNum(days);
-  const ph=getPhase(wk);
-  const dow=days%7;
-  const sessionType=ph.schedule[dow];
-  const dayNames=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-
-  // Phase header
-  document.getElementById('phaseNum').textContent=ph.num;
-  document.getElementById('phaseName').textContent=ph.name;
-  document.getElementById('phaseWks').textContent=ph.weeks;
-  document.getElementById('currentWeek').textContent=wk;
-  const pct=Math.min(100,Math.round(days/112*100));
-  document.getElementById('progFill').style.width=pct+'%';
-  document.getElementById('progLabel').textContent=pct+'% of 16 weeks complete';
-
-  // Issue bars (phase progress within each track)
-  const issuePct=Math.min(100,Math.round((wk/16)*100));
-  ['hip','rfoot','rheel','lfoot'].forEach(id=>{
-    const el=document.getElementById('bar-'+id);
-    if(el) el.style.width=issuePct+'%';
+  const sess=buildSession(state);
+  root.innerHTML=renderSession(sess,state);
+  root.querySelectorAll('.fb-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const exid=btn.dataset.exid,rating=btn.dataset.rating,today=todayStr();
+      if(!state.sessions)state.sessions={};
+      if(!state.sessions[today])state.sessions[today]={ratings:{}};
+      state.sessions[today].ratings[exid]=rating;
+      saveState(state);
+      const card=btn.closest('.ex-card');
+      card.querySelectorAll('.fb-btn').forEach(b=>{b.className='fb-btn';});
+      btn.classList.add('sel-'+rating);
+    });
   });
-
-  // Determine exercises and session metadata
-  let exs, title, desc, badgeClass, badgeText;
-  if(sessionType==='rest'){
-    exs=ph.rest; title=dayNames[dow]+' — '+ph.restTitle;
-    desc=ph.restDesc; badgeClass='sb-rest'; badgeText='Recovery Day';
-  } else if(sessionType==='snack'){
-    exs=ph.snack; title=dayNames[dow]+' — '+ph.snackTitle;
-    desc=ph.snackDesc; badgeClass='sb-snack'; badgeText='Activation Snack';
-  } else {
-    exs=ph.full; title=dayNames[dow]+' — '+ph.fullTitle;
-    desc=ph.fullDesc; badgeClass='sb-full'; badgeText='Full Session';
+  const cb=document.getElementById('complete-btn');
+  if(cb){
+    cb.addEventListener('click',()=>{
+      const today=todayStr();
+      if(!state.sessions)state.sessions={};
+      if(!state.sessions[today])state.sessions[today]={ratings:{}};
+      state.sessions[today].completed=true;
+      saveState(state);
+      cb.textContent='✓ Session Logged';cb.classList.add('done');cb.disabled=true;
+    });
   }
-
-  document.getElementById('sessionTitle').textContent=title;
-  document.getElementById('sessionDesc').textContent=desc;
-  const badge=document.getElementById('sessionBadge');
-  badge.className='session-badge '+badgeClass;
-  badge.textContent=badgeText;
-
-  // Render exercises
-  const todayKey='d'+days+'_';
-  document.getElementById('exList').innerHTML=exs.map((ex,i)=>{
-    const k=todayKey+i;
-    const done=!!S.checked[k];
-    return `<li class="ex-item">
-      <div class="ex-check${done?' done':''}" id="ck-${k}" onclick="toggleEx('${k}')"></div>
-      <div class="ex-body">
-        <div class="ex-name">${ex.n}</div>
-        <div class="ex-dose">${ex.d}</div>
-        ${ex.c?`<div class="ex-cue">${ex.c}</div>`:''}
-      </div>
-    </li>`;
-  }).join('');
-
-  updateCompletion();
-
-  // Restore traffic light
-  if(S.tl) setTL(S.tl);
-
-  // Restore pain sliders
-  const painIds=['rfoot','rheel','rknee','lfoot','lback'];
-  painIds.forEach(id=>{
-    if(S.pain[id]!==undefined){
-      const sl=document.getElementById('p-'+id);
-      if(sl){ sl.value=S.pain[id]; onPain(id,S.pain[id]); }
-    }
-  });
-
-  loadMetrics();
+  const rl=document.getElementById('reset-link');
+  if(rl){
+    rl.addEventListener('click',()=>{
+      if(confirm('Reset the program? This clears all history and ratings.')){
+        localStorage.removeItem(KEY);state={};render();
+      }
+    });
+  }
 }
-
-// ─── INIT ─────────────────────────────────────────────────────────────
-load();
 render();
 </script>
 </body>
